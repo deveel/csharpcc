@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1F32619F-ADDA-4E87-AF1E-A543D20C8A09}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Deveel.CSharpCC</RootNamespace>
+    <AssemblyName>Deveel.CSharpCC</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Deveel.CSharpCC.Parser\Action.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\BnfProduction.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CodeProduction.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CSharpCCErrors.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CSharpCCGlobals.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CSharpCCParserConstants.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\Expansion.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\ILocationInfo.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\LexGen.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\Nfa.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\NfaState.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\NonTerminal.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\NormalProduction.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\Options.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\ParseException.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RegExprSpec.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RegularExpression.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RStringLiteral.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\Token.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\TokenProduction.cs" />
+    <Compile Include="Deveel.CSharpCC.Util\ListUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Deveel.CSharpCC.Parser\CSharpCC.cc" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>$(ProjectDir)..\..\tools\csharpcc-ikvm-1.1.1\csharpcc.exe -OUTPUT_DIRECTORY="$(ProjectDir)Deveel.CSharpCC.Parser\" "$(ProjectDir)Deveel.CSharpCC.Parser\CSharpCC.cc"</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
