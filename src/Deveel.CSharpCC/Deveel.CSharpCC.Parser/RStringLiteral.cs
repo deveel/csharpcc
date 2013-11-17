@@ -9,7 +9,7 @@ namespace Deveel.CSharpCC.Parser {
 		private static int maxStrKind = 0;
 		private static int maxLen = 0;
 		private static int charCnt = 0;
-		private static IList charPosKind = new ArrayList(); // Elements are hashtables
+		private static IList<IDictionary<string, KindInfo>>  charPosKind = new List<IDictionary<string, KindInfo>>(); // Elements are hashtables
 		// with single char keys;
 		private static int[] maxLenForActive = new int[100]; // 6400 tokens
 		public static String[] allImages;
@@ -19,7 +19,7 @@ namespace Deveel.CSharpCC.Parser {
 		private static int startStateCnt = 0;
 		private static bool[] subString;
 		private static bool[] subStringAtPos;
-		private static Hashtable[] statesForPos;
+		private static IDictionary<string, long[]>[] statesForPos;
 
 		public RStringLiteral(Token token, string image) {
 			Line = token.beginLine;
@@ -31,7 +31,7 @@ namespace Deveel.CSharpCC.Parser {
 
 		public void GenerateDfa(TextWriter ostr, int kind) {
 			String s;
-			Hashtable temp;
+			IDictionary<string, KindInfo> temp;
 			KindInfo info;
 			int len;
 
@@ -58,11 +58,11 @@ namespace Deveel.CSharpCC.Parser {
 				}
 
 				if (i >= charPosKind.Count) // Kludge, but OK
-					charPosKind.Add(temp = new Hashtable());
+					charPosKind.Add(temp = new Dictionary<string, KindInfo>());
 				else
-					temp = (Hashtable) charPosKind[i];
+					temp = (IDictionary<string, KindInfo>) charPosKind[i];
 
-				if ((info = (KindInfo) temp[s]) == null)
+				if (!temp.TryGetValue(s, out info))
 					temp[s] = info = new KindInfo(LexGen.maxOrdinal);
 
 				if (i + 1 == len)
@@ -75,11 +75,11 @@ namespace Deveel.CSharpCC.Parser {
 					s = ("" + Image[i]).ToLower();
 
 					if (i >= charPosKind.Count) // Kludge, but OK
-						charPosKind.Add(temp = new Hashtable());
+						charPosKind.Add(temp = new Dictionary<string, KindInfo>());
 					else
-						temp = (Hashtable) charPosKind[i];
+						temp = (IDictionary<string, KindInfo>) charPosKind[i];
 
-					if ((info = (KindInfo) temp[s]) == null)
+					if (!temp.TryGetValue(s, out info))
 						temp[s] = info = new KindInfo(LexGen.maxOrdinal);
 
 					if (i + 1 == len)
@@ -93,11 +93,11 @@ namespace Deveel.CSharpCC.Parser {
 					s = ("" + Image[i]).ToUpper();
 
 					if (i >= charPosKind.Count) // Kludge, but OK
-						charPosKind.Add(temp = new Hashtable());
+						charPosKind.Add(temp = new Dictionary<string, KindInfo>());
 					else
-						temp = (Hashtable) charPosKind[i];
+						temp = (IDictionary<string, KindInfo>) charPosKind[i];
 
-					if ((info = (KindInfo) temp[s]) == null)
+					if (!temp.TryGetValue(s, out info))
 						temp[s] = info = new KindInfo(LexGen.maxOrdinal);
 
 					if (i + 1 == len)
@@ -148,7 +148,7 @@ namespace Deveel.CSharpCC.Parser {
 		public static void ReInit() {
 			maxStrKind = 0;
 			maxLen = 0;
-			charPosKind = new ArrayList();
+			charPosKind = new List<IDictionary<string, KindInfo>>();
 			maxLenForActive = new int[100]; // 6400 tokens
 			intermediateKinds = null;
 			intermediateMatchedPos = null;
@@ -246,14 +246,14 @@ namespace Deveel.CSharpCC.Parser {
 			if (LexGen.mixed[LexGen.lexStateIndex] || NfaState.generatedStates == 0)
 				return -1;
 
-			Hashtable allStateSets = statesForPos[pos];
+			IDictionary<string, long[]> allStateSets = statesForPos[pos];
 
 			if (allStateSets == null)
 				return -1;
 
-			foreach (DictionaryEntry entry in allStateSets) {
-				String s = (String) entry.Key;
-				long[] actives = (long[]) entry.Value;
+			foreach (KeyValuePair<string, long[]> entry in allStateSets) {
+				String s = entry.Key;
+				long[] actives = entry.Value;
 
 				s = s.Substring(s.IndexOf(", ") + 2);
 				s = s.Substring(s.IndexOf(", ") + 2);
@@ -325,13 +325,13 @@ namespace Deveel.CSharpCC.Parser {
 
 				for (int j = 0; j < maxStrKind; j++) {
 					if (j != i && LexGen.lexStates[j] == LexGen.lexStateIndex &&
-					    ((String) allImages[j]) != null) {
-						if (((String) allImages[j]).IndexOf(image) == 0) {
+					    allImages[j] != null) {
+						if (allImages[j].IndexOf(image) == 0) {
 							subString[i] = true;
 							subStringAtPos[image.Length - 1] = true;
 							break;
 						} else if (Options.getIgnoreCase() &&
-						           StartsWithIgnoreCase((String) allImages[j], image)) {
+						           StartsWithIgnoreCase(allImages[j], image)) {
 							subString[i] = true;
 							subStringAtPos[image.Length - 1] = true;
 							break;
@@ -386,15 +386,13 @@ namespace Deveel.CSharpCC.Parser {
 			ostr.WriteLine("}");
 		}
 
-		private static String[] ReArrange(Hashtable tab) {
+		private static String[] ReArrange(IDictionary<string, KindInfo> tab) {
 			String[] ret = new String[tab.Count];
-			IEnumerator e = tab.Keys.GetEnumerator();
 			int cnt = 0;
 
-			while (e.MoveNext()) {
+			foreach (string s in tab.Keys) {
 				int i = 0, j;
-				String s;
-				char c = (s = (String) e.Current)[0];
+				char c = s[0];
 
 				while (i < cnt && ret[i][0] < c)
 					i++;
@@ -411,7 +409,7 @@ namespace Deveel.CSharpCC.Parser {
 		}
 
 		private static void DumpDfaCode(TextWriter ostr) {
-			Hashtable tab;
+			IDictionary<string, KindInfo> tab;
 			String key;
 			KindInfo info;
 			int maxLongsReqd = maxStrKind/64 + 1;
@@ -436,7 +434,7 @@ namespace Deveel.CSharpCC.Parser {
 			for (i = 0; i < maxLen; i++) {
 				bool atLeastOne = false;
 				bool startNfaNeeded = false;
-				tab = (Hashtable) charPosKind[i];
+				tab = (IDictionary<string, KindInfo>) charPosKind[i];
 				String[] keys = ReArrange(tab);
 
 				ostr.Write("private " + (Options.getStatic() ? "static " : "") + "int " + "ccMoveStringLiteralDfa" + i + LexGen.lexStateSuffix + "(");
@@ -850,7 +848,7 @@ namespace Deveel.CSharpCC.Parser {
 
 		private static void GenerateNfaStartStates(TextWriter ostr, NfaState initialState) {
 			bool[] seen = new bool[NfaState.generatedStates];
-			Hashtable stateSets = new Hashtable();
+			IDictionary<string, string> stateSets = new Dictionary<string, string>();
 			String stateSetString = "";
 			int i, j, kind, jjmatchedPos = 0;
 			int maxKindsReqd = maxStrKind/64 + 1;
@@ -858,7 +856,7 @@ namespace Deveel.CSharpCC.Parser {
 			IList<NfaState> newStates = new List<NfaState>();
 			IList<NfaState> oldStates = null, jjtmpStates;
 
-			statesForPos = new Hashtable[maxLen];
+			statesForPos = new IDictionary<string, long[]>[maxLen];
 			intermediateKinds = new int[maxStrKind + 1][];
 			intermediateMatchedPos = new int[maxStrKind + 1][];
 
@@ -923,14 +921,14 @@ namespace Deveel.CSharpCC.Parser {
 					if (stateSets.ContainsKey(stateSetString)) {
 						stateSets[stateSetString] = stateSetString;
 						for (p = 0; p < newStates.Count; p++) {
-							if (seen[((NfaState) newStates[p]).stateName])
-								((NfaState) newStates[p]).inNextOf++;
+							if (seen[newStates[p].stateName])
+								newStates[p].inNextOf++;
 							else
-								seen[((NfaState) newStates[p]).stateName] = true;
+								seen[newStates[p].stateName] = true;
 						}
 					} else {
 						for (p = 0; p < newStates.Count; p++)
-							seen[((NfaState) newStates[p]).stateName] = true;
+							seen[newStates[p].stateName] = true;
 					}
 
 					jjtmpStates = oldStates;
@@ -938,9 +936,9 @@ namespace Deveel.CSharpCC.Parser {
 					(newStates = jjtmpStates).Clear();
 
 					if (statesForPos[j] == null)
-						statesForPos[j] = new Hashtable();
+						statesForPos[j] = new Dictionary<string, long[]>();
 
-					if ((actives = ((long[]) statesForPos[j][kind + ", " + jjmatchedPos + ", " + stateSetString])) == null) {
+					if (!(statesForPos[j].TryGetValue(kind + ", " + jjmatchedPos + ", " + stateSetString, out actives))) {
 						actives = new long[maxKindsReqd];
 						statesForPos[j][kind + ", " + jjmatchedPos + ", " + stateSetString] = actives;
 					}
@@ -953,7 +951,7 @@ namespace Deveel.CSharpCC.Parser {
 			DumpNfaStartStatesCode(statesForPos, ostr);
 		}
 
-		private static void DumpNfaStartStatesCode(Hashtable[] statesForPos, TextWriter ostr) {
+		private static void DumpNfaStartStatesCode(IDictionary<string, long[]>[] statesForPos, TextWriter ostr) {
 			if (maxStrKind == 0) {
 				// No need to generate this function
 				return;
@@ -979,9 +977,9 @@ namespace Deveel.CSharpCC.Parser {
 
 				ostr.WriteLine("      case " + i + ":");
 
-				foreach (DictionaryEntry entry in statesForPos[i]) {
-					String stateSetString = (String)entry.Key;
-					long[] actives = (long[]) entry.Value;
+				foreach (KeyValuePair<string, long[]> entry in statesForPos[i]) {
+					String stateSetString = entry.Key;
+					long[] actives = entry.Value;
 
 					for (int j = 0; j < maxKindsReqd; j++) {
 						if (actives[j] == 0L)
@@ -1084,10 +1082,6 @@ namespace Deveel.CSharpCC.Parser {
 			ostr.WriteLine(", pos + 1);");
 			ostr.WriteLine("}");
 		}
-
-		/**
-		 * Return to original state.
-		 */
 
 		public static void reInit() {
 			ReInit();

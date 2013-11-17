@@ -55,6 +55,7 @@
     <Compile Include="Deveel.CSharpCC.Parser\CSharpCCParserInternals.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\CSharpCCParserTokenManager.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\CSharpCharStream.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CSharpFiles.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Expansion.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\ILocationInfo.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\LexGen.cs" />
@@ -86,7 +87,9 @@
     <Compile Include="Deveel.CSharpCC.Parser\TryBlock.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\ZeroOrMore.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\ZeroOrOne.cs" />
+    <Compile Include="Deveel.CSharpCC.Util\CSharpFileGenerator.cs" />
     <Compile Include="Deveel.CSharpCC.Util\ListUtil.cs" />
+    <Compile Include="Deveel.CSharpCC.Util\OutputFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
