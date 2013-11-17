@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Deveel.CSharpCC.Parser {
     public abstract class RegularExpression : Expansion {
-        private readonly IList<Token> lhsTokens;
+        private IList<Token> lhsTokens;
 
         protected RegularExpression() {
             lhsTokens = new List<Token>();
@@ -13,12 +13,11 @@ namespace Deveel.CSharpCC.Parser {
 
         public string Label { get; internal set; }
 
-        internal int Ordinal { get; set; }
-
         public Token RhsToken { get; internal set; }
 
         public IList<Token> LhsTokens {
             get { return lhsTokens; }
+			internal set { lhsTokens = value; }
         }
 
         public bool IsPrivate { get; internal set; }

@@ -11,6 +11,8 @@
     <AssemblyName>Deveel.CSharpCC</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +22,11 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="${ProjectDir}\..\..\tools\csharpcc-ikvm-1.1.1\csharpcc.exe -OUTPUT_DIRECTORY=&quot;${ProjectDir}\Deveel.CSharpCC.Parser&quot; &quot;${ProjectDir}\Deveel.CSharpCC.Parser\CSharpCC.cc&quot;" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,24 +44,48 @@
   <ItemGroup>
     <Compile Include="Deveel.CSharpCC.Parser\Action.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\BnfProduction.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CharacterRange.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\Choice.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\CodeProduction.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\Container.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\CSharpCCErrors.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\CSharpCCGlobals.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CSharpCCParser.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\CSharpCCParserConstants.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CSharpCCParserInternals.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CSharpCCParserTokenManager.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\CSharpCharStream.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Expansion.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\ILocationInfo.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\LexGen.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\Lookahead.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Nfa.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\NfaState.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\NonTerminal.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\NormalProduction.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\OneOrMore.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Options.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\ParseException.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RCharacterList.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RChoice.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\RegExprSpec.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\RegularExpression.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\REndOfFile.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RJustName.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\ROneOrMore.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RRepetitionRange.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RSequence.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\RStringLiteral.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RZeroOrMore.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\RZeroOrOne.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\Sequence.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\SingleCharacter.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Token.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\TokenMgrError.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\TokenProduction.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\TryBlock.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\ZeroOrMore.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\ZeroOrOne.cs" />
     <Compile Include="Deveel.CSharpCC.Util\ListUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

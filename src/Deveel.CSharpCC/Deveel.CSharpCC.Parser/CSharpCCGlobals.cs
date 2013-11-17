@@ -20,7 +20,7 @@ namespace Deveel.CSharpCC.Parser {
         public static IList<Token> cu_to_insertion_point_2 = new List<Token>();
         public static IList<Token> cu_from_insertion_point_2 = new List<Token>();
 
-        public static IList<BnfProduction> bnfproductions = new List<BnfProduction>();
+        public static IList<NormalProduction> bnfproductions = new List<NormalProduction>();
         public static IDictionary<string, NormalProduction> production_table = new Dictionary<string, NormalProduction>();
 
         public static IDictionary<string, int> lexstate_S2I = new Dictionary<string, int>();
@@ -147,15 +147,15 @@ namespace Deveel.CSharpCC.Parser {
                         break;
 
                 return MakeToolNameList(new String(buf, 0, total));
-            } catch (FileNotFoundException e) {
-            } catch (IOException e) {
+            } catch (FileNotFoundException) {
+            } catch (IOException) {
                 if (total > 0)
                     return MakeToolNameList(new String(buf, 0, total));
             } finally {
                 if (stream != null)
                     try {
                         stream.Close();
-                    } catch (Exception e3) {
+                    } catch (Exception) {
                     }
             }
 
@@ -378,7 +378,7 @@ namespace Deveel.CSharpCC.Parser {
             cu_to_insertion_point_1 = new List<Token>();
             cu_to_insertion_point_2 = new List<Token>();
             cu_from_insertion_point_2 = new List<Token>();
-            bnfproductions = new List<BnfProduction>();
+            bnfproductions = new List<NormalProduction>();
             production_table = new Dictionary<string, NormalProduction>();
             lexstate_S2I = new Dictionary<string, int>();
             lexstate_I2S = new Dictionary<int, string>();

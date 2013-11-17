@@ -50,20 +50,20 @@ namespace Deveel.CSharpCC.Parser {
         }
 
         private long[] asciiMoves = new long[2];
-        private char[] charMoves = null;
+	    internal char[] charMoves = null;
         private char[] rangeMoves = null;
-        private NfaState next = null;
+	    internal NfaState next = null;
         private NfaState stateForCase;
-        private IList<NfaState> epsilonMoves = new List<NfaState>();
+	    internal IList<NfaState> epsilonMoves = new List<NfaState>();
         private String epsilonMovesString;
         private NfaState[] epsilonMoveArray;
 
         private int id;
-        private int stateName = -1;
-        private int kind = Int32.MaxValue;
+	    internal int stateName = -1;
+	    internal int kind = Int32.MaxValue;
         private int lookingFor;
         private int usefulEpsilonMoves = 0;
-        private int inNextOf;
+	    internal int inNextOf;
         private int lexState;
         private int nonAsciiMethod = -1;
         private int kindToPrint = Int32.MaxValue;
@@ -116,7 +116,7 @@ namespace Deveel.CSharpCC.Parser {
             return ret;
         }
 
-        private void AddMove(NfaState newState) {
+	    internal void AddMove(NfaState newState) {
             if (!epsilonMoves.Contains(newState))
                 InsertInOrder(epsilonMoves, newState);
         }
@@ -125,7 +125,7 @@ namespace Deveel.CSharpCC.Parser {
             asciiMoves[c/64] |= (1L << (c%64));
         }
 
-        private void AddChar(char c) {
+	    internal void AddChar(char c) {
             onlyChar++;
             matchSingleChar = c;
             int i;
@@ -153,7 +153,7 @@ namespace Deveel.CSharpCC.Parser {
                     break;
 
             if (!unicodeWarningGiven && c > 0xff &&
-                !Options.getJavaUnicodeEscape() &&
+                !Options.getUnicodeEscape() &&
                 !Options.getUserCharStream()) {
                 unicodeWarningGiven = true;
                 CSharpCCErrors.Warning(LexGen.curRE,
@@ -175,7 +175,7 @@ namespace Deveel.CSharpCC.Parser {
             }
         }
 
-        private void AddRange(char left, char right) {
+	    internal void AddRange(char left, char right) {
             onlyChar = 2;
             int i;
             char tempLeft1, tempLeft2, tempRight1, tempRight2;
@@ -193,7 +193,7 @@ namespace Deveel.CSharpCC.Parser {
             }
 
             if (!unicodeWarningGiven && (left > 0xff || right > 0xff) &&
-                !Options.getJavaUnicodeEscape() &&
+                !Options.getUnicodeEscape() &&
                 !Options.getUserCharStream()) {
                 unicodeWarningGiven = true;
                 CSharpCCErrors.Warning(LexGen.curRE,
@@ -963,7 +963,7 @@ namespace Deveel.CSharpCC.Parser {
             return bitVec.Equals(allBits);
         }
 
-        private static int AddStartStateSet(String stateSetString) {
+	    internal static int AddStartStateSet(String stateSetString) {
             return AddCompositeStateSet(stateSetString, true);
         }
 
@@ -1033,7 +1033,7 @@ namespace Deveel.CSharpCC.Parser {
             return stateNameForComposite[stateSetString];
         }
 
-        private static int InitStateName() {
+	    internal static int InitStateName() {
             String s = LexGen.initialState.GetEpsilonMovesString();
 
             if (LexGen.initialState.usefulEpsilonMoves != 0)
@@ -1103,7 +1103,7 @@ namespace Deveel.CSharpCC.Parser {
             return retVal;
         }
 
-        private static String GetStateSetString(IList<NfaState> states) {
+        internal static String GetStateSetString(IList<NfaState> states) {
             if (states == null || states.Count == 0)
                 return "null;";
 
@@ -1417,7 +1417,7 @@ namespace Deveel.CSharpCC.Parser {
                 ostr.WriteLine("         long l = 1L << (curChar & 63);");
 
             else {
-                if (Options.getJavaUnicodeEscape() || unicodeWarningGiven) {
+                if (Options.getUnicodeEscape() || unicodeWarningGiven) {
                     ostr.WriteLine("         int hiByte = (int)(curChar >> 8);");
                     ostr.WriteLine("         int i1 = hiByte >> 6;");
                     ostr.WriteLine("         long l1 = 1L << (hiByte & 63);");
@@ -1951,7 +1951,7 @@ namespace Deveel.CSharpCC.Parser {
                 }
             }
 
-            if (!Options.getJavaUnicodeEscape() && !unicodeWarningGiven) {
+            if (!Options.getUnicodeEscape() && !unicodeWarningGiven) {
                 if (loByteVec != null && loByteVec.Count > 1)
                     ostr.WriteLine("                  if ((ccBitVec" + loByteVec[1] + "[i2" +"] & l2) != 0L)");
             } else {
@@ -2025,7 +2025,7 @@ namespace Deveel.CSharpCC.Parser {
             if (next == null || next.usefulEpsilonMoves <= 0) {
                 String kindCheck = " && kind > " + kindToPrint;
 
-                if (!Options.getJavaUnicodeEscape() && !unicodeWarningGiven) {
+                if (!Options.getUnicodeEscape() && !unicodeWarningGiven) {
                     if (loByteVec != null && loByteVec.Count > 1)
                         ostr.WriteLine("                  if ((ccBitVec" + loByteVec[1] + "[i2" + "] & l2) != 0L" + kindCheck + ")");
                 } else {
@@ -2038,7 +2038,7 @@ namespace Deveel.CSharpCC.Parser {
 
             String prefix = "   ";
             if (kindToPrint != Int32.MaxValue) {
-                if (!Options.getJavaUnicodeEscape() && !unicodeWarningGiven) {
+                if (!Options.getUnicodeEscape() && !unicodeWarningGiven) {
                     if (loByteVec != null && loByteVec.Count > 1) {
                         ostr.WriteLine("                  if ((ccBitVec" + loByteVec[1] + "[i2" + "] & l2) == 0L)");
                         ostr.WriteLine("                     break;");
@@ -2051,7 +2051,7 @@ namespace Deveel.CSharpCC.Parser {
                 ostr.WriteLine("                  if (kind > " + kindToPrint + ")");
                 ostr.WriteLine("                     kind = " + kindToPrint + ";");
                 prefix = "";
-            } else if (!Options.getJavaUnicodeEscape() && !unicodeWarningGiven) {
+            } else if (!Options.getUnicodeEscape() && !unicodeWarningGiven) {
                 if (loByteVec != null && loByteVec.Count > 1)
                     ostr.WriteLine("                  if ((ccBitVec" + loByteVec[1] + "[i2" + "] & l2) != 0L)");
             } else {
@@ -2142,7 +2142,7 @@ namespace Deveel.CSharpCC.Parser {
         }
 
         public static void DumpNonAsciiMoveMethods(TextWriter ostr) {
-            if (!Options.getJavaUnicodeEscape() && !unicodeWarningGiven)
+            if (!Options.getUnicodeEscape() && !unicodeWarningGiven)
                 return;
 
             if (nonAsciiTableForMethod.Count <= 0)

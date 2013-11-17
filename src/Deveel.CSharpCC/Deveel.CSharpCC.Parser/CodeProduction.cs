@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 
 namespace Deveel.CSharpCC.Parser {
-    public class CodeProdution {
+    public class CodeProduction : NormalProduction {
         private readonly IList<Token> codeTokens;
 
-        public CodeProdution() {
+        public CodeProduction() {
             codeTokens = new List<Token>();
         }
 

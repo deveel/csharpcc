@@ -42,70 +42,34 @@ options {
 
 PARSER_BEGIN(CSharpCCParser)
 
-/**
- * This file contains the code for JavaCCParser generated
- * by CSharpCCParser itself.
- */
-
 namespace Deveel.CSharpCC.Parser;
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
-public class CSharpCCParser : CSharpCCParserInternals {
+class CSharpCCParser {
 
-  /**
-   * The name of the parser class.
-   */
-  String parser_class_name;
+  string parserTypeName;
+  bool processingTypeUnit = false;
+  int typeNesting = 0;
 
-  /**
-   * This flag is set to true when the part between PARSER_BEGIN and
-   * PARSER_END is being parsed.
-   */
-  bool processing_cu = false;
-
-  /**
-   * The level of class nesting.
-   */
-  int class_nesting = 0;
-
-  /**
-   * This int variable is incremented while parsing local lookaheads.
-   * Hence it keeps track of *syntactic* lookahead nesting.
-   * This is used to provide warnings when actions and nested lookaheads
-   * are used in syntactic lookahead productions.  This is to prevent
-   * typos such as leaving out the comma in LOOKAHEAD( foo(), {check()} ).
-   */
   int inLocalLA = 0;
-
-  /**
-   * Set to true when the parser is within an action.
-   */
   bool inAction = false;
-
-  /**
-   * This flag keeps track of whether or not return and throw
-   * statements have been patched during the parsing of a production.
-   * The value of this flag is assigned the field with the same
-   * name in BNFProduction.java.
-   */
   bool jumpPatched = false;
 
-  /*
-   * Returns true if the next token is not in the FOLLOW list of "expansion".
-   * It is used to decide when the end of an "expansion" has been reached.
-   */
-  private bool notTailOfExpansionUnit() {
+  private bool NotTailOfExpansionUnit() {
     Token t;
-    t = getToken(1);
-    if (t.kind == BIT_OR || t.kind == COMMA || t.kind == RPAREN || t.kind == RBRACE || t.kind == RBRACKET) return false;
+    t = GetToken(1);
+    if (t.kind == BIT_OR || 
+		t.kind == COMMA || 
+		t.kind == RPAREN || 
+		t.kind == RBRACE || 
+		t.kind == RBRACKET) 
+		return false;
     return true;
   }
 
-   /**
-    * Class to hold modifiers.
-    */
    public class ModifierSet
    {
      /* Definitions of the bits in the modifiers field.  */
@@ -114,15 +78,11 @@ public class CSharpCCParser : CSharpCCParserInternals {
      public const int PRIVATE = 0x0004;
      public const int ABSTRACT = 0x0008;
      public const int STATIC = 0x0010;
-     public const int FINAL = 0x0020;
-     public const int SYNCHRONIZED = 0x0040;
-     public const int NATIVE = 0x0080;
+     public const int READONLY = 0x0020;
+	 public const int INTERNAL = 0x0040;
+     public const int EXTERN = 0x0080;
      public const int TRANSIENT = 0x0100;
      public const int VOLATILE = 0x0200;
-     public const int STRICTFP = 0x1000;
-
-     /** A set of accessors that indicate whether the specified modifier
-         is in the set. */
 
      public bool isPublic(int modifiers)
      {
@@ -139,6 +99,10 @@ public class CSharpCCParser : CSharpCCParserInternals {
        return (modifiers & PRIVATE) != 0;
      }
 
+	 public bool isInternal(int modifier) {
+		 return (modifier & INTERNAL) != 0;
+	 }
+
      public bool isStatic(int modifiers)
      {
        return (modifiers & STATIC) != 0;
@@ -149,24 +113,14 @@ public class CSharpCCParser : CSharpCCParserInternals {
        return (modifiers & ABSTRACT) != 0;
      }
 
-     public bool isFinal(int modifiers)
+     public bool isReadOnly(int modifiers)
      {
-       return (modifiers & FINAL) != 0;
+       return (modifiers & READONLY) != 0;
      }
 
-     public bool isNative(int modifiers)
+     public bool isExtern(int modifiers)
      {
-       return (modifiers & NATIVE) != 0;
-     }
-
-     public bool isStrictfp(int modifiers)
-     {
-       return (modifiers & STRICTFP) != 0;
-     }
-
-     public bool isSynchronized(int modifiers)
-     {
-       return (modifiers & SYNCHRONIZED) != 0;
+       return (modifiers & EXTERN) != 0;
      }
 
      public bool isTransient(int modifiers)
@@ -179,9 +133,6 @@ public class CSharpCCParser : CSharpCCParserInternals {
        return (modifiers & VOLATILE) != 0;
      }
 
-     /**
-      * Removes the given modifier.
-      */
      static int removeModifier(int modifiers, int mod)
      {
         return modifiers & ~mod;
@@ -200,7 +151,7 @@ TOKEN_MGR_DECLS :
    int depth = 0;
    int size = 10;
 
-   void saveBeginLineCol(int l, int c)
+   void SaveBeginLineCol(int l, int c)
    {
       if (depth == size)
       {
@@ -208,8 +159,8 @@ TOKEN_MGR_DECLS :
          int[] tmpbeginLine = new int[size];
          int[] tmpbeginCol = new int[size];
 
-         System.arraycopy(beginLine, 0, beginLine = tmpbeginLine, 0, depth);
-         System.arraycopy(beginCol, 0, beginCol = tmpbeginCol, 0, depth);
+         Array.Copy(beginLine, 0, beginLine = tmpbeginLine, 0, depth);
+         Array.Copy(beginCol, 0, beginCol = tmpbeginCol, 0, depth);
       }
 
       beginLine[depth] = l;
@@ -217,19 +168,19 @@ TOKEN_MGR_DECLS :
       depth++;
    }
 
-   void restoreBeginLineCol()
+   void RestoreBeginLineCol()
    {
       depth--;
-      input_stream.adjustBeginLineColumn(beginLine[depth], beginCol[depth]);
+      input_stream.AdjustBeginLineColumn(beginLine[depth], beginCol[depth]);
    }
 }
 
 
 /**********************************************
- * THE JAVACC TOKEN SPECIFICATION STARTS HERE *
+ * THE CSHARPCC TOKEN SPECIFICATION STARTS HERE *
  **********************************************/
 
-/* JAVACC RESERVED WORDS: These are the only tokens in JavaCC but not in Java */
+/* CSHARPCC RESERVED WORDS: These are the only tokens in CSharpCC but not in C# */
 
 TOKEN :
 {
@@ -239,7 +190,7 @@ TOKEN :
 | < _IGNORE_CASE: "IGNORE_CASE" >
 | < _PARSER_BEGIN: "PARSER_BEGIN" >
 | < _PARSER_END: "PARSER_END" >
-| < _JAVACODE: "JAVACODE" >
+| < _CODE: "CODE" >
 | < _TOKEN: "TOKEN" >
 | < _SPECIAL_TOKEN: "SPECIAL_TOKEN" >
 | < _MORE: "MORE" >
@@ -269,7 +220,7 @@ SKIP :
 
 <AFTER_EGEN> SKIP :
 {
-  <~[]> { restoreBeginLineCol(); input_stream.backup(1); } : DEFAULT
+  <~[]> { RestoreBeginLineCol(); input_stream.Backup(1); } : DEFAULT
 }
 
 /* COMMENTS */
@@ -278,14 +229,14 @@ MORE :
 {
   "//" : IN_SINGLE_LINE_COMMENT
 |
-  <"/**" ~["/"]> { input_stream.backup(1); } : IN_FORMAL_COMMENT
+  <"/**" ~["/"]> { input_stream.Backup(1); } : IN_FORMAL_COMMENT
 |
   "/*" : IN_MULTI_LINE_COMMENT
 |
-  "/*@bgen(jjtree"
+  "/*@bgen(csTree"
      {
-        saveBeginLineCol(input_stream.getBeginLine(),
-                         input_stream.getBeginColumn());
+        SaveBeginLineCol(input_stream.BeginLine,
+                         input_stream.BeginColumn);
      } : IN_MULTI_LINE_COMMENT
 }
 
@@ -318,8 +269,8 @@ MORE :
 TOKEN :
 {
   < ABSTRACT: "abstract" >
-| < ASSERT: "assert" >
-| < BOOLEAN: "boolean" >
+| < BASE: "base" >
+| < BOOL: "bool" >
 | < BREAK: "break" >
 | < BYTE: "byte" >
 | < CASE: "case" >
@@ -333,46 +284,43 @@ TOKEN :
 | < DOUBLE: "double" >
 | < ELSE: "else" >
 | < ENUM: "enum" >
-| < EXTENDS: "extends" >
+| <EXTERN: "extern" >
 | < FALSE: "false" >
-| < FINAL: "final" >
 | < FINALLY: "finally" >
 | < FLOAT: "float" >
 | < FOR: "for" >
 | < GOTO: "goto" >
 | < IF: "if" >
-| < IMPLEMENTS: "implements" >
-| < IMPORT: "import" >
-| < INSTANCEOF: "instanceof" >
 | < INT: "int" >
 | < INTERFACE: "interface" >
+| < INTERNAL: "internal" >
+| < IS: "is" >
+| < LOCK: "lock" >
 | < LONG: "long" >
-| < NATIVE: "native" >
+| < NAMESPACE: "namespace" >
 | < NEW: "new" >
 | < NULL: "null" >
-| < PACKAGE: "package">
 | < PRIVATE: "private" >
 | < PROTECTED: "protected" >
 | < PUBLIC: "public" >
+| <READONLY: "readonly" >
 | < RETURN: "return" >
 | < SHORT: "short" >
 | < STATIC: "static" >
-| < STRICTFP: "strictfp" >
-| < SUPER: "super" >
 | < SWITCH: "switch" >
-| < SYNCHRONIZED: "synchronized" >
 | < THIS: "this" >
 | < THROW: "throw" >
-| < THROWS: "throws" >
 | < TRANSIENT: "transient" >
 | < TRUE: "true" >
 | < TRY: "try" >
+| < USING: "using" >
+| < VAR: "var" >
 | < VOID: "void" >
 | < VOLATILE: "volatile" >
 | < WHILE: "while" >
 }
 
-/* JAVA LITERALS */
+/* LITERALS */
 
 TOKEN :
 {
@@ -478,9 +426,6 @@ TOKEN :
 | < BIT_OR: "|" >
 | < XOR: "^" >
 | < REM: "%" >
-//	| < LSHIFT: "<<" >
-//	| < RSIGNEDSHIFT: ">>" >
-//	| < RUNSIGNEDSHIFT: ">>>" >
 | < PLUSASSIGN: "+=" >
 | < MINUSASSIGN: "-=" >
 | < STARASSIGN: "*=" >
@@ -489,26 +434,16 @@ TOKEN :
 | < ORASSIGN: "|=" >
 | < XORASSIGN: "^=" >
 | < REMASSIGN: "%=" >
-//	| < LSHIFTASSIGN: "<<=" >
-//	| < RSIGNEDSHIFTASSIGN: ">>=" >
-//	| < RUNSIGNEDSHIFTASSIGN: ">>>=" >
 }
 
 /* >'s need special attention due to generics syntax. */
 TOKEN :
 {
-  < RUNSIGNEDSHIFT: ">>>" >
+ < RSIGNEDSHIFT: ">>" >
   {
      matchedToken.kind = GT;
-     ((Token.GTToken)matchedToken).realKind = RUNSIGNEDSHIFT;
-     input_stream.backup(2);
-     matchedToken.image = ">";
-  }
-| < RSIGNEDSHIFT: ">>" >
-  {
-     matchedToken.kind = GT;
-     ((Token.GTToken)matchedToken).realKind = RSIGNEDSHIFT;
-     input_stream.backup(1);
+     ((Token.GTToken)matchedToken).realKind = CSharpCCParserConstants.RSIGNEDSHIFT;
+     input_stream.Backup(1);
      matchedToken.image = ">";
   }
 | < GT: ">" >
@@ -516,44 +451,44 @@ TOKEN :
 
 
 /************************************************
- * THE JAVACC GRAMMAR SPECIFICATION STARTS HERE *
+ * THE CSHARPCC GRAMMAR SPECIFICATION STARTS HERE *
  ************************************************/
 
-void javacc_input() :
+void charpcc_input() :
 	{
 	  String id1, id2;
-	  initialize();
+	  CSharpCCParserInternals.initialize();
 	}
 {
-  javacc_options()
+  csharpcc_options()
   "PARSER_BEGIN" "(" id1=identifier()
 	{
-	  addcuname(id1);
+	  CSharpCCParserInternals.addcuname(id1);
 	}
                  ")"
 	{
-	  processing_cu = true;
-	  parser_class_name = id1;
+	  processingTypeUnit = true;
+	  parserTypeName = id1;
 	}
   CompilationUnit()
 	{
-	  processing_cu = false;
+	  processingTypeUnit = false;
 	}
   "PARSER_END" "(" id2=identifier()
 	{
-	  compare(getToken(0), id1, id2);
+	  CSharpCCParserInternals.compare(GetToken(0), id1, id2);
 	}
                ")"
   ( production() )+
   <EOF>
 }
 
-void javacc_options() :
+void csharpcc_options() :
 {}
 {
-  [ LOOKAHEAD({ getToken(1).image.equals("options") }) <IDENTIFIER>  "{" ( option_binding() )* "}" ]
+  [ LOOKAHEAD({ GetToken(1).image.Equals("options") }) <IDENTIFIER>  "{" ( option_binding() )* "}" ]
 	{
-	  Options.normalize();
+	  Options.Normalize();
 	}
 }
 
@@ -563,7 +498,7 @@ void option_binding() :
 	  int int_val;
 	  bool bool_val;
 	  String string_val;
-	  Token t = getToken(1);
+	  Token t = GetToken(1);
 	}
 {
   ( <IDENTIFIER> | "LOOKAHEAD" | "IGNORE_CASE" | "static" )
@@ -574,17 +509,17 @@ void option_binding() :
   (
     int_val = IntegerLiteral()
 	{
-	  Options.setInputFileOption(t, getToken(0), option_name, new Integer(int_val));
+	  Options.SetInputFileOption(t, GetToken(0), option_name, int_val);
 	}
   |
     bool_val = BooleanLiteral()
 	{
-	  Options.setInputFileOption(t, getToken(0), option_name, new Boolean(bool_val));
+	  Options.SetInputFileOption(t, GetToken(0), option_name, bool_val);
 	}
   |
     string_val = StringLiteral()
 	{
-	  Options.setInputFileOption(t, getToken(0), option_name, string_val);
+	  Options.SetInputFileOption(t, GetToken(0), option_name, string_val);
 	}
   )
   ";"
@@ -595,11 +530,11 @@ void production() :
 {
   LOOKAHEAD(1)
   /*
-   * Since JAVACODE is both a JavaCC reserved word and a Java identifier,
-   * we need to give preference to "javacode_production" over
+   * Since CODE is both a CSharpCC reserved word and a C# identifier,
+   * we need to give preference to "cscode_production" over
    * "bnf_production".
    */
-  javacode_production()
+  cscode_production()
 |
   LOOKAHEAD(1)
   /*
@@ -611,7 +546,7 @@ void production() :
 |
   LOOKAHEAD(1)
   /*
-   * Since TOKEN_MGR_DECLS is both a JavaCC reserved word and a Java identifier,
+   * Since TOKEN_MGR_DECLS is both a CSharpCC reserved word and a C# identifier,
    * we need to give preference to "token_manager_decls" over
    * "bnf_production".
    */
@@ -620,92 +555,52 @@ void production() :
   bnf_production()
 }
 
-void javacode_production() :
+void cscode_production() :
 	{
-	  JavaCodeProduction p = new JavaCodeProduction();
+	  CodeProduction p = new CodeProduction();
 	  String lhs;
-	  Token t = getToken(1);
-	  p.setFirstToken(t);
-	  java.util.List excName;
-	  p.setThrowsList(new java.util.ArrayList());
-	  p.setLine(t.beginLine);
-	  p.setColumn(t.beginColumn);
+	  Token t = GetToken(1);
+	  p.FirstToken = t;
+	  p.Line = t.beginLine;
+	  p.Column = t.beginColumn;
 	}
 {
-  "JAVACODE"
+  "CODE"
   AccessModifier(p)
-  ResultType(p.getReturnTypeTokens())
-  lhs=identifier()	{ p.setLhs(lhs); }
-  FormalParameters(p.getParameterListTokens())
-  [ "throws"
+  ResultType(p.ReturnTypeTokens)
+  lhs=identifier()	{ p.Lhs = lhs; }
+  FormalParameters(p.ParameterTokens)
+  Block(p.CodeTokens)
 	{
-	  excName = new ArrayList();
-	}
-    Name(excName)
-	{
-	  p.getThrowsList().add(excName);
-	}
-    (
-	{
-	  excName = new ArrayList();
-	}
-      "," Name(excName)
-	{
-	  p.getThrowsList().add(excName);
-	}
-    )*
-  ]
-  Block(p.getCodeTokens())
-	{
-	  p.setLastToken(getToken(0));
-	  addproduction(p);
+	  p.LastToken = GetToken(0);
+	  CSharpCCParserInternals.addproduction(p);
 	}
 }
 
 void bnf_production() :
 	{
-	  BNFProduction p = new BNFProduction();
+	  BnfProduction p = new BnfProduction();
 	  Container c = new Container();
-	  Token t = getToken(1);
-	  p.setFirstToken(t);
-	  java.util.List excName;
+	  Token t = GetToken(1);
+	  p.FirstToken = t;
 	  String lhs;
-	  p.setThrowsList(new java.util.ArrayList());
-	  p.setLine(t.beginLine);
-	  p.setColumn(t.beginColumn);
+	  p.Line =t.beginLine;
+	  p.Column =t.beginColumn;
 	  jumpPatched = false;
 	}
 {
   AccessModifier(p)
-  ResultType(p.getReturnTypeTokens())
-  lhs=identifier()  { p.setLhs(lhs); }
-  FormalParameters(p.getParameterListTokens())
-  [ "throws"
-	{
-	  excName = new ArrayList();
-	}
-    Name(excName)
-	{
-	  p.getThrowsList().add(excName);
-	}
-    (
-	{
-	  excName = new ArrayList();
-	}
-      "," Name(excName)
-	{
-	  p.getThrowsList().add(excName);
-	}
-    )*
-  ]
+  ResultType(p.ReturnTypeTokens)
+  lhs=identifier()  { p.Lhs = lhs; }
+  FormalParameters(p.ParameterTokens)
   ":"
-  Block(p.getDeclarationTokens())
+  Block(p.DeclarationTokens)
   "{" expansion_choices(c) t="}"
 	{
-	  p.setLastToken(t);
-	  p.setJumpPatched(jumpPatched);
-	  production_addexpansion(p, (Expansion)(c.member));
-	  addproduction(p);
+	  p.LastToken = t;
+	  p.IsJumpPatched = jumpPatched;
+	  CSharpCCParserInternals.production_addexpansion(p, (Expansion)(c.member));
+	  CSharpCCParserInternals.addproduction(p);
 	}
 }
 
@@ -714,10 +609,10 @@ void AccessModifier(NormalProduction p) :
 	  Token t = null;
 	}
 {
-	( t = "public" | t = "protected" | t = "private" )?
+	( t = "public" | t = "protected" | t = "private" | t = "internal")?
 	{
 	  if(t != null){
-	    p.setAccessMod(t.image);
+	    p.AccessModifier = t.image;
 	  }
 	}
 }
@@ -725,77 +620,74 @@ void AccessModifier(NormalProduction p) :
 void regular_expr_production() :
 	{
 	  TokenProduction p = new TokenProduction();
-	  java.util.List states;
-	  Token t = p.firstToken = getToken(1);
-	  p.setLine(t.beginLine);
-	  p.setColumn(t.beginColumn);
+	  List<String> states;
+	  Token t = p.FirstToken = GetToken(1);
+	  p.Line = t.beginLine;
+	  p.Column = t.beginColumn;
 	}
 {
 	{
 	  // set p.lexStates assuming there is no state spec.
 	  // and then override if necessary.
-	  p.lexStates = new String[] {"DEFAULT"};
+	  p.LexStates = new String[] {"DEFAULT"};
 	}
   [
     LOOKAHEAD(2) "<" "*" ">"
 	{
-	  p.lexStates = null;
+	  p.LexStates = null;
 	}
   |
     "<"
 	{
-	  states = new java.util.ArrayList();
+	  states = new List<String>();
 	}
       t=<IDENTIFIER>
 	{
-	  states.add(t.image);
+	  states.Add(t.image);
 	}
       ( "," t=<IDENTIFIER>
 	{
-	  states.add(t.image);
+	  states.Add(t.image);
 	}
       )*
     ">"
 	{
-	  p.lexStates = new String[states.size()];
-	  for (int i = 0; i < states.size(); i++) {
-	    p.lexStates[i] = (String)states.get(i);
-	  }
+	  p.LexStates = states.ToArray();
 	}
   ]
   regexpr_kind(p)
 	{
-	  if (p.kind != TokenProduction.TOKEN && Options.getUserTokenManager()) {
-	    JavaCCErrors.warning(getToken(0), "Regular expression is being treated as if it were a TOKEN since option USER_TOKEN_MANAGER has been set to true.");
+	  if (p.Kind != TokenProduction.TOKEN && Options.getUserTokenManager()) {
+	    CSharpCCErrors.Warning(GetToken(0), "Regular expression is being treated as if it were a TOKEN since option USER_TOKEN_MANAGER has been set to true.");
 	  }
 	}
   [
     "[" t="IGNORE_CASE" "]"
 	{
-	  p.ignoreCase = true;
+	  p.IgnoreCase = true;
 	  if (Options.getUserTokenManager()) {
-	    JavaCCErrors.warning(t, "Ignoring \"IGNORE_CASE\" specification since option USER_TOKEN_MANAGER has been set to true.");
+	    CSharpCCErrors.Warning(t, "Ignoring \"IGNORE_CASE\" specification since option USER_TOKEN_MANAGER has been set to true.");
 	  }
 	}
   ]
   ":"
   "{" regexpr_spec(p) ( "|" regexpr_spec(p) )* t="}"
 	{
-	  p.lastToken = t;
-	  addregexpr(p);
+	  p.LastToken = t;
+	  CSharpCCParserInternals.addregexpr(p);
 	}
 }
 
 void token_manager_decls() :
 	{
-	  java.util.List decls = new java.util.ArrayList();
+	  IList<Token> decls = new List<Token>();
 	  Token t;
 	}
 {
   t="TOKEN_MGR_DECLS" ":"
   ClassOrInterfaceBody(false, decls)
 	{
-	  add_token_manager_decls(t, decls);
+	  CSharpCCParserInternals.add_token_manager_decls(t, decls);
 	}
 }
 
@@ -804,22 +696,22 @@ void regexpr_kind(TokenProduction p) :
 {
   "TOKEN"
 	{
-	  p.kind = TokenProduction.TOKEN;
+	  p.Kind = TokenProduction.TOKEN;
 	}
 |
   "SPECIAL_TOKEN"
 	{
-	  p.kind = TokenProduction.SPECIAL;
+	  p.Kind = TokenProduction.SPECIAL;
 	}
 |
   "SKIP"
 	{
-	  p.kind = TokenProduction.SKIP;
+	  p.Kind = TokenProduction.SKIP;
 	}
 |
   "MORE"
 	{
-	  p.kind = TokenProduction.MORE;
+	  p.Kind = TokenProduction.MORE;
 	}
 }
 
@@ -833,42 +725,42 @@ void regexpr_spec(TokenProduction p) :
 {
   regular_expression(c)
 	{
-	  res.rexp = (RegularExpression)c.member;
-	  res.rexp.tpContext = p;
+	  res.RegularExpression = (RegularExpression)c.member;
+	  res.RegularExpression.TokenProductionContext = p;
 	}
   [
 	{
-	  t = getToken(1);
+	  t = GetToken(1);
 	}
-    Block(act.getActionTokens())
+    Block(act.ActionTokens)
 	{
 	  if (Options.getUserTokenManager()) {
-	    JavaCCErrors.warning(t, "Ignoring action in regular expression specification since option USER_TOKEN_MANAGER has been set to true.");
+	    CSharpCCErrors.Warning(t, "Ignoring action in regular expression specification since option USER_TOKEN_MANAGER has been set to true.");
 	  }
-	  if (res.rexp.private_rexp) {
-	    JavaCCErrors.parse_error(t, "Actions are not permitted on private (#) regular expressions.");
+	  if (res.RegularExpression.IsPrivate) {
+	    CSharpCCErrors.ParseError(t, "Actions are not permitted on private (#) regular expressions.");
 	  }
 	}
   ]
   [ ":" t=<IDENTIFIER>
 	{
-	  res.nextState = t.image;
-	  if (res.rexp.private_rexp) {
-	    JavaCCErrors.parse_error(t, "Lexical state changes are not permitted after private (#) regular expressions.");
+	  res.NextState = t.image;
+	  if (res.RegularExpression.IsPrivate) {
+	    CSharpCCErrors.ParseError(t, "Lexical state changes are not permitted after private (#) regular expressions.");
 	  }
 	}
   ]
 	{
-	  res.act = act;
-	  res.nsTok = t;
-	  p.respecs.add(res);
+	  res.Action = act;
+	  res.NextStateToken = t;
+	  p.RegexSpecs.Add(res);
 	}
 }
 
 void expansion_choices(Container c1) :
 	{
 	  bool morethanone = false;
-	  Choice ch = null; // unnecessary initialization to make Java compiler happy!
+	  Choice ch = null; // unnecessary initialization to make compiler happy!
 	  Container c2 = new Container();
 	}
 {
@@ -876,14 +768,14 @@ void expansion_choices(Container c1) :
   ( "|" expansion(c2)
 	{
 	  if (morethanone) {
-	    ch.getChoices().add(c2.member);
-	    ((Expansion)c2.member).parent = ch;
+	    ch.Choices.Add((Expansion) c2.member);
+	    ((Expansion)c2.member).Parent = ch;
 	  } else {
 	    morethanone = true;
 	    ch = new Choice((Expansion)c1.member);
-	    ((Expansion)c1.member).parent = ch;
-	    ch.getChoices().add(c2.member);
-	    ((Expansion)c2.member).parent = ch;
+	    ((Expansion)c1.member).Parent = ch;
+	    ch.Choices.Add((Expansion)c2.member);
+	    ((Expansion)c2.member).Parent = ch;
 	  }
 	}
   )*
@@ -899,40 +791,40 @@ void expansion(Container c1) :
 	  Sequence seq = new Sequence();
 	  Container c2 = new Container();
 	  Lookahead la = new Lookahead();
-	  Token t = getToken(1);
-	  seq.setLine(t.beginLine);
-	  seq.setColumn(t.beginColumn);
-	  la.setLine(t.beginLine);
-	  la.setColumn(t.beginColumn);
+	  Token t = GetToken(1);
+	  seq.Line = t.beginLine;
+	  seq.Column=t.beginColumn;
+	  la.Line = t.beginLine;
+	  la.Column =t.beginColumn;
 	}
 {
 	{
-	  la.setAmount(Options.getLookahead());
-	  la.setLaExpansion(null);
-	  la.setExplicit(false);
+	  la.Amount = Options.getLookahead();
+	  la.Expansion = null;
+	  la.IsExplicit = false;
 	}
   ( LOOKAHEAD(1)
     t="LOOKAHEAD" "(" la=local_lookahead() ")"
 	{
-	  if (inLocalLA != 0 && la.getAmount() != 0) {
-	    JavaCCErrors.warning(t, "Only semantic lookahead specifications within other lookahead specifications is considered.  Syntactic lookahead is ignored.");
+	  if (inLocalLA != 0 && la.Amount != 0) {
+	    CSharpCCErrors.Warning(t, "Only semantic lookahead specifications within other lookahead specifications is considered.  Syntactic lookahead is ignored.");
 	  }
 	}
   )?
 	{
-	  seq.units.add(la);
+	  seq.Units.Add(la);
 	}
-  ( LOOKAHEAD(0, { notTailOfExpansionUnit() } )
+  ( LOOKAHEAD(0, { NotTailOfExpansionUnit() } )
     expansion_unit(c2)
 	{
-	  seq.units.add(c2.member);
-	  ((Expansion)c2.member).parent = seq;
-	  ((Expansion)c2.member).ordinal = seq.units.size()-1;
+	  seq.Units.Add((Lookahead)c2.member);
+	  ((Expansion)c2.member).Parent = seq;
+	  ((Expansion)c2.member).Ordinal = seq.Units.Count-1;
 	}
   )+
 	{
-	  if (la.getLaExpansion() == null) {
-	    la.setLaExpansion(seq);
+	  if (la.Expansion == null) {
+	    la.Expansion = seq;
 	  }
 	  c1.member = seq;
 	}
@@ -941,11 +833,11 @@ void expansion(Container c1) :
 Lookahead local_lookahead() :
 	{
 	  Lookahead la = new Lookahead();
-	  la.setExplicit(true);
-	  Token t = getToken(1);
-	  la.setLine(t.beginLine);
-	  la.setColumn(t.beginColumn);
-	  la.setLaExpansion(null);
+	  la.IsExplicit = true;
+	  Token t = GetToken(1);
+	  la.Line = t.beginLine;
+	  la.Column = t.beginColumn;
+	  la.Expansion = null;
 	  Container c = new Container();
 	  bool commaAtEnd = false, emptyLA = true;
 	  int laAmount;
@@ -963,33 +855,33 @@ Lookahead local_lookahead() :
     laAmount = IntegerLiteral()
 	{
 	  emptyLA = false;
-	  la.setAmount(laAmount);
+	  la.Amount = laAmount;
 	}
   ]
-  [ LOOKAHEAD(0, { !emptyLA && (getToken(1).kind != RPAREN) } )
+  [ LOOKAHEAD(0, { !emptyLA && (GetToken(1).kind != RPAREN) } )
     ","
 	{
 	  commaAtEnd = true;
 	}
   ]
-  [ LOOKAHEAD(0, { getToken(1).kind != RPAREN && getToken(1).kind != LBRACE } )
+  [ LOOKAHEAD(0, { GetToken(1).kind != RPAREN && GetToken(1).kind != LBRACE } )
     expansion_choices(c)
 	{
 	  emptyLA = false; commaAtEnd = false;
-	  la.setLaExpansion((Expansion)c.member);
+	  la.Expansion = (Expansion)c.member;
 	}
   ]
-  [ LOOKAHEAD(0, { !emptyLA && !commaAtEnd && (getToken(1).kind != RPAREN) } )
+  [ LOOKAHEAD(0, { !emptyLA && !commaAtEnd && (GetToken(1).kind != RPAREN) } )
     ","
 	{
 	  commaAtEnd = true;
 	}
   ]
   [ LOOKAHEAD(0, { emptyLA || commaAtEnd } )
-    "{" Expression(la.getActionTokens()) "}"
+    "{" Expression(la.ActionTokens) "}"
 	{
 	  if (emptyLA) {
-	    la.setAmount(0);
+	    la.Amount = 0;
 	  }
 	}
   ]
@@ -1002,7 +894,7 @@ Lookahead local_lookahead() :
 void expansion_unit(Container c) :
 	{
 	  String name;
-	  java.util.List lhsTokens = new java.util.ArrayList();
+	  IList<Token> lhsTokens = new List<Token>();
 	  NonTerminal nt;
 	  Action act;
 	  Token t;
@@ -1018,23 +910,23 @@ void expansion_unit(Container c) :
 	{
 	  // Now set the la_expansion field of la with a dummy
 	  // expansion (we use EOF).
-	  la.setLaExpansion(new REndOfFile());
+	  la.Expansion =new REndOfFile();
 	  // Create a singleton choice with an empty action.
 	  Choice ch = new Choice(t);
 	  Sequence seq = new Sequence(t, la);
-	  la.parent = seq; la.ordinal = 0;
+	  la.Parent = seq; la.Ordinal = 0;
 	  act = new Action();
-	  act.setLine(t.beginLine);
-	  act.setColumn(t.beginColumn);
-	  seq.units.add(act);
-	  act.parent = seq; act.ordinal = 1;
-	  ch.getChoices().add(seq);
-	  seq.parent = ch; seq.ordinal = 0;
-	  if (la.getAmount() != 0) {
-	    if (la.getActionTokens().size() != 0) {
-	      JavaCCErrors.warning(t, "Encountered LOOKAHEAD(...) at a non-choice location.  Only semantic lookahead will be considered here.");
+	  act.Line = t.beginLine;
+	  act.Column = t.beginColumn;
+	  seq.Units.Add(act);
+	  act.Parent = seq; act.Ordinal = 1;
+	  ch.Choices.Add(seq);
+	  seq.Parent = ch; seq.Ordinal = 0;
+	  if (la.Amount != 0) {
+	    if (la.ActionTokens.Count != 0) {
+	      CSharpCCErrors.Warning(t, "Encountered LOOKAHEAD(...) at a non-choice location.  Only semantic lookahead will be considered here.");
 	    } else {
-	      JavaCCErrors.warning(t, "Encountered LOOKAHEAD(...) at a non-choice location.  This will be ignored.");
+	      CSharpCCErrors.Warning(t, "Encountered LOOKAHEAD(...) at a non-choice location.  This will be ignored.");
 	    }
 	  }
 	  c.member = ch;
@@ -1042,16 +934,16 @@ void expansion_unit(Container c) :
 |
 	{
 	  act = new Action();
-	  t = getToken(1);
-	  act.setLine(t.beginLine);
-	  act.setColumn(t.beginColumn);
+	  t = GetToken(1);
+	  act.Line = t.beginLine;
+	  act.Column = t.beginColumn;
 	  inAction = true;
 	}
-  Block(act.getActionTokens())
+  Block(act.ActionTokens)
 	{
 	  inAction = false;
 	  if (inLocalLA != 0) {
-	    JavaCCErrors.warning(t, "Action within lookahead specification will be ignored.");
+	    CSharpCCErrors.Warning(t, "Action within lookahead specification will be ignored.");
 	  }
 	  c.member = act;
 	}
@@ -1063,26 +955,26 @@ void expansion_unit(Container c) :
 |
 	{
 	  Container expch = new Container();
-	  java.util.List types = new java.util.ArrayList();
-	  java.util.List ids = new java.util.ArrayList();
-	  java.util.List catchblks = new java.util.ArrayList();
-	  java.util.List finallyblk = null;
-	  java.util.List vec = new java.util.ArrayList();
+	  List<Token> types = new List<Token>();
+	  List<Token> ids = new List<Token>();
+	  List<Token> catchblks = new List<Token>();
+	  List<Token> finallyblk = null;
+	  List<Token> vec = new List<Token>();
 	  Token t0;
 	}
   t0="try" "{" expansion_choices(expch) "}"
   ( "catch" "(" Name(vec) t=<IDENTIFIER> ")"
 	{
-	  types.add(vec);
-	  ids.add(t);
-	  vec = new java.util.ArrayList();
+	  types.AddRange(vec);
+	  ids.Add(t);
+	  vec = new List<Token>();
 	  inAction = true;
 	}
     Block(vec)
 	{
 	  inAction = false;
-	  catchblks.add(vec);
-	  vec = new java.util.ArrayList();
+	  catchblks.AddRange(vec);
+	  vec = new List<Token>();
 	}
   )*
   [
@@ -1096,7 +988,7 @@ void expansion_unit(Container c) :
 	}
   ]
 	{
-	  makeTryBlock(t0, c, expch, types, ids, catchblks, finallyblk);
+	  CSharpCCParserInternals.makeTryBlock(t0, c, expch, types, ids, catchblks, finallyblk);
 	}
 |
   LOOKAHEAD(
@@ -1111,17 +1003,17 @@ void expansion_unit(Container c) :
   [
     LOOKAHEAD(PrimaryExpression() "=")
 	{
-	  Token first = getToken(1);
+	  Token first = GetToken(1);
 	}
     PrimaryExpression()
 	{
-	  Token last = getToken(0);
+	  Token last = GetToken(0);
 	}
     "="
 	{
 	  t = first;
 	  while (true) {
-	    lhsTokens.add(t);
+	    lhsTokens.Add(t);
 	    if (t == last) break;
 	    t = t.next;
 	  }
@@ -1131,23 +1023,23 @@ void expansion_unit(Container c) :
 	LOOKAHEAD( identifier() "(")
 	{
 	  nt = new NonTerminal();
-	  t = getToken(1);
-	  nt.setLine(t.beginLine);
-	  nt.setColumn(t.beginColumn);
-	  nt.setLhsTokens(lhsTokens);
+	  t = GetToken(1);
+	  nt.Line = t.beginLine;
+	  nt.Column = t.beginColumn;
+	  nt.LhsTokens = lhsTokens;
 	}
-   name=identifier() Arguments(nt.getArgumentTokens())
+   name=identifier() Arguments(nt.ArgumentTokens)
 	{
-	  nt.setName(name);
+	  nt.Name = name;
 	  c.member = nt;
 	}
   |
     regular_expression(c)
 	{
-	  ((RegularExpression)(c.member)).lhsTokens = lhsTokens;
-	  add_inline_regexpr((RegularExpression)(c.member));
+	  ((RegularExpression)(c.member)).LhsTokens = lhsTokens;
+	  CSharpCCParserInternals.add_inline_regexpr((RegularExpression)(c.member));
 	}
-	[ "." t=<IDENTIFIER> { ((RegularExpression)(c.member)).rhsToken = t; } ]
+	[ "." t=<IDENTIFIER> { ((RegularExpression)(c.member)).RhsToken = t; } ]
   )
 |
   t="(" expansion_choices(c) ")"
@@ -1162,7 +1054,7 @@ void regular_expression(Container c) :
 	  REndOfFile ef;
 	  String image;
 	  bool private_rexp = false;
-	  Token t = getToken(1);
+	  Token t = GetToken(1);
 	}
 {
   image=StringLiteral()
@@ -1188,15 +1080,15 @@ void regular_expression(Container c) :
 	  RegularExpression re;
 	  if (c.member is RJustName) {
 	    RSequence seq = new RSequence();
-	    seq.units.add(c.member);
+	    seq.Units.Add((RegularExpression)c.member);
 	    re = seq;
 	  } else {
 	    re = (RegularExpression)c.member;
 	  }
-	  re.label = image;
-	  re.private_rexp = private_rexp;
-	  re.setLine(t.beginLine);
-	  re.setColumn(t.beginColumn);
+	  re.Label = image;
+	  re.IsPrivate = private_rexp;
+	  re.Line = t.beginLine;
+	  re.Column = t.beginColumn;
 	  c.member = re;
 	}
 |
@@ -1209,9 +1101,9 @@ void regular_expression(Container c) :
   "<" "EOF" ">"
 	{
 	  ef = new REndOfFile();
-	  ef.setLine(t.beginLine);
-	  ef.setColumn(t.beginColumn);
-	  ef.ordinal = 0;
+	  ef.Line = t.beginLine;
+	  ef.Column = t.beginColumn;
+	  ef.Ordinal = 0;
 	  c.member = ef;
 	}
 }
@@ -1227,14 +1119,14 @@ void complex_regular_expression_choices(Container c1) :
   ( "|" complex_regular_expression(c2)
 	{
 	  if (morethanone) {
-	    ch.getChoices().add(c2.member);
+	    ch.Choices.Add((RegularExpression)c2.member);
 	  } else {
 	    morethanone = true;
 	    ch = new RChoice();
-	    ch.setLine(((RegularExpression)c1.member).getLine());
-	    ch.setColumn(((RegularExpression)c1.member).getColumn());
-	    ch.getChoices().add(c1.member);
-	    ch.getChoices().add(c2.member);
+	    ch.Line = ((RegularExpression)c1.member).Line;
+	    ch.Column = ((RegularExpression)c1.member).Column;
+	    ch.Choices.Add((RegularExpression)c1.member);
+	    ch.Choices.Add((RegularExpression)c2.member);
 	  }
 	}
   )*
@@ -1248,7 +1140,7 @@ void complex_regular_expression_choices(Container c1) :
 void complex_regular_expression(Container c1) :
 	{
 	  int count = 0;
-	  RSequence seq = null; // unnecessary initialization to make Java compiler happy!
+	  RSequence seq = null; // unnecessary initialization to make compiler happy!
 	  Container c2 = new Container();
 	}
 {
@@ -1259,12 +1151,12 @@ void complex_regular_expression(Container c1) :
 	    c1.member = c2.member; // if count does not go beyond 1, we are done.
 	  } else if (count == 2) { // more than 1, so create a sequence.
 	    seq = new RSequence();
-	    seq.setLine(((RegularExpression)c1.member).getLine());
-	    seq.setColumn(((RegularExpression)c1.member).getColumn());
-	    seq.units.add(c1.member);
-	    seq.units.add(c2.member);
+	    seq.Line = ((RegularExpression)c1.member).Line;
+	    seq.Column = ((RegularExpression)c1.member).Column;
+	    seq.Units.Add((RegularExpression)c1.member);
+	    seq.Units.Add((RegularExpression)c2.member);
 	  } else {
-	    seq.units.add(c2.member);
+	    seq.Units.Add((RegularExpression)c2.member);
 	  }
 	}
   )+
@@ -1278,7 +1170,7 @@ void complex_regular_expression(Container c1) :
 void complex_regular_expression_unit(Container c) :
 	{
 	  String image;
-	  Token t = getToken(1);
+	  Token t = GetToken(1);
           int r1 = 0, r2 = -1;
           bool hasMax = false;
 	}
@@ -1307,9 +1199,9 @@ void complex_regular_expression_unit(Container c) :
    | "?"
 	{
 	  RZeroOrOne zorexp = new RZeroOrOne();
-	  zorexp.setLine(t.beginLine);
-	  zorexp.setColumn(t.beginColumn);
-	  zorexp.regexpr = (RegularExpression)c.member;
+	  zorexp.Line = t.beginLine;
+	  zorexp.Column = t.beginColumn;
+	  zorexp.RegularExpression = (RegularExpression)c.member;
 	  c.member = zorexp;
 	}
    | "{" r1 = IntegerLiteral()
@@ -1317,12 +1209,12 @@ void complex_regular_expression_unit(Container c) :
      "}"
 	{
 	  RRepetitionRange rrrexp = new RRepetitionRange();
-	  rrrexp.setLine(t.beginLine);
-	  rrrexp.setColumn(t.beginColumn);
-	  rrrexp.min = r1;
-	  rrrexp.max = r2;
-        rrrexp.hasMax = hasMax;
-	  rrrexp.regexpr = (RegularExpression)c.member;
+	  rrrexp.Line = t.beginLine;
+	  rrrexp.Column = t.beginColumn;
+	  rrrexp.Min = r1;
+	  rrrexp.Max = r2;
+        rrrexp.HasMax = hasMax;
+	  rrrexp.RegularExpression = (RegularExpression)c.member;
 	  c.member = rrrexp;
 	}
   )?
@@ -1331,24 +1223,24 @@ void complex_regular_expression_unit(Container c) :
 void character_list(Container c1) :
 	{
 	  RCharacterList chlist = new RCharacterList();
-	  Token t = getToken(1);
-	  chlist.setLine(t.beginLine);
-	  chlist.setColumn(t.beginColumn);
+	  Token t = GetToken(1);
+	  chlist.Line = t.beginLine;
+	  chlist.Column = t.beginColumn;
 	  Container c2 = new Container();
 	}
 {
   ["~"
 	{
-	  chlist.negated_list = true;
+	  chlist.Negated = true;
 	}
   ]
   "[" [ character_descriptor(c2)
 	{
-	  chlist.descriptors.add(c2.member);
+	  chlist.Descriptors.Add(c2.member);
 	}
         ( "," character_descriptor(c2)
 	{
-	  chlist.descriptors.add(c2.member);
+	  chlist.Descriptors.Add(c2.member);
 	}
         )*
       ]
@@ -1360,35 +1252,35 @@ void character_list(Container c1) :
 
 void character_descriptor(Container c) :
 	{
-	  char c1, c2 = ' '; // unnecessary initialization to make Java compiler happy!
+	  char c1, c2 = ' '; // unnecessary initialization to make compiler happy!
 	  bool isrange = false;
 	  String imageL, imageR;
-	  Token t = getToken(1);
+	  Token t = GetToken(1);
 	}
 {
   imageL=StringLiteral()
 	{
-	  c1 = character_descriptor_assign(getToken(0), imageL);
+	  c1 = CSharpCCParserInternals.character_descriptor_assign(GetToken(0), imageL);
 	}
   [ "-" imageR=StringLiteral()
 	{
 	  isrange = true;
-	  c2 = character_descriptor_assign(getToken(0), imageR, imageL);
+	  c2 = CSharpCCParserInternals.character_descriptor_assign(GetToken(0), imageR, imageL);
 	}
   ]
 	{
 	  if (isrange) {
 	    CharacterRange cr = new CharacterRange();
-	    cr.setLine(t.beginLine);
-	    cr.setColumn(t.beginColumn);
-        cr.setLeft(c1);
-        cr.setRight(c2);
+	    cr.Line = t.beginLine;
+	    cr.Column = t.beginColumn;
+        cr.Left =c1;
+        cr.Right = c2;
 	    c.member = cr;
 	  } else {
 	    SingleCharacter sc = new SingleCharacter();
-	    sc.setLine(t.beginLine);
-	    sc.setColumn(t.beginColumn);
-	    sc.ch = c1;
+	    sc.Line = t.beginLine;
+	    sc.Column = t.beginColumn;
+	    sc.Character = c1;
 	    c.member = sc;
 	  }
 	}
@@ -1406,11 +1298,11 @@ String identifier() :
 }
 
 /**********************************************
- * THE JAVA GRAMMAR SPECIFICATION STARTS HERE *
+ * THE C# GRAMMAR SPECIFICATION STARTS HERE *
  **********************************************/
 
 /*
- * The Java grammar is modified to use sequences of tokens
+ * The C# grammar is modified to use sequences of tokens
  * for the missing tokens - those that include "<<" and ">>".
  */
 
@@ -1419,7 +1311,7 @@ String identifier() :
  * includes the reserved words of JavaCC also.
  */
 
-Token JavaIdentifier() :
+Token CSharpIdentifier() :
 {}
 {
 (
@@ -1437,7 +1329,7 @@ Token JavaIdentifier() :
 | "EOF"
 )
 	{
-	  Token retval = getToken(0);
+	  Token retval = GetToken(0);
 	  retval.kind = IDENTIFIER;
 	  return retval;
 	}
@@ -1453,27 +1345,27 @@ void CompilationUnit() :
  * within grammar code.
  */
 	{
-	  set_initial_cu_token(getToken(1));
+	  CSharpCCParserInternals.set_initial_cu_token(GetToken(1));
 	}
 {
-  [ LOOKAHEAD( ( Annotation() )* "package" ) PackageDeclaration() ]
-  ( ImportDeclaration() )*
+  [ LOOKAHEAD( ( Annotation() )* "namespace" ) NamespaceDeclaration() ]
+  ( UsingDeclaration() )*
   ( TypeDeclaration() )*
 	{
-	  insertionpointerrors(getToken(1));
+	  CSharpCCParserInternals.insertionpointerrors(GetToken(1));
 	}
 }
 
-void PackageDeclaration() :
+void NamespaceDeclaration() :
 {}
 {
-  Modifiers() "package" Name(null) ";"
+  "namespace" Name(null) ";"
 }
 
-void ImportDeclaration() :
+void UsingDeclaration() :
 {}
 {
-  "import" [ "static" ] Name(null) [ "." "*" ] ";"
+  "using" Name(null) [ "=" Name(null) ]";"
 }
 
 /*
@@ -1498,19 +1390,17 @@ int Modifiers():
   |
    "private" { modifiers |= ModifierSet.PRIVATE; }
   |
-   "final" { modifiers |= ModifierSet.FINAL; }
+	  "internal" { modifiers |= ModifierSet.INTERNAL; }
+  |
+   "readonly" { modifiers |= ModifierSet.READONLY; }
   |
    "abstract" { modifiers |= ModifierSet.ABSTRACT; }
   |
-   "synchronized" { modifiers |= ModifierSet.SYNCHRONIZED; }
-  |
-   "native" { modifiers |= ModifierSet.NATIVE; }
+   "extern" { modifiers |= ModifierSet.EXTERN; }
   |
    "transient" { modifiers |= ModifierSet.TRANSIENT; }
   |
    "volatile" { modifiers |= ModifierSet.VOLATILE; }
-  |
-   "strictfp" { modifiers |= ModifierSet.STRICTFP; }
   |
    Annotation()
   )
@@ -1536,71 +1426,51 @@ void TypeDeclaration():
      ClassOrInterfaceDeclaration(modifiers, null)
    |
      EnumDeclaration(modifiers)
-   |
-     AnnotationTypeDeclaration(modifiers)
   )
 }
 
 
-void ClassOrInterfaceDeclaration(int modifiers, List tokens):
+void ClassOrInterfaceDeclaration(int modifiers, IList tokens):
 {
-   bool isInterface = false;
-	  class_nesting++;
+	  typeNesting++;
 	  Token t;
 	  bool is_parser_class = false;
+	  bool isInterface = false;
   if (tokens == null)
     tokens = new ArrayList();
 }
 {
-  ( "class" | "interface" { isInterface = true; } )
+	( "class" | "interface" { isInterface = true; } )
   t=<IDENTIFIER>
   [ TypeParameters() ]
-  [ ExtendsList(isInterface) ]
-  [ ImplementsList(isInterface) ]
+  [ InheritList() ]
 	{
-	  if (t.image.equals(parser_class_name) && class_nesting == 1 && processing_cu) {
+	  if (t.image.Equals(parserTypeName) && typeNesting == 1 && processingTypeUnit) {
 	    is_parser_class = true;
-	    setinsertionpoint(getToken(1), 1);
+	    CSharpCCParserInternals.setinsertionpoint(GetToken(1), 1);
 	  }
 	}
   ClassOrInterfaceBody(isInterface, null)
 	{
 	  if (is_parser_class) {
-	    setinsertionpoint(getToken(0), 2);
+	    CSharpCCParserInternals.setinsertionpoint(GetToken(0), 2);
 	  }
-	  class_nesting--;
+	  typeNesting--;
 	}
 }
 
-void ExtendsList(bool isInterface):
-{
-   bool extendsMoreThanOne = false;
+void InheritList() :{
 }
 {
-   "extends" ClassOrInterfaceType()
-   ( "," ClassOrInterfaceType() { extendsMoreThanOne = true; } )*
-   {
-      if (extendsMoreThanOne && !isInterface)
-         throw new ParseException("A class cannot extend more than one other class");
-   }
-}
-
-void ImplementsList(bool isInterface):
-{}
-{
-   "implements" ClassOrInterfaceType()
-   ( "," ClassOrInterfaceType() )*
-   {
-      if (isInterface)
-         throw new ParseException("An interface cannot implement other interfaces");
-   }
+	":" ClassOrInterfaceType()
+		( "," ClassOrInterfaceType() )*
 }
 
 void EnumDeclaration(int modifiers):
 {}
 {
   "enum" <IDENTIFIER>
-  [ ImplementsList(false) ]
+  [ InheritList() ]
   EnumBody()
 }
 
@@ -1609,15 +1479,13 @@ void EnumBody():
 {
    "{"
    [ EnumConstant() ( LOOKAHEAD(2) "," EnumConstant() )* ]
-   [ "," ]
-   [ ";" ( ClassOrInterfaceBodyDeclaration(false) )* ]
    "}"
 }
 
 void EnumConstant():
 {}
 {
-  Modifiers() <IDENTIFIER> [ Arguments(null) ] [ ClassOrInterfaceBody(false, null) ]
+	<IDENTIFIER> [ Arguments(null) ]
 }
 
 void TypeParameters():
@@ -1629,16 +1497,10 @@ void TypeParameters():
 void TypeParameter():
 {}
 {
-   <IDENTIFIER> [ TypeBound() ]
+   ["out" | "in"] <IDENTIFIER>
 }
 
-void TypeBound():
-{}
-{
-   "extends" ClassOrInterfaceType() ( "&" ClassOrInterfaceType() )*
-}
-
-void ClassOrInterfaceBody(bool isInterface, List tokens):
+void ClassOrInterfaceBody(bool isInterface, IList<Token> tokens):
 /*
  * Parsing this fills "tokens" with all tokens of the block
  * excluding the braces at each end.
@@ -1646,23 +1508,23 @@ void ClassOrInterfaceBody(bool isInterface, List tokens):
 	{
 	  Token first, last;
 	  if (tokens == null)
-	    tokens = new ArrayList();
+	    tokens = new List<Token>();
 	}
 {
   "{"
 	{
-	  first = getToken(1);
+	  first = GetToken(1);
 	}
   ( ClassOrInterfaceBodyDeclaration(isInterface) )*
 	{
-	  last = getToken(0);
+	  last = GetToken(0);
 	}
   "}"
 	{
 	  if (last.next != first) { // i.e., this is not an empty sequence
 	    Token t = first;
 	    while (true) {
-	      tokens.add(t);
+	      tokens.Add(t);
 	      if (t == last) break;
 	      t = t.next;
 	    }
@@ -1692,7 +1554,7 @@ void ClassOrInterfaceBodyDeclaration(bool isInterface):
       LOOKAHEAD( [ TypeParameters() ] <IDENTIFIER> "(" )
       ConstructorDeclaration()
     |
-      LOOKAHEAD( Type() <IDENTIFIER> ( "[" "]" )* ( "," | "=" | ";" ) )
+      LOOKAHEAD( Type() ( "[" "]" )* <IDENTIFIER> ( "," | "=" | ";" ) )
       FieldDeclaration(modifiers)
     |
       MethodDeclaration(modifiers)
@@ -1705,7 +1567,7 @@ void FieldDeclaration(int modifiers):
 {}
 {
   // Modifiers are already matched in the caller
-  Type() VariableDeclarator() ( "," VariableDeclarator() )* ";"
+  Type() ( "[" "]" )* VariableDeclarator() ( "," VariableDeclarator() )* ";"
 }
 
 void VariableDeclarator():
@@ -1717,7 +1579,7 @@ void VariableDeclarator():
 void VariableDeclaratorId():
 {}
 {
-  <IDENTIFIER> ( "[" "]" )*
+  <IDENTIFIER>
 }
 
 void VariableInitializer():
@@ -1740,17 +1602,17 @@ void MethodDeclaration(int modifiers):
   // Modifiers already matched in the caller!
   [ TypeParameters() ]
   ResultType(null)
-  MethodDeclarator() [ "throws" NameList() ]
+  MethodDeclarator()
   ( Block(null) | ";" )
 }
 
 void MethodDeclarator():
 {}
 {
-  <IDENTIFIER> FormalParameters(null) ( "[" "]" )*
+  <IDENTIFIER> FormalParameters(null)
 }
 
-void FormalParameters(List tokens) :
+void FormalParameters(IList<Token> tokens) :
 /*
  * Parsing this fills "tokens" with all tokens of the formal
  * parameters excluding the parentheses at each end.
@@ -1758,23 +1620,23 @@ void FormalParameters(List tokens) :
 	{
 	  Token first, last;
 	  if (tokens == null)
-	    tokens = new ArrayList();
+	    tokens = new List<Token>();
 	}
 {
   "("
 	{
-	  first = getToken(1);
+	  first = GetToken(1);
 	}
   [ FormalParameter() ( "," FormalParameter() )* ]
 	{
-	  last = getToken(0);
+	  last = GetToken(0);
 	}
   ")"
 	{
 	  if (last.next != first) { // i.e., this is not an empty sequence
 	    Token t = first;
 	    while (true) {
-	      tokens.add(t);
+	      tokens.Add(t);
 	      if (t == last) break;
 	      t = t.next;
 	    }
@@ -1785,7 +1647,7 @@ void FormalParameters(List tokens) :
 void FormalParameter():
 {}
 {
-  Modifiers() Type() [ "..." ] VariableDeclaratorId()
+  ["params"] Type() VariableDeclaratorId()
 }
 
 void ConstructorDeclaration():
@@ -1793,7 +1655,7 @@ void ConstructorDeclaration():
 {
   [ TypeParameters() ]
   // Modifiers matched in the caller
-  <IDENTIFIER> FormalParameters(null) [ "throws" NameList() ]
+  <IDENTIFIER> FormalParameters(null)
   "{"
     [ LOOKAHEAD(ExplicitConstructorInvocation()) ExplicitConstructorInvocation() ]
     ( BlockStatement() )*
@@ -1803,10 +1665,10 @@ void ConstructorDeclaration():
 void ExplicitConstructorInvocation():
 {}
 {
-  LOOKAHEAD("this" Arguments(null) ";")
-  "this" Arguments(null) ";"
+  LOOKAHEAD(":" "this" Arguments(null))
+  ":" "this" Arguments(null)
 |
-  [ LOOKAHEAD(2) PrimaryExpression() "." ] "super" Arguments(null) ";"
+  ":" "base" Arguments(null)
 }
 
 void Initializer():
@@ -1853,23 +1715,13 @@ void TypeArgument():
 {}
 {
    ReferenceType()
- |
-   "?" [ WildcardBounds() ]
-}
-
-void WildcardBounds():
-{}
-{
-   "extends" ReferenceType()
- |
-   "super" ReferenceType()
 }
 
 
 void PrimitiveType():
 {}
 {
-  "boolean"
+  "bool"
 |
   "char"
 |
@@ -1887,11 +1739,11 @@ void PrimitiveType():
 }
 
 
-void ResultType(List tokens) :
+void ResultType(IList<Token> tokens) :
 	{
-	  Token first = getToken(1);
+	  Token first = GetToken(1);
 	  if (tokens == null)
-	    tokens = new ArrayList();
+	    tokens = new List<Token>();
 	}
 {
 (
@@ -1900,35 +1752,35 @@ void ResultType(List tokens) :
   Type()
 )
 	{
-	  Token last = getToken(0);
+	  Token last = GetToken(0);
 	  Token t = first;
 	  while (true) {
-	    tokens.add(t);
+	    tokens.Add(t);
 	    if (t == last) break;
 	    t = t.next;
 	  }
 	}
 }
 
-void Name(List tokens) :
+void Name(IList<Token> tokens) :
 /*
  * A lookahead of 2 is required below since "Name" can be followed
  * by a ".*" when used in the context of an "ImportDeclaration".
  */
 	{
 	  if (tokens == null)
-	    tokens = new ArrayList();
-	  Token first = getToken(1);
+	    tokens = new List<Token>();
+	  Token first = GetToken(1);
 	}
 {
-  JavaIdentifier()
-  ( LOOKAHEAD(2) "." JavaIdentifier()
+  CSharpIdentifier()
+  ( LOOKAHEAD(2) "." CSharpIdentifier()
   )*
 	{
-	  Token last = getToken(0);
+	  Token last = GetToken(0);
 	  Token t = first;
 	  while (true) {
-	    tokens.add(t);
+	    tokens.Add(t);
 	    if (t == last) break;
 	    t = t.next;
 	  }
@@ -1947,7 +1799,7 @@ void NameList():
  * Expression syntax follows.
  */
 
-void Expression(List tokens) :
+void Expression(IList tokens) :
 /*
  * This expansion has been written this way instead of:
  *   Assignment() | ConditionalExpression()
@@ -1958,7 +1810,7 @@ void Expression(List tokens) :
  * around this.
  */
 	{
-	  Token first = getToken(1);
+	  Token first = GetToken(1);
 	  if (tokens == null)
 	    tokens = new ArrayList();
 	}
@@ -1969,10 +1821,10 @@ void Expression(List tokens) :
     AssignmentOperator() Expression(null)
   ]
 	{
-	  Token last = getToken(0);
+	  Token last = GetToken(0);
 	  Token t = first;
 	  while (true) {
-	    tokens.add(t);
+	    tokens.Add(t);
 	    if (t == last) break;
 	    t = t.next;
 	  }
@@ -1983,7 +1835,7 @@ void Expression(List tokens) :
 void AssignmentOperator():
 {}
 {
-  "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|="
+  "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|="
 }
 
 void ConditionalExpression():
@@ -2025,13 +1877,13 @@ void AndExpression():
 void EqualityExpression():
 {}
 {
-  InstanceOfExpression() ( ( "==" | "!=" ) InstanceOfExpression() )*
+  IsExpression() ( ( "==" | "!=" ) IsExpression() )*
 }
 
-void InstanceOfExpression():
+void IsExpression():
 {}
 {
-  RelationalExpression() [ "instanceof" Type() ]
+  RelationalExpression() [ "is" Type() ]
 }
 
 void RelationalExpression():
@@ -2043,7 +1895,7 @@ void RelationalExpression():
 void ShiftExpression():
 {}
 {
-  AdditiveExpression() ( ( "<<" | RSIGNEDSHIFT() | RUNSIGNEDSHIFT() ) AdditiveExpression() )*
+  AdditiveExpression() ( ( "<<" | RSIGNEDSHIFT() ) AdditiveExpression() )*
 }
 
 void AdditiveExpression():
@@ -2105,7 +1957,7 @@ void CastLookahead():
   LOOKAHEAD("(" Type() "[")
   "(" Type() "[" "]"
 |
-  "(" Type() ")" ( "~" | "!" | "(" | <IDENTIFIER> | "this" | "super" | "new" | Literal() )
+  "(" Type() ")" ( "~" | "!" | "(" | <IDENTIFIER> | "this" | "base" | "new" | Literal() )
 }
 
 void PostfixExpression():
@@ -2142,14 +1994,11 @@ void PrimaryPrefix():
 |
   "this"
 |
-  "super" "." <IDENTIFIER>
+  "base" "." <IDENTIFIER>
 |
   "(" Expression(null) ")"
 |
   AllocationExpression()
-|
-  LOOKAHEAD( ResultType(null) "." "class" )
-  ResultType(null) "." "class"
 |
   Name(null)
 }
@@ -2157,9 +2006,6 @@ void PrimaryPrefix():
 void PrimarySuffix():
 {}
 {
-  LOOKAHEAD(2)
-  "." "this"
-|
   LOOKAHEAD(2)
   "." AllocationExpression()
 |
@@ -2195,9 +2041,9 @@ int IntegerLiteral() :
   <INTEGER_LITERAL>
 	{
 	  try {
-	    return Integer.parseInt(token.image);
-	  } catch (NumberFormatException e) {
-	    throw new Error();
+	    return Int32.Parse(token.image);
+	  } catch (FormatException e) {
+	    throw new InvalidOperationException();
 	  }
 	}
 }
@@ -2223,7 +2069,7 @@ String StringLiteral() :
 {
   t=<STRING_LITERAL>
 	{
-	  return remove_escapes_and_quotes(t, t.image);
+	  return CSharpCCParserInternals.remove_escapes_and_quotes(t, t.image);
 	}
 }
 
@@ -2233,7 +2079,7 @@ void NullLiteral() :
   "null"
 }
 
-void Arguments(java.util.List tokens) :
+void Arguments(IList<Token> tokens) :
 /*
  * Parsing this fills "tokens" with all tokens of the arguments
  * excluding the parentheses at each end.
@@ -2241,23 +2087,23 @@ void Arguments(java.util.List tokens) :
 	{
 	  Token first, last;
 	  if (tokens == null)
-	    tokens = new ArrayList();
+	    tokens = new List<Token>();
 	}
 {
   "("
 	{
-	  first = getToken(1);
+	  first = GetToken(1);
 	}
   [ ArgumentList() ]
 	{
-	  last = getToken(0);
+	  last = GetToken(0);
 	}
   ")"
 	{
 	  if (last.next != first) { // i.e., this is not an empty sequence
 	    Token t = first;
 	    while (true) {
-	      tokens.add(t);
+	      tokens.Add(t);
 	      if (t == last) break;
 	      t = t.next;
 	    }
@@ -2309,8 +2155,6 @@ void Statement():
   LOOKAHEAD(2)
   LabeledStatement()
 |
-  AssertStatement()
-|
   Block(null)
 |
   EmptyStatement()
@@ -2331,19 +2175,15 @@ void Statement():
 |
   ContinueStatement()
 |
+  GoToStatement()
+|
   ReturnStatement()
 |
   ThrowStatement()
 |
-  SynchronizedStatement()
+ LockStatement()
 |
   TryStatement()
-}
-
-void AssertStatement():
-{}
-{
-  "assert" Expression(null) [ ":" Expression(null) ] ";"
 }
 
 void LabeledStatement():
@@ -2352,7 +2192,7 @@ void LabeledStatement():
   <IDENTIFIER> ":" Statement()
 }
 
-void Block(List tokens) :
+void Block(IList<Token> tokens) :
 /*
  * Parsing this fills "tokens" with all tokens of the block
  * excluding the braces at each end.
@@ -2360,23 +2200,23 @@ void Block(List tokens) :
 	{
 	  Token first, last;
 	  if (tokens == null)
-	    tokens = new ArrayList();
+	    tokens = new List<Token>();
 	}
 {
   "{"
 	{
-	  first = getToken(1);
+	  first = GetToken(1);
 	}
   ( BlockStatement() )*
 	{
-	  last = getToken(0);
+	  last = GetToken(0);
 	}
   "}"
 	{
 	  if (last.next != first) { // i.e., this is not an empty sequence
 	    Token t = first;
 	    while (true) {
-	      tokens.add(t);
+	      tokens.Add(t);
 	      if (t == last) break;
 	      t = t.next;
 	    }
@@ -2474,8 +2314,8 @@ void ForStatement():
   "for" "("
 
   (
-      LOOKAHEAD(Modifiers() Type() <IDENTIFIER> ":")
-      Modifiers() Type() <IDENTIFIER> ":" Expression(null)
+      LOOKAHEAD(Type() <IDENTIFIER> ":")
+      Type() <IDENTIFIER> ":" Expression(null)
     |
      [ ForInit() ] ";" [ Expression(null) ] ";" [ ForUpdate() ]
   )
@@ -2486,7 +2326,7 @@ void ForStatement():
 void ForInit():
 {}
 {
-  LOOKAHEAD( Modifiers() Type() <IDENTIFIER> )
+  LOOKAHEAD( Type() <IDENTIFIER> )
   LocalVariableDeclaration()
 |
   StatementExpressionList()
@@ -2507,13 +2347,19 @@ void ForUpdate():
 void BreakStatement():
 {}
 {
-  "break" [ <IDENTIFIER> ] ";"
+  "break" ";"
 }
 
 void ContinueStatement():
 {}
 {
-  "continue" [ <IDENTIFIER> ] ";"
+  "continue" ";"
+}
+
+void GoToStatement():
+{}
+{
+	"goto" ";"
 }
 
 void ReturnStatement() :
@@ -2566,10 +2412,10 @@ void ThrowStatement() :
 	}
 }
 
-void SynchronizedStatement():
+void LockStatement():
 {}
 {
-  "synchronized" "(" Expression(null) ")" Block(null)
+  "lock" "(" Expression(null) ")" Block(null)
 }
 
 void TryStatement():
@@ -2584,24 +2430,16 @@ void TryStatement():
   [ "finally" Block(null) ]
 }
 
-/* We use productions to match >>>, >> and > so that we can keep the
+/* We use productions to match >> and > so that we can keep the
  * type declaration syntax with generics clean
  */
 
-void RUNSIGNEDSHIFT():
-{}
-{
-  ( LOOKAHEAD({ getToken(1).kind == GT &&
-                ((Token.GTToken)getToken(1)).realKind == RUNSIGNEDSHIFT} )
-   ">" ">" ">"
-  )
-}
 
 void RSIGNEDSHIFT():
 {}
 {
-  ( LOOKAHEAD({ getToken(1).kind == GT &&
-                ((Token.GTToken)getToken(1)).realKind == RSIGNEDSHIFT} )
+  ( LOOKAHEAD({ GetToken(1).kind == GT &&
+                ((Token.GTToken)GetToken(1)).realKind == CSharpCCParserConstants.RSIGNEDSHIFT} )
   ">" ">"
   )
 }
@@ -2611,31 +2449,23 @@ void RSIGNEDSHIFT():
 void Annotation():
 {}
 {
-   LOOKAHEAD( "@" Name(null) "(" ( <IDENTIFIER> "=" | ")" ))
+   LOOKAHEAD( "[" Name(null) "(" ( <IDENTIFIER> "=" | ")" ))
    NormalAnnotation()
  |
-   LOOKAHEAD( "@" Name(null) "(" )
+   LOOKAHEAD( "[" Name(null) "(" )
    SingleMemberAnnotation()
- |
-   MarkerAnnotation()
 }
 
 void NormalAnnotation():
 {}
 {
-   "@" Name(null) "(" [ MemberValuePairs() ] ")"
-}
-
-void MarkerAnnotation():
-{}
-{
-  "@" Name(null)
+   "[" Name(null) [ "(" [ MemberValuePairs() ] ")" ] "]"
 }
 
 void SingleMemberAnnotation():
 {}
 {
-  "@" Name(null) "(" MemberValue() ")"
+  "[" Name(null) [ "(" MemberValue() ")" ] "]"
 }
 
 void MemberValuePairs():
@@ -2667,42 +2497,6 @@ void  MemberValueArrayInitializer():
 }
 
 
-/* Annotation Types. */
-
-void AnnotationTypeDeclaration(int modifiers):
-{}
-{
-  "@" "interface" <IDENTIFIER> AnnotationTypeBody()
-}
-
-void AnnotationTypeBody():
-{}
-{
-  "{" ( AnnotationTypeMemberDeclaration() )* "}"
-}
-
-void AnnotationTypeMemberDeclaration():
-{
-   int modifiers;
-}
-{
- modifiers = Modifiers()
- (
-   LOOKAHEAD(Type() <IDENTIFIER> "(")
-   Type() <IDENTIFIER> "(" ")" [ DefaultValue() ] ";"
-  |
-   ClassOrInterfaceDeclaration(modifiers, null)
-  |
-   EnumDeclaration(modifiers)
-  |
-   AnnotationTypeDeclaration(modifiers)
-  |
-   FieldDeclaration(modifiers)
- )
- |
-   ( ";" )
-}
-
 void DefaultValue():
 {}
 {
@@ -2717,7 +2511,7 @@ TOKEN :
   < IDENTIFIER: <LETTER> (<PART_LETTER>)* >
 |
   < #LETTER:
-      [  // all chars for which Character.isIdentifierStart is true
+      [  // all chars for which Char.IsIdentifierStart is true
          "$",
          "A"-"Z",
          "_",
@@ -2992,7 +2786,7 @@ TOKEN :
   >
 |
   < #PART_LETTER:
-      [  // all chars for which Character.isIdentifierPart is true
+      [  // all chars for which Char.IsIdentifierPart is true
          "\u0000"-"\u0008",
          "\u000e"-"\u001b",
          "$",

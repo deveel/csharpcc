@@ -7,7 +7,10 @@ namespace Deveel.CSharpCC.Parser {
             End = end;
         }
 
-        internal NfaState Start { get; set; }
+	    public Nfa() {
+	    }
+
+	    internal NfaState Start { get; set; }
 
         internal NfaState End { get; set; }
     }

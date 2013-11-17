@@ -1,75 +1,37 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace Deveel.CSharpCC.Parser {
-    public class Options {
+	public static class Options {
+		private static IDictionary<string, object> optionValues = null;
 
+		private static int IntValue(String option) {
+			object value;
+			return !optionValues.TryGetValue(option, out value) ? 0 : (int) value;
+		}
 
-        /**
-   * Limit subclassing to derived classes.
-   */
+		private static bool BooleanValue(string option) {
+			object value;
+			return optionValues.TryGetValue(option, out value) && (bool)value;
+		}
 
-        protected Options() {
+		private static String StringValue(String option) {
+			object value;
+			return !optionValues.TryGetValue(option, out value) ? null : (string)value;
+		}
+
+        public static IDictionary<string, object> getOptions() {
+            return new Dictionary<string, object>(optionValues);
         }
 
-        /**
-   * A mapping of option names (Strings) to values (Integer, Boolean, String).
-   * This table is initialized by the main program. Its contents defines the
-   * set of legal options. Its initial values define the default option
-   * values, and the option types can be determined from these values too.
-   */
-        protected static IDictionary optionValues = null;
-
-        /**
-   * Convenience method to retrieve integer options.
-   */
-
-        protected static int intValue(String option) {
-            return (int) optionValues[option];
-        }
-
-        /**
-   * Convenience method to retrieve bool options.
-   */
-
-        protected static bool booleanValue(String option) {
-            return (bool) optionValues[option];
-        }
-
-        /**
-   * Convenience method to retrieve string options.
-   */
-
-        protected static String stringValue(String option) {
-            return (String) optionValues[option];
-        }
-
-        public static IDictionary getOptions() {
-            return new Hashtable(optionValues);
-        }
-
-        /**
-   * Keep track of what options were set as a command line argument. We use
-   * this to see if the options set from the command line and the ones set in
-   * the input files clash in any way.
-   */
         private static IList cmdLineSetting = null;
-
-        /**
-   * Keep track of what options were set from the grammar file. We use this to
-   * see if the options set from the command line and the ones set in the
-   * input files clash in any way.
-   */
         private static IList inputFileSetting = null;
-
-        /**
-   * Initialize for JavaCC
-   */
-
+		
         public static void init() {
-            optionValues = new Hashtable();
+            optionValues = new Dictionary<string, object>();
             cmdLineSetting = new ArrayList();
             inputFileSetting = new ArrayList();
 
@@ -82,7 +44,7 @@ namespace Deveel.CSharpCC.Parser {
             optionValues.Add("DEBUG_LOOKAHEAD", false);
             optionValues.Add("DEBUG_TOKEN_MANAGER", false);
             optionValues.Add("ERROR_REPORTING", true);
-            optionValues.Add("JAVA_UNICODE_ESCAPE", false);
+            optionValues.Add("UNICODE_ESCAPE", false);
             optionValues.Add("UNICODE_INPUT", false);
             optionValues.Add("IGNORE_CASE", false);
             optionValues.Add("USER_TOKEN_MANAGER", false);
@@ -103,22 +65,13 @@ namespace Deveel.CSharpCC.Parser {
             optionValues.Add("SUPPORT_CLASS_VISIBILITY_PUBLIC", true);
 
             optionValues.Add("OUTPUT_DIRECTORY", ".");
-            optionValues.Add("JDK_VERSION", "1.5");
+			optionValues.Add("CLR_VERSION", "2.0");
             optionValues.Add("TOKEN_EXTENDS", "");
             optionValues.Add("TOKEN_FACTORY", "");
             optionValues.Add("GRAMMAR_ENCODING", "");
         }
-
-        /**
-   * Returns a string representation of the specified options of interest.
-   * Used when, for example, generating Token.java to record the JavaCC options
-   * that were used to generate the file. All of the options must be
-   * bool values.
-   * @param interestingOptions the options of interest, eg {"STATIC", "CACHE_TOKENS"}
-   * @return the string representation of the options, eg "STATIC=true,CACHE_TOKENS=false"
-   */
-
-        public static String getOptionsString(String[] interestingOptions) {
+		
+        public static String GetOptionsString(String[] interestingOptions) {
             StringBuilder sb = new StringBuilder();
 
             for (int i = 0; i < interestingOptions.Length; i++) {
@@ -134,31 +87,12 @@ namespace Deveel.CSharpCC.Parser {
             return sb.ToString();
         }
 
-
-        /**
-   * Determine if a given command line argument might be an option flag.
-   * Command line options start with a dash&nbsp;(-).
-   *
-   * @param opt
-   *            The command line argument to examine.
-   * @return True when the argument looks like an option flag.
-   */
-
-        public static bool isOption(String opt) {
+		
+        public static bool IsOption(String opt) {
             return opt != null && opt.Length > 1 && opt[0] == '-';
         }
 
-        /**
-   * Help function to handle cases where the meaning of an option has changed
-   * over time. If the user has supplied an option in the old format, it will
-   * be converted to the new format.
-   *
-   * @param name The name of the option being checked.
-   * @param value The option's value.
-   * @return The upgraded value.
-   */
-
-        public static Object upgradeValue(String name, Object value) {
+        public static Object UpgradeValue(String name, Object value) {
             if (name.Equals("NODE_FACTORY", StringComparison.OrdinalIgnoreCase) && value is bool) {
                 if ((bool) value) {
                     value = "*";
@@ -170,61 +104,42 @@ namespace Deveel.CSharpCC.Parser {
             return value;
         }
 
-        public static void setInputFileOption(Object nameloc,
-            Object valueloc,
-            String name,
-            Object value) {
-            String s = name.ToUpper();
-            if (!optionValues.Contains(s)) {
-                CSharpCCErrors.Warning(nameloc,
-                    "Bad option name \"" + name
-                    + "\".  Option setting will be ignored.");
+        public static void SetInputFileOption(object nameloc, object valueloc, string name, object value) {
+            string s = name.ToUpper();
+            if (!optionValues.ContainsKey(s)) {
+                CSharpCCErrors.Warning(nameloc, "Bad option name \"" + name + "\".  Option setting will be ignored.");
                 return;
             }
-            Object existingValue = optionValues[s];
 
-            value = upgradeValue(name, value);
+            object existingValue;
 
-            if (existingValue != null) {
+            value = UpgradeValue(name, value);
+
+            if (optionValues.TryGetValue(s, out existingValue)) {
                 if ((existingValue.GetType() != value.GetType()) ||
                     (value is int && ((int) value) <= 0)) {
-                    CSharpCCErrors.Warning(valueloc,
-                        "Bad option value \"" + value
-                        + "\" for \"" + name
-                        + "\".  Option setting will be ignored.");
+                    CSharpCCErrors.Warning(valueloc,"Bad option value \"" + value + "\" for \"" + name + "\".  Option setting will be ignored.");
                     return;
                 }
 
                 if (inputFileSetting.Contains(s)) {
-                    CSharpCCErrors.Warning(nameloc,
-                        "Duplicate option setting for \""
-                        + name + "\" will be ignored.");
+                    CSharpCCErrors.Warning(nameloc, "Duplicate option setting for \""  + name + "\" will be ignored.");
                     return;
                 }
 
                 if (cmdLineSetting.Contains(s)) {
                     if (!existingValue.Equals(value)) {
-                        CSharpCCErrors.Warning(nameloc,
-                            "Command line setting of \""
-                            + name + "\" modifies option value in file.");
+                        CSharpCCErrors.Warning(nameloc, "Command line setting of \"" + name + "\" modifies option value in file.");
                     }
                     return;
                 }
             }
 
-            optionValues.Add(s, value);
+            optionValues[s] = value;
             inputFileSetting.Add(s);
         }
 
-
-
-        /**
-   * Process a single command-line option.
-   * The option is parsed and stored in the optionValues map.
-   * @param arg
-   */
-
-        public static void setCmdLineOption(String arg) {
+        public static void SetCmdLineOption(String arg) {
             String s;
 
             if (arg[0] == '-') {
@@ -253,7 +168,7 @@ namespace Deveel.CSharpCC.Parser {
 
             if (index < 0) {
                 name = s.ToUpper();
-                if (optionValues.Contains(name)) {
+                if (optionValues.ContainsKey(name)) {
                     Val = true;
                 } else if (name.Length > 2 && name[0] == 'N' && name[1] == 'O') {
                     Val = false;
@@ -291,12 +206,13 @@ namespace Deveel.CSharpCC.Parser {
                 }
             }
 
-            if (!optionValues.Contains(name)) {
+            if (!optionValues.ContainsKey(name)) {
                 Console.Out.WriteLine("Warning: Bad option \"" + arg
                                       + "\" will be ignored.");
                 return;
             }
-            Object valOrig = optionValues[name];
+
+            object valOrig = optionValues[name];
             if (Val.GetType() != valOrig.GetType()) {
                 Console.Out.WriteLine("Warning: Bad option value in \"" + arg
                                       + "\" will be ignored.");
@@ -308,13 +224,13 @@ namespace Deveel.CSharpCC.Parser {
                 return;
             }
 
-            Val = upgradeValue(name, Val);
+            Val = UpgradeValue(name, Val);
 
             optionValues.Add(name, Val);
             cmdLineSetting.Add(name);
         }
 
-        public static void normalize() {
+        public static void Normalize() {
             if (getDebugLookahead() && !getDebugParser()) {
                 if (cmdLineSetting.Contains("DEBUG_PARSER")
                     || inputFileSetting.Contains("DEBUG_PARSER")) {
@@ -326,160 +242,69 @@ namespace Deveel.CSharpCC.Parser {
 
             // Now set the "GENERATE" options from the supplied (or default) JDK version.
 
-            optionValues.Add("GENERATE_CHAINED_EXCEPTION", jdkVersionAtLeast(1.4));
-            optionValues.Add("GENERATE_GENERICS", jdkVersionAtLeast(1.5));
-            optionValues.Add("GENERATE_STRING_BUILDER", jdkVersionAtLeast(1.5));
-            optionValues.Add("GENERATE_ANNOTATIONS", jdkVersionAtLeast(1.5));
+            optionValues.Add("GENERATE_CHAINED_EXCEPTION", jdkVersionAtLeast(1.1));
+            optionValues.Add("GENERATE_GENERICS", jdkVersionAtLeast(2.0));
+            optionValues.Add("GENERATE_STRING_BUILDER", jdkVersionAtLeast(1.1));
         }
-
-        /**
-   * Find the lookahead setting.
-   *
-   * @return The requested lookahead value.
-   */
 
         public static int getLookahead() {
-            return intValue("LOOKAHEAD");
+            return IntValue("LOOKAHEAD");
         }
-
-        /**
-   * Find the choice ambiguity check value.
-   *
-   * @return The requested choice ambiguity check value.
-   */
 
         public static int getChoiceAmbiguityCheck() {
-            return intValue("CHOICE_AMBIGUITY_CHECK");
+            return IntValue("CHOICE_AMBIGUITY_CHECK");
         }
-
-        /**
-   * Find the other ambiguity check value.
-   *
-   * @return The requested other ambiguity check value.
-   */
 
         public static int getOtherAmbiguityCheck() {
-            return intValue("OTHER_AMBIGUITY_CHECK");
+            return IntValue("OTHER_AMBIGUITY_CHECK");
         }
-
-        /**
-   * Find the static value.
-   *
-   * @return The requested static value.
-   */
 
         public static bool getStatic() {
-            return booleanValue("STATIC");
+            return BooleanValue("STATIC");
         }
-
-        /**
-   * Find the debug parser value.
-   *
-   * @return The requested debug parser value.
-   */
 
         public static bool getDebugParser() {
-            return booleanValue("DEBUG_PARSER");
+            return BooleanValue("DEBUG_PARSER");
         }
-
-        /**
-   * Find the debug lookahead value.
-   *
-   * @return The requested debug lookahead value.
-   */
 
         public static bool getDebugLookahead() {
-            return booleanValue("DEBUG_LOOKAHEAD");
+            return BooleanValue("DEBUG_LOOKAHEAD");
         }
-
-        /**
-   * Find the debug tokenmanager value.
-   *
-   * @return The requested debug tokenmanager value.
-   */
 
         public static bool getDebugTokenManager() {
-            return booleanValue("DEBUG_TOKEN_MANAGER");
+            return BooleanValue("DEBUG_TOKEN_MANAGER");
         }
-
-        /**
-   * Find the error reporting value.
-   *
-   * @return The requested error reporting value.
-   */
 
         public static bool getErrorReporting() {
-            return booleanValue("ERROR_REPORTING");
+            return BooleanValue("ERROR_REPORTING");
         }
 
-        /**
-   * Find the Java unicode escape value.
-   *
-   * @return The requested Java unicode escape value.
-   */
-
-        public static bool getJavaUnicodeEscape() {
-            return booleanValue("JAVA_UNICODE_ESCAPE");
+        public static bool getUnicodeEscape() {
+            return BooleanValue("JAVA_UNICODE_ESCAPE");
         }
-
-        /**
-   * Find the unicode input value.
-   *
-   * @return The requested unicode input value.
-   */
 
         public static bool getUnicodeInput() {
-            return booleanValue("UNICODE_INPUT");
+            return BooleanValue("UNICODE_INPUT");
         }
-
-        /**
-   * Find the ignore case value.
-   *
-   * @return The requested ignore case value.
-   */
 
         public static bool getIgnoreCase() {
-            return booleanValue("IGNORE_CASE");
+            return BooleanValue("IGNORE_CASE");
         }
-
-        /**
-   * Find the user tokenmanager value.
-   *
-   * @return The requested user tokenmanager value.
-   */
 
         public static bool getUserTokenManager() {
-            return booleanValue("USER_TOKEN_MANAGER");
+            return BooleanValue("USER_TOKEN_MANAGER");
         }
-
-        /**
-   * Find the user charstream value.
-   *
-   * @return The requested user charstream value.
-   */
 
         public static bool getUserCharStream() {
-            return booleanValue("USER_CHAR_STREAM");
+            return BooleanValue("USER_CHAR_STREAM");
         }
-
-        /**
-   * Find the build parser value.
-   *
-   * @return The requested build parser value.
-   */
 
         public static bool getBuildParser() {
-            return booleanValue("BUILD_PARSER");
+            return BooleanValue("BUILD_PARSER");
         }
 
-        /**
-   * Find the build token manager value.
-   *
-   * @return The requested build token manager value.
-   */
-
         public static bool getBuildTokenManager() {
-            return booleanValue("BUILD_TOKEN_MANAGER");
+            return BooleanValue("BUILD_TOKEN_MANAGER");
         }
 
         /**
@@ -489,7 +314,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getTokenManagerUsesParser() {
-            return booleanValue("TOKEN_MANAGER_USES_PARSER");
+            return BooleanValue("TOKEN_MANAGER_USES_PARSER");
         }
 
         /**
@@ -499,7 +324,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getSanityCheck() {
-            return booleanValue("SANITY_CHECK");
+            return BooleanValue("SANITY_CHECK");
         }
 
         /**
@@ -509,7 +334,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getForceLaCheck() {
-            return booleanValue("FORCE_LA_CHECK");
+            return BooleanValue("FORCE_LA_CHECK");
         }
 
         /**
@@ -519,7 +344,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getCommonTokenAction() {
-            return booleanValue("COMMON_TOKEN_ACTION");
+            return BooleanValue("COMMON_TOKEN_ACTION");
         }
 
         /**
@@ -529,7 +354,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getCacheTokens() {
-            return booleanValue("CACHE_TOKENS");
+            return BooleanValue("CACHE_TOKENS");
         }
 
         /**
@@ -539,7 +364,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getKeepLineColumn() {
-            return booleanValue("KEEP_LINE_COLUMN");
+            return BooleanValue("KEEP_LINE_COLUMN");
         }
 
         /**
@@ -549,7 +374,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static String getJdkVersion() {
-            return stringValue("JDK_VERSION");
+            return StringValue("JDK_VERSION");
         }
 
         /**
@@ -558,7 +383,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getGenerateChainedException() {
-            return booleanValue("GENERATE_CHAINED_EXCEPTION");
+            return BooleanValue("GENERATE_CHAINED_EXCEPTION");
         }
 
         /**
@@ -567,7 +392,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getGenerateGenerics() {
-            return booleanValue("GENERATE_GENERICS");
+            return BooleanValue("GENERATE_GENERICS");
         }
 
         /**
@@ -576,7 +401,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getGenerateStringBuilder() {
-            return booleanValue("GENERATE_STRING_BUILDER");
+            return BooleanValue("GENERATE_STRING_BUILDER");
         }
 
         /**
@@ -585,7 +410,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getGenerateAnnotations() {
-            return booleanValue("GENERATE_ANNOTATIONS");
+            return BooleanValue("GENERATE_ANNOTATIONS");
         }
 
         /**
@@ -594,7 +419,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool getSupportClassVisibilityPublic() {
-            return booleanValue("SUPPORT_CLASS_VISIBILITY_PUBLIC");
+            return BooleanValue("SUPPORT_CLASS_VISIBILITY_PUBLIC");
         }
 
         /**
@@ -618,7 +443,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static String getTokenExtends() {
-            return stringValue("TOKEN_EXTENDS");
+            return StringValue("TOKEN_EXTENDS");
         }
 
         /**
@@ -628,7 +453,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static String getTokenFactory() {
-            return stringValue("TOKEN_FACTORY");
+            return StringValue("TOKEN_FACTORY");
         }
 
         /**
@@ -638,10 +463,10 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static String getGrammarEncoding() {
-            if (stringValue("GRAMMAR_ENCODING").Equals("")) {
+            if (StringValue("GRAMMAR_ENCODING").Equals("")) {
                 return Encoding.Default.EncodingName;
             } else {
-                return stringValue("GRAMMAR_ENCODING");
+                return StringValue("GRAMMAR_ENCODING");
             }
         }
 
@@ -652,7 +477,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static DirectoryInfo getOutputDirectory() {
-            return new DirectoryInfo(stringValue("OUTPUT_DIRECTORY"));
+            return new DirectoryInfo(StringValue("OUTPUT_DIRECTORY"));
         }
 
         public static String stringBufOrBuild() {
@@ -664,5 +489,4 @@ namespace Deveel.CSharpCC.Parser {
         }
 
     }
-
 }
