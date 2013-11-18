@@ -304,7 +304,7 @@ namespace Deveel.CSharpCC.Parser {
 			return true;
 		}
 
-		private static void FillSubString() {
+	    internal static void FillSubString() {
 			String image;
 			subString = new bool[maxStrKind + 1];
 			subStringAtPos = new bool[maxLen];
@@ -408,7 +408,7 @@ namespace Deveel.CSharpCC.Parser {
 			return ret;
 		}
 
-		private static void DumpDfaCode(TextWriter ostr) {
+	    internal static void DumpDfaCode(TextWriter ostr) {
 			IDictionary<string, KindInfo> tab;
 			String key;
 			KindInfo info;
@@ -846,7 +846,7 @@ namespace Deveel.CSharpCC.Parser {
 			return Int32.MaxValue;
 		}
 
-		private static void GenerateNfaStartStates(TextWriter ostr, NfaState initialState) {
+	    internal static void GenerateNfaStartStates(TextWriter ostr, NfaState initialState) {
 			bool[] seen = new bool[NfaState.generatedStates];
 			IDictionary<string, string> stateSets = new Dictionary<string, string>();
 			String stateSetString = "";

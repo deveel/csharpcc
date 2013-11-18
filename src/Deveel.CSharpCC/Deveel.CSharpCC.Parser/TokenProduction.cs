@@ -5,7 +5,7 @@ namespace Deveel.CSharpCC.Parser {
     public class TokenProduction {
         private readonly IList<RegExprSpec> respecs;
 
-		  public static readonly int TOKEN  = 0,
+		  public const int TOKEN  = 0,
                           SKIP   = 1,
                           MORE   = 2,
                           SPECIAL = 3;

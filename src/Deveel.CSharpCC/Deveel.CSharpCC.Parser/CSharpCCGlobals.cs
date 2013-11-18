@@ -47,8 +47,8 @@ namespace Deveel.CSharpCC.Parser {
 
         internal static Action actForEof;
         internal static String nextStateForEof;
-        private static int cline;
-        private static int ccol;
+        internal static int cline;
+        internal static int ccol;
 
         public static void BannerLine(String fullName, String ver) {
             Console.Out.Write("C# Compiler Compiler Version " + Assembly.GetAssembly(typeof(CSharpCCGlobals)).GetName().Version + " (" + fullName);

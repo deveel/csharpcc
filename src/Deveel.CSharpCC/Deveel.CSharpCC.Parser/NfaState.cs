@@ -49,7 +49,7 @@ namespace Deveel.CSharpCC.Parser {
             stateSetsToFix.Clear();
         }
 
-        private long[] asciiMoves = new long[2];
+        internal long[] asciiMoves = new long[2];
 	    internal char[] charMoves = null;
         private char[] rangeMoves = null;
 	    internal NfaState next = null;
@@ -67,10 +67,10 @@ namespace Deveel.CSharpCC.Parser {
         private int lexState;
         private int nonAsciiMethod = -1;
         private int kindToPrint = Int32.MaxValue;
-        private bool dummy;
+        internal bool dummy;
         private bool isComposite;
         private int[] compositeStates;
-        private bool isFinal;
+        internal bool isFinal;
         private IList<int> loByteVec;
         private int[] nonAsciiMoveIndices;
         private int round ;
@@ -401,7 +401,7 @@ namespace Deveel.CSharpCC.Parser {
         }
 
         // generates code (without outputting it) and returns the name used.
-        private void GenerateCode() {
+        internal void GenerateCode() {
             if (stateName != -1)
                 return;
 
@@ -1354,9 +1354,7 @@ namespace Deveel.CSharpCC.Parser {
                 int[] toFix = entry.Value;
                 int cnt = 0;
 
-                //System.out.print("Fixing : ");
                 for (i = 0; i < toFix.Length; i++) {
-                    //System.out.print(toFix[i] + ", ");
                     if (toFix[i] != -1)
                         tmp[cnt++] = toFix[i];
                 }
@@ -1365,7 +1363,6 @@ namespace Deveel.CSharpCC.Parser {
                 Array.Copy(tmp, 0, iFixed, 0, cnt);
                 fixedSets[s] = iFixed;
                 allNextStates[s] = iFixed;
-                //System.out.println(" as " + GetStateSetString(fixed));
             }
 
             for (i = 0; i < allStates.Count; i++) {
@@ -1375,9 +1372,6 @@ namespace Deveel.CSharpCC.Parser {
                 if (tmpState.next == null || tmpState.next.usefulEpsilonMoves == 0)
                     continue;
 
-                /*if (compositeStateTable.get(tmpState.next.epsilonMovesString) != null)
-            tmpState.next.usefulEpsilonMoves = 1;
-         else*/
                 if (fixedSets.TryGetValue(tmpState.next.epsilonMovesString, out newSet))
                     tmpState.FixNextStates(newSet);
             }
@@ -1385,7 +1379,6 @@ namespace Deveel.CSharpCC.Parser {
 
         private void FixNextStates(int[] newSet) {
             next.usefulEpsilonMoves = newSet.Length;
-            //next.epsilonMovesString = GetStateSetString(newSet);
         }
 
         private static bool Intersect(String set1, String set2) {
@@ -1554,10 +1547,6 @@ namespace Deveel.CSharpCC.Parser {
             }
 
             if (neededStates == 1) {
-                //if (byteNum == 1)
-                //System.out.println(toBePrinted.stateName + " is the only state for "
-                //+ key + " ; and key is : " + StateNameForComposite(key));
-
                 if (!toPrint.Equals(""))
                     ostr.Write(toPrint);
 
@@ -2210,7 +2199,7 @@ namespace Deveel.CSharpCC.Parser {
         }
 
         //private static bool boilerPlateDumped = false;
-        private static void PrintBoilerPlate(TextWriter ostr) {
+        internal static void PrintBoilerPlate(TextWriter ostr) {
             ostr.WriteLine("private" + (Options.getStatic() ? "static " : "") + " void " +"ccCheckNAdd(int state)");
             ostr.WriteLine("{");
             ostr.WriteLine("   if (ccRounds[state] != ccRound)");

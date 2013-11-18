@@ -24,8 +24,8 @@ namespace Deveel.CSharpCC.Parser {
 			return b.ToString();
 		}
 
-		private static double GetVersion(String fileName) {
-			string commentHeader = "/* " + getIdString(CSharpCCGlobals.ToolNames, fileName) + " Version ";
+	    internal static double GetVersion(String fileName) {
+			string commentHeader = "/* " + CSharpCCGlobals.GetIdString(CSharpCCGlobals.ToolNames, fileName) + " Version ";
 			string file = Path.Combine(Options.getOutputDirectory().FullName, ReplaceBackslash(fileName));
 
 			if (!File.Exists(file)) {
