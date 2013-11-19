@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Deveel.CSharpCC.Parser {
-	internal static class CSharpCCParserInternals {
+	public static class CSharpCCParserInternals {
 		internal static void initialize() {
 			int i = 0;
 			CSharpCCGlobals.lexstate_S2I["DEFAULT"] = i;

@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-internal  class CSharpCCParserTokenManager : CSharpCCParserConstants {
+public  class CSharpCCParserTokenManager : CSharpCCParserConstants {
    int[] beginLine = new int[10];
    int[] beginCol = new int[10];
    int depth = 0;

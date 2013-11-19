@@ -52,7 +52,7 @@ namespace Deveel.CSharpCC.Parser {
             return Line + Column;
         }
 
-        internal static void reInit() {
+	    public static void reInit() {
             NextGenerationIndex = -1;
         }
 

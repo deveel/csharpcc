@@ -60,13 +60,16 @@
     <Compile Include="Deveel.CSharpCC.Parser\ILocationInfo.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\LexGen.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Lookahead.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\MetaParseException.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Nfa.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\NfaState.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\NonTerminal.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\NormalProduction.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\OneOrMore.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Options.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\OtherFilesGen.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\ParseException.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\ParseGen.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\RCharacterList.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\RChoice.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\RegExprSpec.cs" />
@@ -79,6 +82,7 @@
     <Compile Include="Deveel.CSharpCC.Parser\RStringLiteral.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\RZeroOrMore.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\RZeroOrOne.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\Semanticize.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Sequence.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\SingleCharacter.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Token.cs" />

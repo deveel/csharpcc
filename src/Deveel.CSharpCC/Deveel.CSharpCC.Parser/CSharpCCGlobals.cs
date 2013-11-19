@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 
 namespace Deveel.CSharpCC.Parser {
-    internal static class CSharpCCGlobals {
+	public static class CSharpCCGlobals {
         public const string ToolName = "CSharpCC";
 
         public static string FileName;

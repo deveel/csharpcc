@@ -6,7 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-class CSharpCCParser : CSharpCCParserConstants {
+public class CSharpCCParser : CSharpCCParserConstants {
 
   string parserTypeName;
   bool processingTypeUnit = false;
@@ -100,7 +100,7 @@ class CSharpCCParser : CSharpCCParserConstants {
 /************************************************
  * THE CSHARPCC GRAMMAR SPECIFICATION STARTS HERE *
  ************************************************/
-  public void charpcc_input() {
+  public void csharpcc_input() {
           String id1, id2;
           CSharpCCParserInternals.initialize();
     csharpcc_options();

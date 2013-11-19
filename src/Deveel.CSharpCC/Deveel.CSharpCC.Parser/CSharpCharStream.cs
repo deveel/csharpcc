@@ -12,7 +12,7 @@ namespace Deveel.CSharpCC.Parser {
 /// contain only ASCII characters (with unicode escape processing).
 /// </summary>
 
-internal  class CSharpCharStream {
+public  class CSharpCharStream {
   public static readonly bool staticFlag = false;
   static int hexval(char c) {
     switch(c) {

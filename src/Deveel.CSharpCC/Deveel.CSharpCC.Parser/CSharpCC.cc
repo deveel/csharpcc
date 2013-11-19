@@ -37,7 +37,6 @@
 options {
   CSHARP_UNICODE_ESCAPE = true;
   STATIC=false;
-  VISIBILITY_INTERNAL = true;
 }
 
 PARSER_BEGIN(CSharpCCParser)
@@ -48,7 +47,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-class CSharpCCParser {
+public class CSharpCCParser {
 
   string parserTypeName;
   bool processingTypeUnit = false;
@@ -454,7 +453,7 @@ TOKEN :
  * THE CSHARPCC GRAMMAR SPECIFICATION STARTS HERE *
  ************************************************/
 
-void charpcc_input() :
+void csharpcc_input() :
 	{
 	  String id1, id2;
 	  CSharpCCParserInternals.initialize();

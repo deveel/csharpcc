@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deveel.CSharpCC", "Deveel.CSharpCC\Deveel.CSharpCC.csproj", "{1F32619F-ADDA-4E87-AF1E-A543D20C8A09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharpcc", "csharpcc\csharpcc.csproj", "{2D3F0A4B-DC58-4ADD-AA55-C3F4369519AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{1F32619F-ADDA-4E87-AF1E-A543D20C8A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F32619F-ADDA-4E87-AF1E-A543D20C8A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F32619F-ADDA-4E87-AF1E-A543D20C8A09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D3F0A4B-DC58-4ADD-AA55-C3F4369519AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D3F0A4B-DC58-4ADD-AA55-C3F4369519AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D3F0A4B-DC58-4ADD-AA55-C3F4369519AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D3F0A4B-DC58-4ADD-AA55-C3F4369519AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

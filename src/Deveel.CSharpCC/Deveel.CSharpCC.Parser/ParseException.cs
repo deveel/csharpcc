@@ -19,7 +19,7 @@ namespace Deveel.CSharpCC.Parser {
 /// mechanisms so long as you retain the public fields.
 /// </para>
 /// </remarks>
-internal  class ParseException : System.Exception {
+public class ParseException : System.Exception {
 
   /**
    * This constructor is used by the method "GenerateParseException"

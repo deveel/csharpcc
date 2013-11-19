@@ -6,7 +6,7 @@ using System.IO;
 using Deveel.CSharpCC.Util;
 
 namespace Deveel.CSharpCC.Parser {
-    internal class NfaState {
+	public class NfaState {
         public static bool unicodeWarningGiven = false;
         public static int generatedStates = 0;
 

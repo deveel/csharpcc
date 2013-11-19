@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace Deveel.CSharpCC.Parser {
-    internal class LexGen {
+	public class LexGen {
         private static TextWriter ostr;
         private static String staticString;
         private static String tokMgrClassName;
