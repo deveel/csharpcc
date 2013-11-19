@@ -57,9 +57,12 @@
     <Compile Include="Deveel.CSharpCC.Parser\CSharpCharStream.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\CSharpFiles.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Expansion.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\ExpansionTreeWalker.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\ILocationInfo.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\ITreeWalkerOp.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\LexGen.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Lookahead.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\LookaheadCalc.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\MetaParseException.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Nfa.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\NfaState.cs" />
@@ -68,6 +71,7 @@
     <Compile Include="Deveel.CSharpCC.Parser\OneOrMore.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Options.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\OtherFilesGen.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\ParseEngine.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\ParseException.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\ParseGen.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\RCharacterList.cs" />

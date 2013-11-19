@@ -9,11 +9,11 @@ namespace Deveel.CSharpCC.Parser {
 
 		public IList<Token> Ids { get; internal set; }
 
-		public IList<Token> CatchBlocks { get; internal set; }
+		public IList<IList<Token>> CatchBlocks { get; internal set; }
 
 		public IList<Token> FinallyBlocks { get; internal set; }
 
-		public IList<Token> Types { get; internal set; }
+		public IList<IList<Token>> Types { get; internal set; }
 
 		public override StringBuilder Dump(int indent, IList alreadyDumped) {
 			StringBuilder sb = base.Dump(indent, alreadyDumped);

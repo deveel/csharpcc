@@ -11,6 +11,8 @@ namespace Deveel.CSharpCC.Parser {
 
         public IList<Token> LhsTokens { get; internal set; }
 
+        public NormalProduction Production { get; internal set; }
+
         public override StringBuilder Dump(int indent, IList alreadyDumped) {
             return base.Dump(indent, alreadyDumped).Append(' ').Append(Name);
         }

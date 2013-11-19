@@ -8,7 +8,7 @@ namespace Deveel.CSharpCC.Parser {
 			Label = image;
 		}
 
-		public RegularExpression RegularExpression { get; private set; }
+		public RegularExpression RegularExpression { get; internal set; }
 
 		public override Nfa GenerateNfa(bool ignoreCase) {
 			return RegularExpression.GenerateNfa(ignoreCase);

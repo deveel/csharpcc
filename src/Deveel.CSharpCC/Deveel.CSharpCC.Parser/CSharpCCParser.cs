@@ -709,9 +709,9 @@ public class CSharpCCParser : CSharpCCParserConstants {
       break;
     case TRY:
           Container expch = new Container();
-          List<Token> types = new List<Token>();
+          List<IList<Token>> types = new List<IList<Token>>();
           List<Token> ids = new List<Token>();
-          List<Token> catchblks = new List<Token>();
+          List<IList<Token>> catchblks = new List<IList<Token>>();
           List<Token> finallyblk = null;
           List<Token> vec = new List<Token>();
           Token t0;
@@ -733,13 +733,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
         Name(vec);
         t = mcc_consume_token(IDENTIFIER);
         mcc_consume_token(RPAREN);
-          types.AddRange(vec);
+          types.Add(vec);
           ids.Add(t);
           vec = new List<Token>();
           inAction = true;
         Block(vec);
           inAction = false;
-          catchblks.AddRange(vec);
+          catchblks.Add(vec);
           vec = new List<Token>();
       }label_7: ;
       

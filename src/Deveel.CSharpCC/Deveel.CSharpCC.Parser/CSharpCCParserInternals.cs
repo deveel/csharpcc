@@ -8,7 +8,7 @@ namespace Deveel.CSharpCC.Parser {
 			int i = 0;
 			CSharpCCGlobals.lexstate_S2I["DEFAULT"] = i;
 			CSharpCCGlobals.lexstate_I2S[i] = "DEFAULT";
-			CSharpCCGlobals.simple_tokens_table["DEFAULT"] = new Dictionary<string, RegularExpression>();
+			CSharpCCGlobals.simple_tokens_table["DEFAULT"] = new Dictionary<string, IDictionary<string, RegularExpression>>();
 		}
 
 		public static void addcuname(String id) {
@@ -94,7 +94,7 @@ namespace Deveel.CSharpCC.Parser {
 					ii = nextFreeLexState++;
 					CSharpCCGlobals.lexstate_S2I[p.LexStates[i]] = ii;
 					CSharpCCGlobals.lexstate_I2S[ii] = p.LexStates[i];
-					CSharpCCGlobals.simple_tokens_table[p.LexStates[i]] = new Dictionary<string, RegularExpression>();
+					CSharpCCGlobals.simple_tokens_table[p.LexStates[i]] = new Dictionary<string, IDictionary<string, RegularExpression>>();
 				}
 			}
 		}
@@ -276,9 +276,9 @@ namespace Deveel.CSharpCC.Parser {
 			Token tryLoc,
 			Container result,
 			Container nestedExp,
-			IList<Token> types,
+			IList<IList<Token>> types,
 			IList<Token> ids,
-			IList<Token> catchblks,
+			IList<IList<Token>> catchblks,
 			IList<Token> finallyblk
 			) {
 			if (catchblks.Count == 0 && finallyblk == null) {

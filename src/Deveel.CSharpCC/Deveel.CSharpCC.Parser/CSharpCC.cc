@@ -954,9 +954,9 @@ void expansion_unit(Container c) :
 |
 	{
 	  Container expch = new Container();
-	  List<Token> types = new List<Token>();
+	  List<IList<Token>> types = new List<IList<Token>>();
 	  List<Token> ids = new List<Token>();
-	  List<Token> catchblks = new List<Token>();
+	  List<IList<Token>> catchblks = new List<IList<Token>>();
 	  List<Token> finallyblk = null;
 	  List<Token> vec = new List<Token>();
 	  Token t0;
@@ -964,7 +964,7 @@ void expansion_unit(Container c) :
   t0="try" "{" expansion_choices(expch) "}"
   ( "catch" "(" Name(vec) t=<IDENTIFIER> ")"
 	{
-	  types.AddRange(vec);
+	  types.Add(vec);
 	  ids.Add(t);
 	  vec = new List<Token>();
 	  inAction = true;
@@ -972,7 +972,7 @@ void expansion_unit(Container c) :
     Block(vec)
 	{
 	  inAction = false;
-	  catchblks.AddRange(vec);
+	  catchblks.Add(vec);
 	  vec = new List<Token>();
 	}
   )*
