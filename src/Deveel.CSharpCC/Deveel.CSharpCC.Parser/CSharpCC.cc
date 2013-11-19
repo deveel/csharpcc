@@ -82,6 +82,8 @@ public class CSharpCCParser {
      public const int EXTERN = 0x0080;
      public const int TRANSIENT = 0x0100;
      public const int VOLATILE = 0x0200;
+	 public const int VIRTUAL = 0x0400;
+	 public const int SEALED = 0x0800;
 
      public bool isPublic(int modifiers)
      {
@@ -299,11 +301,13 @@ TOKEN :
 | < NAMESPACE: "namespace" >
 | < NEW: "new" >
 | < NULL: "null" >
+| < OVERRIDE: "override" >
 | < PRIVATE: "private" >
 | < PROTECTED: "protected" >
 | < PUBLIC: "public" >
-| <READONLY: "readonly" >
+| < READONLY: "readonly" >
 | < RETURN: "return" >
+| < SEALED: "sealed" >
 | < SHORT: "short" >
 | < STATIC: "static" >
 | < SWITCH: "switch" >
@@ -314,6 +318,7 @@ TOKEN :
 | < TRY: "try" >
 | < USING: "using" >
 | < VAR: "var" >
+| < VIRTUAL: "virtual" >
 | < VOID: "void" >
 | < VOLATILE: "volatile" >
 | < WHILE: "while" >
@@ -1319,7 +1324,7 @@ Token CSharpIdentifier() :
 | "IGNORE_CASE"
 | "PARSER_BEGIN"
 | "PARSER_END"
-| "JAVACODE"
+| "CODE"
 | "TOKEN"
 | "SPECIAL_TOKEN"
 | "MORE"
@@ -1400,6 +1405,12 @@ int Modifiers():
    "transient" { modifiers |= ModifierSet.TRANSIENT; }
   |
    "volatile" { modifiers |= ModifierSet.VOLATILE; }
+  |
+	  "virtual" { modifiers |= ModifierSet.VIRTUAL; }
+  |
+	  "sealed" { modifiers |= ModifierSet.SEALED; }
+  |
+	  "override"
   |
    Annotation()
   )

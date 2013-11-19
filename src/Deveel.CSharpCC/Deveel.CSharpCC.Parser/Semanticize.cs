@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 namespace Deveel.CSharpCC.Parser {
     public class Semanticize {
-        private static readonly IList<IList<RegExprSpec>> removeList = new List<IList<RegExprSpec>>();
-        private static readonly IList<RegExprSpec> itemList = new List<RegExprSpec>();
+        private static IList<IList<RegExprSpec>> removeList = new List<IList<RegExprSpec>>();
+        private static IList<RegExprSpec> itemList = new List<RegExprSpec>();
 
         public static RegularExpression other;
 
@@ -550,7 +550,10 @@ namespace Deveel.CSharpCC.Parser {
         }
 
         public static void reInit() {
-            //TODO:
+			removeList = new List<IList<RegExprSpec>>();
+			itemList = new List<RegExprSpec>();
+			other = null;
+			loopString = null;
         }
 
         public static bool EmptyExpansionExists(Expansion expansion) {

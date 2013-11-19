@@ -143,5 +143,9 @@ namespace Deveel.CSharpCC.Parser {
 		public static void GenerateSimpleCharStream() {
 			GenerateFile("SimpleCharStream.cs", "Deveel.CSharpCC.Templates.SimpleCharStream.template", new String[] { "STATIC", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
 		}
+
+		public static void GenerateUnicodeCharStream() {
+			GenerateFile("UnicodeCharStream.cs", "Deveel.CSharpCC.Templates.UnicodeCharStream.template", new String[] { "STATIC", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
+		}
 	}
 }

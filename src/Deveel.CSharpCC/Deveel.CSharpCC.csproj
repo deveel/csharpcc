@@ -63,6 +63,8 @@
     <Compile Include="Deveel.CSharpCC.Parser\LexGen.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Lookahead.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\LookaheadCalc.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\LookaheadWalk.cs" />
+    <Compile Include="Deveel.CSharpCC.Parser\MatchInfo.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\MetaParseException.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\Nfa.cs" />
     <Compile Include="Deveel.CSharpCC.Parser\NfaState.cs" />

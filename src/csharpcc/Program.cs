@@ -168,13 +168,12 @@ namespace Deveel.CSharpCC.Parser {
 			// CSharpFiles.reInit();
 			LexGen.reInit();
 			NfaState.reInit();
-			//TODO: MatchInfo.reInit();
-			//TODO: LookaheadWalk.reInit();
+			MatchInfo.reInit();
+			LookaheadWalk.reInit();
 			Semanticize.reInit();
 			ParseGen.reInit();
 			OtherFilesGen.reInit();
-			//TODO: ParseEngine.reInit();
-
+			ParseEngine.reInit();
 		}
 	}
 }

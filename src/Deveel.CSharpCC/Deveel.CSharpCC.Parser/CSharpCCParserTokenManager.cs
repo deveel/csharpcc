@@ -40,108 +40,108 @@ private int mccStopStringLiteralDfa_0(int pos, long active0, long active1, long 
    switch (pos)
    {
       case 0:
-         if ((active0 & 6946816L) != 0L || (active1 & 289356276058554368L) != 0L)
+         if ((active0 & 6946816L) != 0L || (active1 & 2314850208468434944L) != 0L)
             return 2;
-         if ((active1 & 4294967296L) != 0L)
+         if ((active1 & 34359738368L) != 0L)
             return 8;
-         if ((active0 & -134213634L) != 0L || (active1 & 8191L) != 0L || (active2 & 60L) != 0L)
+         if ((active0 & -134213634L) != 0L || (active1 & 65535L) != 0L || (active2 & 224L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             return 32;
          }
          return -1;
       case 1:
          if ((active0 & 6422528L) != 0L)
             return 0;
-         if ((active0 & -17453097957715970L) != 0L || (active1 & 8191L) != 0L || (active2 & 44L) != 0L)
+         if ((active0 & -17453097957715970L) != 0L || (active1 & 65535L) != 0L || (active2 & 160L) != 0L)
          {
             if (mccmatchedPos != 1) {
-               mccmatchedKind = 137;
+               mccmatchedKind = 139;
                mccmatchedPos = 1;
             }
             return 32;
          }
-         if ((active0 & 17453097823502336L) != 0L || (active2 & 16L) != 0L)
+         if ((active0 & 17453097823502336L) != 0L || (active2 & 64L) != 0L)
             return 32;
          return -1;
       case 2:
-         if ((active0 & -161707924010301442L) != 0L || (active1 & 7551L) != 0L || (active2 & 36L) != 0L)
+         if ((active0 & 152137224912111616L) != 0L || (active1 & 2560L) != 0L || (active2 & 32L) != 0L)
+            return 32;
+         if ((active0 & -161707924010301442L) != 0L || (active1 & 62975L) != 0L || (active2 & 128L) != 0L)
          {
             if (mccmatchedPos != 2) {
-               mccmatchedKind = 137;
+               mccmatchedKind = 139;
                mccmatchedPos = 2;
             }
             return 32;
          }
-         if ((active0 & 152137224912111616L) != 0L || (active1 & 640L) != 0L || (active2 & 8L) != 0L)
-            return 32;
          return -1;
       case 3:
-         if ((active0 & -497514192723508002L) != 0L || (active1 & 6455L) != 0L || (active2 & 36L) != 0L)
+         if ((active0 & -497514192723508002L) != 0L || (active1 & 54495L) != 0L || (active2 & 128L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 3;
             return 32;
          }
-         if ((active0 & 342561668154262304L) != 0L || (active1 & 1096L) != 0L)
+         if ((active0 & 342561668154262304L) != 0L || (active1 & 8480L) != 0L)
             return 32;
          return -1;
       case 4:
-         if ((active0 & -497602266396622690L) != 0L || (active1 & 2086L) != 0L || (active2 & 36L) != 0L)
+         if ((active0 & -497602266396622690L) != 0L || (active1 & 20635L) != 0L || (active2 & 128L) != 0L)
          {
             if (mccmatchedPos != 4) {
-               mccmatchedKind = 137;
+               mccmatchedKind = 139;
                mccmatchedPos = 4;
             }
             return 32;
          }
-         if ((active0 & 88073673114688L) != 0L || (active1 & 4369L) != 0L)
+         if ((active0 & 88073673114688L) != 0L || (active1 & 33860L) != 0L)
             return 32;
          return -1;
       case 5:
-         if ((active0 & -6917519132036431872L) != 0L || (active1 & 6L) != 0L || (active2 & 32L) != 0L)
+         if ((active0 & 4611695914032037888L) != 0L || (active1 & 27L) != 0L || (active2 & 128L) != 0L)
             return 32;
-         if ((active0 & 6419916865639810206L) != 0L || (active1 & 2080L) != 0L || (active2 & 4L) != 0L)
+         if ((active0 & -5109298180428659554L) != 0L || (active1 & 20608L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 5;
             return 32;
          }
          return -1;
       case 6:
-         if ((active0 & 5843420654086390942L) != 0L || (active1 & 2080L) != 0L || (active2 & 4L) != 0L)
+         if ((active0 & -6262255144285502306L) != 0L || (active1 & 16512L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 6;
             return 32;
          }
-         if ((active0 & 576496211553419264L) != 0L)
+         if ((active0 & 1152956963856842752L) != 0L || (active1 & 4096L) != 0L)
             return 32;
          return -1;
       case 7:
-         if ((active0 & 1227230898458461342L) != 0L || (active1 & 32L) != 0L)
+         if ((active0 & 2380152403065308318L) != 0L || (active1 & 128L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 7;
             return 32;
          }
-         if ((active0 & 4616189755627929600L) != 0L || (active1 & 2048L) != 0L || (active2 & 4L) != 0L)
+         if ((active0 & -8642407547350810624L) != 0L || (active1 & 16384L) != 0L)
             return 32;
          return -1;
       case 8:
          if ((active0 & 1180L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 8;
             return 32;
          }
-         if ((active0 & 1227230898458460162L) != 0L || (active1 & 32L) != 0L)
+         if ((active0 & 2380152403065307138L) != 0L || (active1 & 128L) != 0L)
             return 32;
          return -1;
       case 9:
          if ((active0 & 1164L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 9;
             return 32;
          }
@@ -151,7 +151,7 @@ private int mccStopStringLiteralDfa_0(int pos, long active0, long active1, long 
       case 10:
          if ((active0 & 1160L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 10;
             return 32;
          }
@@ -161,7 +161,7 @@ private int mccStopStringLiteralDfa_0(int pos, long active0, long active1, long 
       case 11:
          if ((active0 & 1152L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 11;
             return 32;
          }
@@ -171,7 +171,7 @@ private int mccStopStringLiteralDfa_0(int pos, long active0, long active1, long 
       case 12:
          if ((active0 & 1024L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 12;
             return 32;
          }
@@ -181,7 +181,7 @@ private int mccStopStringLiteralDfa_0(int pos, long active0, long active1, long 
       case 13:
          if ((active0 & 1024L) != 0L)
          {
-            mccmatchedKind = 137;
+            mccmatchedKind = 139;
             mccmatchedPos = 13;
             return 32;
          }
@@ -211,59 +211,57 @@ private int mccMoveStringLiteralDfa0_0()
 {
    switch((int)curChar) {
       case 33:
-         mccmatchedKind = 99;
-         return mccMoveStringLiteralDfa1_0(0L, 4398046511104L, 0L);
+         mccmatchedKind = 102;
+         return mccMoveStringLiteralDfa1_0(0L, 35184372088832L, 0L);
       case 35:
-         return mccStopAtPos(0, 129);
+         return mccStopAtPos(0, 132);
       case 37:
-         mccmatchedKind = 118;
-         return mccMoveStringLiteralDfa1_0(0L, 4611686018427387904L, 0L);
+         mccmatchedKind = 121;
+         return mccMoveStringLiteralDfa1_0(0L, 0L, 2L);
       case 38:
-         mccmatchedKind = 115;
-         return mccMoveStringLiteralDfa1_0(0L, 576478344489467904L, 0L);
+         mccmatchedKind = 118;
+         return mccMoveStringLiteralDfa1_0(0L, 4611826755915743232L, 0L);
       case 40:
-         return mccStopAtPos(0, 88);
+         return mccStopAtPos(0, 91);
       case 41:
-         return mccStopAtPos(0, 89);
+         return mccStopAtPos(0, 92);
       case 42:
-         mccmatchedKind = 113;
-         return mccMoveStringLiteralDfa1_0(0L, 144115188075855872L, 0L);
+         mccmatchedKind = 116;
+         return mccMoveStringLiteralDfa1_0(0L, 1152921504606846976L, 0L);
       case 43:
-         mccmatchedKind = 111;
-         return mccMoveStringLiteralDfa1_0(0L, 36063981391052800L, 0L);
-      case 44:
-         return mccStopAtPos(0, 95);
-      case 45:
-         mccmatchedKind = 112;
-         return mccMoveStringLiteralDfa1_0(0L, 72127962782105600L, 0L);
-      case 46:
-         return mccStartNfaWithStates_0(0, 96, 8);
-      case 47:
          mccmatchedKind = 114;
-         return mccMoveStringLiteralDfa1_0(6946816L, 288230376151711744L, 0L);
+         return mccMoveStringLiteralDfa1_0(0L, 288511851128422400L, 0L);
+      case 44:
+         return mccStopAtPos(0, 98);
+      case 45:
+         mccmatchedKind = 115;
+         return mccMoveStringLiteralDfa1_0(0L, 577023702256844800L, 0L);
+      case 46:
+         return mccStartNfaWithStates_0(0, 99, 8);
+      case 47:
+         mccmatchedKind = 117;
+         return mccMoveStringLiteralDfa1_0(6946816L, 2305843009213693952L, 0L);
       case 58:
-         return mccStopAtPos(0, 102);
+         return mccStopAtPos(0, 105);
       case 59:
-         return mccStopAtPos(0, 94);
+         return mccStopAtPos(0, 97);
       case 60:
-         mccmatchedKind = 98;
-         return mccMoveStringLiteralDfa1_0(0L, 1099511627776L, 320L);
+         mccmatchedKind = 101;
+         return mccMoveStringLiteralDfa1_0(0L, 8796093022208L, 1280L);
       case 61:
-         mccmatchedKind = 97;
-         return mccMoveStringLiteralDfa1_0(0L, 549755813888L, 0L);
+         mccmatchedKind = 100;
+         return mccMoveStringLiteralDfa1_0(0L, 4398046511104L, 0L);
       case 62:
-         mccmatchedKind = 128;
-         return mccMoveStringLiteralDfa1_0(0L, -9223369837831520256L, 128L);
+         mccmatchedKind = 131;
+         return mccMoveStringLiteralDfa1_0(0L, 17592186044416L, 516L);
       case 63:
-         return mccStopAtPos(0, 101);
+         return mccStopAtPos(0, 104);
       case 67:
          return mccMoveStringLiteralDfa1_0(32L, 0L, 0L);
       case 69:
          return mccMoveStringLiteralDfa1_0(2048L, 0L, 0L);
       case 73:
          return mccMoveStringLiteralDfa1_0(4L, 0L, 0L);
-      case 74:
-         return mccMoveStringLiteralDfa1_0(0L, 0L, 4L);
       case 76:
          return mccMoveStringLiteralDfa1_0(2L, 0L, 0L);
       case 77:
@@ -275,12 +273,12 @@ private int mccMoveStringLiteralDfa0_0()
       case 84:
          return mccMoveStringLiteralDfa1_0(1088L, 0L, 0L);
       case 91:
-         return mccStopAtPos(0, 92);
+         return mccStopAtPos(0, 95);
       case 93:
-         return mccStopAtPos(0, 93);
+         return mccStopAtPos(0, 96);
       case 94:
-         mccmatchedKind = 117;
-         return mccMoveStringLiteralDfa1_0(0L, 2305843009213693952L, 0L);
+         mccmatchedKind = 120;
+         return mccMoveStringLiteralDfa1_0(0L, 0L, 1L);
       case 97:
          return mccMoveStringLiteralDfa1_0(134217728L, 0L, 0L);
       case 98:
@@ -296,36 +294,36 @@ private int mccMoveStringLiteralDfa0_0()
       case 103:
          return mccMoveStringLiteralDfa1_0(281474976710656L, 0L, 0L);
       case 105:
-         return mccMoveStringLiteralDfa1_0(17451448556060672L, 0L, 16L);
+         return mccMoveStringLiteralDfa1_0(17451448556060672L, 0L, 64L);
       case 108:
          return mccMoveStringLiteralDfa1_0(54043195528445952L, 0L, 0L);
       case 110:
          return mccMoveStringLiteralDfa1_0(504403158265495552L, 0L, 0L);
       case 111:
-         return mccMoveStringLiteralDfa1_0(0L, 0L, 8L);
+         return mccMoveStringLiteralDfa1_0(576460752303423488L, 0L, 32L);
       case 112:
-         return mccMoveStringLiteralDfa1_0(4035225266123964416L, 0L, 32L);
+         return mccMoveStringLiteralDfa1_0(8070450532247928832L, 0L, 128L);
       case 114:
-         return mccMoveStringLiteralDfa1_0(-4611686018427387904L, 0L, 0L);
+         return mccMoveStringLiteralDfa1_0(-9223372036854775808L, 1L, 0L);
       case 115:
-         return mccMoveStringLiteralDfa1_0(0L, 7L, 0L);
+         return mccMoveStringLiteralDfa1_0(0L, 30L, 0L);
       case 116:
-         return mccMoveStringLiteralDfa1_0(0L, 248L, 0L);
+         return mccMoveStringLiteralDfa1_0(0L, 992L, 0L);
       case 117:
-         return mccMoveStringLiteralDfa1_0(0L, 256L, 0L);
+         return mccMoveStringLiteralDfa1_0(0L, 1024L, 0L);
       case 118:
-         return mccMoveStringLiteralDfa1_0(0L, 3584L, 0L);
+         return mccMoveStringLiteralDfa1_0(0L, 30720L, 0L);
       case 119:
-         return mccMoveStringLiteralDfa1_0(0L, 4096L, 0L);
+         return mccMoveStringLiteralDfa1_0(0L, 32768L, 0L);
       case 123:
-         return mccStopAtPos(0, 90);
+         return mccStopAtPos(0, 93);
       case 124:
-         mccmatchedKind = 116;
-         return mccMoveStringLiteralDfa1_0(0L, 1152930300699869184L, 0L);
+         mccmatchedKind = 119;
+         return mccMoveStringLiteralDfa1_0(0L, -9223301668110598144L, 0L);
       case 125:
-         return mccStopAtPos(0, 91);
+         return mccStopAtPos(0, 94);
       case 126:
-         return mccStopAtPos(0, 100);
+         return mccStopAtPos(0, 103);
       default :
          return mccMoveNfa_0(3, 0);
    }
@@ -339,8 +337,8 @@ private int mccMoveStringLiteralDfa1_0(long active0, long active1, long active2)
    }
    switch((int)curChar) {
       case 38:
-         if ((active1 & 17592186044416L) != 0L)
-            return mccStopAtPos(1, 108);
+         if ((active1 & 140737488355328L) != 0L)
+            return mccStopAtPos(1, 111);
          break;
       case 42:
          if ((active0 & 2097152L) != 0L)
@@ -350,39 +348,33 @@ private int mccMoveStringLiteralDfa1_0(long active0, long active1, long active2)
          }
          return mccMoveStringLiteralDfa2_0(active0, 4325376L, active1, 0L, active2, 0L);
       case 43:
-         if ((active1 & 35184372088832L) != 0L)
-            return mccStopAtPos(1, 109);
+         if ((active1 & 281474976710656L) != 0L)
+            return mccStopAtPos(1, 112);
          break;
       case 45:
-         if ((active1 & 70368744177664L) != 0L)
-            return mccStopAtPos(1, 110);
+         if ((active1 & 562949953421312L) != 0L)
+            return mccStopAtPos(1, 113);
          break;
       case 47:
          if ((active0 & 524288L) != 0L)
             return mccStopAtPos(1, 19);
          break;
       case 60:
-         if ((active2 & 256L) != 0L)
+         if ((active2 & 1024L) != 0L)
          {
-            mccmatchedKind = 136;
+            mccmatchedKind = 138;
             mccmatchedPos = 1;
          }
-         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 0L, active2, 64L);
+         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 0L, active2, 256L);
       case 61:
-         if ((active1 & 549755813888L) != 0L)
-            return mccStopAtPos(1, 103);
-         else if ((active1 & 1099511627776L) != 0L)
-            return mccStopAtPos(1, 104);
-         else if ((active1 & 2199023255552L) != 0L)
-            return mccStopAtPos(1, 105);
-         else if ((active1 & 4398046511104L) != 0L)
+         if ((active1 & 4398046511104L) != 0L)
             return mccStopAtPos(1, 106);
-         else if ((active1 & 36028797018963968L) != 0L)
-            return mccStopAtPos(1, 119);
-         else if ((active1 & 72057594037927936L) != 0L)
-            return mccStopAtPos(1, 120);
-         else if ((active1 & 144115188075855872L) != 0L)
-            return mccStopAtPos(1, 121);
+         else if ((active1 & 8796093022208L) != 0L)
+            return mccStopAtPos(1, 107);
+         else if ((active1 & 17592186044416L) != 0L)
+            return mccStopAtPos(1, 108);
+         else if ((active1 & 35184372088832L) != 0L)
+            return mccStopAtPos(1, 109);
          else if ((active1 & 288230376151711744L) != 0L)
             return mccStopAtPos(1, 122);
          else if ((active1 & 576460752303423488L) != 0L)
@@ -393,16 +385,22 @@ private int mccMoveStringLiteralDfa1_0(long active0, long active1, long active2)
             return mccStopAtPos(1, 125);
          else if ((active1 & 4611686018427387904L) != 0L)
             return mccStopAtPos(1, 126);
+         else if ((active1 & -9223372036854775808L) != 0L)
+            return mccStopAtPos(1, 127);
+         else if ((active2 & 1L) != 0L)
+            return mccStopAtPos(1, 128);
+         else if ((active2 & 2L) != 0L)
+            return mccStopAtPos(1, 129);
          break;
       case 62:
-         if ((active1 & -9223372036854775808L) != 0L)
+         if ((active2 & 4L) != 0L)
          {
-            mccmatchedKind = 127;
+            mccmatchedKind = 130;
             mccmatchedPos = 1;
          }
-         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 0L, active2, 128L);
+         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 0L, active2, 512L);
       case 65:
-         return mccMoveStringLiteralDfa2_0(active0, 24L, active1, 0L, active2, 4L);
+         return mccMoveStringLiteralDfa2_0(active0, 24L, active1, 0L, active2, 0L);
       case 71:
          return mccMoveStringLiteralDfa2_0(active0, 4L, active1, 0L, active2, 0L);
       case 75:
@@ -412,25 +410,25 @@ private int mccMoveStringLiteralDfa1_0(long active0, long active1, long active2)
       case 80:
          return mccMoveStringLiteralDfa2_0(active0, 128L, active1, 0L, active2, 0L);
       case 97:
-         return mccMoveStringLiteralDfa2_0(active0, 72075199377309696L, active1, 512L, active2, 32L);
+         return mccMoveStringLiteralDfa2_0(active0, 72075199377309696L, active1, 2048L, active2, 128L);
       case 98:
          return mccMoveStringLiteralDfa2_0(active0, 134217728L, active1, 0L, active2, 0L);
       case 101:
-         return mccMoveStringLiteralDfa2_0(active0, -4467570555473625088L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa2_0(active0, -9079256573901012992L, active1, 3L, active2, 0L);
       case 102:
          if ((active0 & 562949953421312L) != 0L)
             return mccStartNfaWithStates_0(1, 49, 32);
          break;
       case 104:
-         return mccMoveStringLiteralDfa2_0(active0, 17179869184L, active1, 4121L, active2, 0L);
+         return mccMoveStringLiteralDfa2_0(active0, 17179869184L, active1, 32868L, active2, 0L);
       case 105:
-         return mccMoveStringLiteralDfa2_0(active0, 35184372088832L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa2_0(active0, 35184372088832L, active1, 4096L, active2, 0L);
       case 108:
          return mccMoveStringLiteralDfa2_0(active0, 72602127171584L, active1, 0L, active2, 0L);
       case 110:
-         if ((active2 & 16L) != 0L)
+         if ((active2 & 64L) != 0L)
          {
-            mccmatchedKind = 132;
+            mccmatchedKind = 134;
             mccmatchedPos = 1;
          }
          return mccMoveStringLiteralDfa2_0(active0, 7885697394409472L, active1, 0L, active2, 0L);
@@ -440,26 +438,28 @@ private int mccMoveStringLiteralDfa1_0(long active0, long active1, long active2)
             mccmatchedKind = 39;
             mccmatchedPos = 1;
          }
-         return mccMoveStringLiteralDfa2_0(active0, 54466714200440832L, active1, 3072L, active2, 0L);
+         return mccMoveStringLiteralDfa2_0(active0, 54466714200440832L, active1, 24576L, active2, 0L);
       case 114:
-         return mccMoveStringLiteralDfa2_0(active0, 1729382257984012288L, active1, 224L, active2, 0L);
+         return mccMoveStringLiteralDfa2_0(active0, 3458764514894282752L, active1, 896L, active2, 0L);
       case 115:
          if ((active0 & 9007199254740992L) != 0L)
             return mccStartNfaWithStates_0(1, 53, 32);
-         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 256L, active2, 0L);
+         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 1024L, active2, 0L);
       case 116:
-         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 2L, active2, 0L);
+         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 8L, active2, 0L);
       case 117:
-         return mccMoveStringLiteralDfa2_0(active0, 2594073385365405696L, active1, 0L, active2, 8L);
+         return mccMoveStringLiteralDfa2_0(active0, 4899916394579099648L, active1, 0L, active2, 32L);
+      case 118:
+         return mccMoveStringLiteralDfa2_0(active0, 576460752303423488L, active1, 0L, active2, 0L);
       case 119:
-         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 4L, active2, 0L);
+         return mccMoveStringLiteralDfa2_0(active0, 0L, active1, 16L, active2, 0L);
       case 120:
          return mccMoveStringLiteralDfa2_0(active0, 8796093022208L, active1, 0L, active2, 0L);
       case 121:
          return mccMoveStringLiteralDfa2_0(active0, 2147483648L, active1, 0L, active2, 0L);
       case 124:
-         if ((active1 & 8796093022208L) != 0L)
-            return mccStopAtPos(1, 107);
+         if ((active1 & 70368744177664L) != 0L)
+            return mccStopAtPos(1, 110);
          break;
       default :
          break;
@@ -477,10 +477,10 @@ private int mccMoveStringLiteralDfa2_0(long old0, long active0, long old1, long 
    }
    switch((int)curChar) {
       case 61:
-         if ((active2 & 64L) != 0L)
-            return mccStopAtPos(2, 134);
-         else if ((active2 & 128L) != 0L)
-            return mccStopAtPos(2, 135);
+         if ((active2 & 256L) != 0L)
+            return mccStopAtPos(2, 136);
+         else if ((active2 & 512L) != 0L)
+            return mccStopAtPos(2, 137);
          break;
       case 64:
          return mccMoveStringLiteralDfa3_0(active0, 4325376L, active1, 0L, active2, 0L);
@@ -502,34 +502,32 @@ private int mccMoveStringLiteralDfa2_0(long old0, long active0, long old1, long 
          return mccMoveStringLiteralDfa3_0(active0, 2L, active1, 0L, active2, 0L);
       case 82:
          return mccMoveStringLiteralDfa3_0(active0, 280L, active1, 0L, active2, 0L);
-      case 86:
-         return mccMoveStringLiteralDfa3_0(active0, 0L, active1, 0L, active2, 4L);
       case 97:
-         return mccMoveStringLiteralDfa3_0(active0, 4611686069966995456L, active1, 34L, active2, 0L);
+         return mccMoveStringLiteralDfa3_0(active0, -9223371985315168256L, active1, 138L, active2, 0L);
       case 98:
-         return mccMoveStringLiteralDfa3_0(active0, 2305843009213693952L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa3_0(active0, 4611686018427387904L, active1, 0L, active2, 0L);
       case 99:
          return mccMoveStringLiteralDfa3_0(active0, 18014398509481984L, active1, 0L, active2, 0L);
       case 101:
-         return mccMoveStringLiteralDfa3_0(active0, 1073741824L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa3_0(active0, 576460753377165312L, active1, 0L, active2, 0L);
       case 102:
          return mccMoveStringLiteralDfa3_0(active0, 274877906944L, active1, 0L, active2, 0L);
       case 105:
-         return mccMoveStringLiteralDfa3_0(active0, 576460752303423488L, active1, 5388L, active2, 0L);
+         return mccMoveStringLiteralDfa3_0(active0, 1152921504606846976L, active1, 42032L, active2, 0L);
       case 108:
-         return mccMoveStringLiteralDfa3_0(active0, 288247968337756160L, active1, 2048L, active2, 0L);
+         return mccMoveStringLiteralDfa3_0(active0, 288247968337756160L, active1, 16384L, active2, 0L);
       case 109:
          return mccMoveStringLiteralDfa3_0(active0, 72057594037927936L, active1, 0L, active2, 0L);
       case 110:
          return mccMoveStringLiteralDfa3_0(active0, 36064187549483008L, active1, 0L, active2, 0L);
       case 111:
-         return mccMoveStringLiteralDfa3_0(active0, 1152991873887895552L, active1, 1L, active2, 0L);
+         return mccMoveStringLiteralDfa3_0(active0, 2305913378494742528L, active1, 4L, active2, 0L);
       case 114:
          if ((active0 & 140737488355328L) != 0L)
             return mccStartNfaWithStates_0(2, 47, 32);
-         else if ((active1 & 512L) != 0L)
-            return mccStartNfaWithStates_0(2, 73, 32);
-         return mccMoveStringLiteralDfa3_0(active0, 0L, active1, 16L, active2, 32L);
+         else if ((active1 & 2048L) != 0L)
+            return mccStartNfaWithStates_0(2, 75, 32);
+         return mccMoveStringLiteralDfa3_0(active0, 0L, active1, 4160L, active2, 128L);
       case 115:
          return mccMoveStringLiteralDfa3_0(active0, 2203720876032L, active1, 0L, active2, 0L);
       case 116:
@@ -538,18 +536,18 @@ private int mccMoveStringLiteralDfa2_0(long old0, long active0, long old1, long 
             mccmatchedKind = 50;
             mccmatchedPos = 2;
          }
-         else if ((active2 & 8L) != 0L)
-            return mccStartNfaWithStates_0(2, 131, 32);
-         return mccMoveStringLiteralDfa3_0(active0, -9216326355606568960L, active1, 0L, active2, 0L);
+         else if ((active2 & 32L) != 0L)
+            return mccStartNfaWithStates_0(2, 133, 32);
+         return mccMoveStringLiteralDfa3_0(active0, 7045681248206848L, active1, 1L, active2, 0L);
       case 117:
-         return mccMoveStringLiteralDfa3_0(active0, 5497558138880L, active1, 64L, active2, 0L);
+         return mccMoveStringLiteralDfa3_0(active0, 5497558138880L, active1, 256L, active2, 0L);
       case 119:
          if ((active0 & 144115188075855872L) != 0L)
             return mccStartNfaWithStates_0(2, 57, 32);
          break;
       case 121:
-         if ((active1 & 128L) != 0L)
-            return mccStartNfaWithStates_0(2, 71, 32);
+         if ((active1 & 512L) != 0L)
+            return mccStartNfaWithStates_0(2, 73, 32);
          break;
       default :
          break;
@@ -566,8 +564,6 @@ private int mccMoveStringLiteralDfa3_0(long old0, long active0, long old1, long 
       return 3;
    }
    switch((int)curChar) {
-      case 65:
-         return mccMoveStringLiteralDfa4_0(active0, 0L, active1, 0L, active2, 4L);
       case 67:
          return mccMoveStringLiteralDfa4_0(active0, 128L, active1, 0L, active2, 0L);
       case 69:
@@ -587,15 +583,15 @@ private int mccMoveStringLiteralDfa3_0(long old0, long active0, long old1, long 
       case 83:
          return mccMoveStringLiteralDfa4_0(active0, 24L, active1, 0L, active2, 0L);
       case 97:
-         return mccMoveStringLiteralDfa4_0(active0, 105829067915264L, active1, 2048L, active2, 32L);
+         return mccMoveStringLiteralDfa4_0(active0, 105829067915264L, active1, 16384L, active2, 128L);
       case 98:
          return mccMoveStringLiteralDfa4_0(active0, 1099515822080L, active1, 0L, active2, 0L);
       case 99:
          return mccMoveStringLiteralDfa4_0(active0, 8589934592L, active1, 0L, active2, 0L);
       case 100:
-         if ((active1 & 1024L) != 0L)
-            return mccStartNfaWithStates_0(3, 74, 32);
-         return mccMoveStringLiteralDfa4_0(active0, 4611686018427387904L, active1, 0L, active2, 0L);
+         if ((active1 & 8192L) != 0L)
+            return mccStartNfaWithStates_0(3, 77, 32);
+         return mccMoveStringLiteralDfa4_0(active0, -9223372036854775808L, active1, 0L, active2, 0L);
       case 101:
          if ((active0 & 268435456L) != 0L)
             return mccStartNfaWithStates_0(3, 28, 32);
@@ -605,8 +601,8 @@ private int mccMoveStringLiteralDfa3_0(long old0, long active0, long old1, long 
             return mccStartNfaWithStates_0(3, 32, 32);
          else if ((active0 & 2199023255552L) != 0L)
             return mccStartNfaWithStates_0(3, 41, 32);
-         else if ((active1 & 64L) != 0L)
-            return mccStartNfaWithStates_0(3, 70, 32);
+         else if ((active1 & 256L) != 0L)
+            return mccStartNfaWithStates_0(3, 72, 32);
          return mccMoveStringLiteralDfa4_0(active0, 78821789572136960L, active1, 0L, active2, 0L);
       case 103:
          if ((active0 & 36028797018963968L) != 0L)
@@ -621,31 +617,31 @@ private int mccMoveStringLiteralDfa3_0(long old0, long active0, long old1, long 
             return mccStartNfaWithStates_0(3, 29, 32);
          else if ((active0 & 288230376151711744L) != 0L)
             return mccStartNfaWithStates_0(3, 58, 32);
-         return mccMoveStringLiteralDfa4_0(active0, 2305843009213693952L, active1, 4096L, active2, 0L);
+         return mccMoveStringLiteralDfa4_0(active0, 4611686018427387904L, active1, 32770L, active2, 0L);
       case 109:
          if ((active0 & 4398046511104L) != 0L)
             return mccStartNfaWithStates_0(3, 42, 32);
          break;
       case 110:
-         return mccMoveStringLiteralDfa4_0(active0, 0L, active1, 288L, active2, 0L);
+         return mccMoveStringLiteralDfa4_0(active0, 0L, active1, 1152L, active2, 0L);
       case 111:
          if ((active0 & 281474976710656L) != 0L)
             return mccStartNfaWithStates_0(3, 48, 32);
-         return mccMoveStringLiteralDfa4_0(active0, 0L, active1, 16L, active2, 0L);
+         return mccMoveStringLiteralDfa4_0(active0, 0L, active1, 64L, active2, 0L);
       case 114:
          if ((active0 & 17179869184L) != 0L)
             return mccStartNfaWithStates_0(3, 34, 32);
-         return mccMoveStringLiteralDfa4_0(active0, 0L, active1, 1L, active2, 0L);
+         return mccMoveStringLiteralDfa4_0(active0, 576460752303423488L, active1, 4L, active2, 0L);
       case 115:
-         if ((active1 & 8L) != 0L)
-            return mccStartNfaWithStates_0(3, 67, 32);
+         if ((active1 & 32L) != 0L)
+            return mccStartNfaWithStates_0(3, 69, 32);
          return mccMoveStringLiteralDfa4_0(active0, 17695265259520L, active1, 0L, active2, 0L);
       case 116:
-         return mccMoveStringLiteralDfa4_0(active0, 1152921642180018176L, active1, 6L, active2, 0L);
+         return mccMoveStringLiteralDfa4_0(active0, 2305843146786865152L, active1, 4120L, active2, 0L);
       case 117:
-         return mccMoveStringLiteralDfa4_0(active0, -9223372036854775808L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa4_0(active0, 0L, active1, 1L, active2, 0L);
       case 118:
-         return mccMoveStringLiteralDfa4_0(active0, 576460752303423488L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa4_0(active0, 1152921504606846976L, active1, 0L, active2, 0L);
       default :
          break;
    }
@@ -663,8 +659,6 @@ private int mccMoveStringLiteralDfa4_0(long old0, long active0, long old1, long 
    switch((int)curChar) {
       case 65:
          return mccMoveStringLiteralDfa5_0(active0, 2L, active1, 0L, active2, 0L);
-      case 67:
-         return mccMoveStringLiteralDfa5_0(active0, 0L, active1, 0L, active2, 4L);
       case 69:
          return mccMoveStringLiteralDfa5_0(active0, 24L, active1, 0L, active2, 0L);
       case 73:
@@ -679,25 +673,25 @@ private int mccMoveStringLiteralDfa4_0(long old0, long active0, long old1, long 
       case 82:
          return mccMoveStringLiteralDfa5_0(active0, 4L, active1, 0L, active2, 0L);
       case 97:
-         return mccMoveStringLiteralDfa5_0(active0, 576460752303423488L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa5_0(active0, 1152921504606846976L, active1, 0L, active2, 0L);
       case 99:
-         return mccMoveStringLiteralDfa5_0(active0, 0L, active1, 4L, active2, 0L);
+         return mccMoveStringLiteralDfa5_0(active0, 0L, active1, 16L, active2, 0L);
       case 101:
          if ((active0 & 17592186044416L) != 0L)
             return mccStartNfaWithStates_0(4, 44, 32);
-         else if ((active1 & 4096L) != 0L)
-            return mccStartNfaWithStates_0(4, 76, 32);
-         return mccMoveStringLiteralDfa5_0(active0, 1152921504606846976L, active1, 0L, active2, 0L);
+         else if ((active1 & 32768L) != 0L)
+            return mccStartNfaWithStates_0(4, 79, 32);
+         return mccMoveStringLiteralDfa5_0(active0, 2305843009213693952L, active1, 2L, active2, 0L);
       case 103:
-         if ((active1 & 256L) != 0L)
-            return mccStartNfaWithStates_0(4, 72, 32);
+         if ((active1 & 1024L) != 0L)
+            return mccStartNfaWithStates_0(4, 74, 32);
          return mccMoveStringLiteralDfa5_0(active0, 4325376L, active1, 0L, active2, 0L);
       case 104:
          if ((active0 & 8589934592L) != 0L)
             return mccStartNfaWithStates_0(4, 33, 32);
          break;
       case 105:
-         return mccMoveStringLiteralDfa5_0(active0, 2305843146652647424L, active1, 2L, active2, 0L);
+         return mccMoveStringLiteralDfa5_0(active0, 4611686155866341376L, active1, 8L, active2, 0L);
       case 107:
          if ((active0 & 1073741824L) != 0L)
             return mccStartNfaWithStates_0(4, 30, 32);
@@ -705,28 +699,28 @@ private int mccMoveStringLiteralDfa4_0(long old0, long active0, long old1, long 
       case 108:
          return mccMoveStringLiteralDfa5_0(active0, 36283883716608L, active1, 0L, active2, 0L);
       case 109:
-         return mccMoveStringLiteralDfa5_0(active0, 0L, active1, 0L, active2, 32L);
+         return mccMoveStringLiteralDfa5_0(active0, 0L, active1, 0L, active2, 128L);
       case 111:
-         return mccMoveStringLiteralDfa5_0(active0, 4611686018427387904L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa5_0(active0, -9223372036854775808L, active1, 0L, active2, 0L);
       case 114:
-         return mccMoveStringLiteralDfa5_0(active0, -9216607841186480128L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa5_0(active0, 583224947971719168L, active1, 1L, active2, 0L);
       case 115:
          if ((active0 & 34359738368L) != 0L)
             return mccStartNfaWithStates_0(4, 35, 32);
-         return mccMoveStringLiteralDfa5_0(active0, 72057594037927936L, active1, 32L, active2, 0L);
+         return mccMoveStringLiteralDfa5_0(active0, 72057594037927936L, active1, 128L, active2, 0L);
       case 116:
          if ((active0 & 68719476736L) != 0L)
             return mccStartNfaWithStates_0(4, 36, 32);
          else if ((active0 & 70368744177664L) != 0L)
             return mccStartNfaWithStates_0(4, 46, 32);
-         else if ((active1 & 1L) != 0L)
-            return mccStartNfaWithStates_0(4, 64, 32);
-         return mccMoveStringLiteralDfa5_0(active0, 0L, active1, 2048L, active2, 0L);
+         else if ((active1 & 4L) != 0L)
+            return mccStartNfaWithStates_0(4, 66, 32);
+         return mccMoveStringLiteralDfa5_0(active0, 0L, active1, 16384L, active2, 0L);
       case 117:
-         return mccMoveStringLiteralDfa5_0(active0, 274877906944L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa5_0(active0, 274877906944L, active1, 4096L, active2, 0L);
       case 119:
-         if ((active1 & 16L) != 0L)
-            return mccStartNfaWithStates_0(4, 68, 32);
+         if ((active1 & 64L) != 0L)
+            return mccStartNfaWithStates_0(4, 70, 32);
          break;
       default :
          break;
@@ -749,20 +743,22 @@ private int mccMoveStringLiteralDfa5_0(long old0, long active0, long old1, long 
          return mccMoveStringLiteralDfa6_0(active0, 4L, active1, 0L, active2, 0L);
       case 72:
          return mccMoveStringLiteralDfa6_0(active0, 2L, active1, 0L, active2, 0L);
-      case 79:
-         return mccMoveStringLiteralDfa6_0(active0, 0L, active1, 0L, active2, 4L);
       case 82:
          return mccMoveStringLiteralDfa6_0(active0, 24L, active1, 0L, active2, 0L);
       case 95:
          return mccMoveStringLiteralDfa6_0(active0, 1024L, active1, 0L, active2, 0L);
       case 97:
-         return mccMoveStringLiteralDfa6_0(active0, 134217728L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa6_0(active0, 134217728L, active1, 4096L, active2, 0L);
       case 99:
-         if ((active0 & 2305843009213693952L) != 0L)
-            return mccStartNfaWithStates_0(5, 61, 32);
-         else if ((active1 & 2L) != 0L)
+         if ((active0 & 4611686018427387904L) != 0L)
+            return mccStartNfaWithStates_0(5, 62, 32);
+         else if ((active1 & 8L) != 0L)
+            return mccStartNfaWithStates_0(5, 67, 32);
+         return mccMoveStringLiteralDfa6_0(active0, 2305843009213693952L, active1, 0L, active2, 0L);
+      case 100:
+         if ((active1 & 2L) != 0L)
             return mccStartNfaWithStates_0(5, 65, 32);
-         return mccMoveStringLiteralDfa6_0(active0, 1152921504606846976L, active1, 0L, active2, 0L);
+         break;
       case 101:
          if ((active0 & 1099511627776L) != 0L)
             return mccStartNfaWithStates_0(5, 40, 32);
@@ -770,27 +766,27 @@ private int mccMoveStringLiteralDfa5_0(long old0, long active0, long old1, long 
       case 102:
          return mccMoveStringLiteralDfa6_0(active0, 2251799813685248L, active1, 0L, active2, 0L);
       case 104:
-         if ((active1 & 4L) != 0L)
-            return mccStartNfaWithStates_0(5, 66, 32);
+         if ((active1 & 16L) != 0L)
+            return mccStartNfaWithStates_0(5, 68, 32);
          break;
       case 105:
-         return mccMoveStringLiteralDfa6_0(active0, 0L, active1, 2080L, active2, 0L);
+         return mccMoveStringLiteralDfa6_0(active0, 576460752303423488L, active1, 16512L, active2, 0L);
       case 108:
          return mccMoveStringLiteralDfa6_0(active0, 35459249995776L, active1, 0L, active2, 0L);
       case 110:
          if ((active0 & 8796093022208L) != 0L)
             return mccStartNfaWithStates_0(5, 43, 32);
-         else if ((active0 & -9223372036854775808L) != 0L)
-            return mccStartNfaWithStates_0(5, 63, 32);
-         return mccMoveStringLiteralDfa6_0(active0, 4616189755493711872L, active1, 0L, active2, 0L);
+         else if ((active1 & 1L) != 0L)
+            return mccStartNfaWithStates_0(5, 64, 32);
+         return mccMoveStringLiteralDfa6_0(active0, -9218868299788451840L, active1, 0L, active2, 0L);
       case 112:
          return mccMoveStringLiteralDfa6_0(active0, 72057594037927936L, active1, 0L, active2, 0L);
       case 115:
-         if ((active2 & 32L) != 0L)
-            return mccStartNfaWithStates_0(5, 133, 32);
+         if ((active2 & 128L) != 0L)
+            return mccStartNfaWithStates_0(5, 135, 32);
          break;
       case 116:
-         return mccMoveStringLiteralDfa6_0(active0, 576460752303423488L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa6_0(active0, 1152921504606846976L, active1, 0L, active2, 0L);
       default :
          break;
    }
@@ -802,38 +798,40 @@ private int mccMoveStringLiteralDfa6_0(long old0, long active0, long old1, long 
       return mccStartNfa_0(4, old0, old1, old2); 
    try { curChar = input_stream.ReadChar(); }
    catch(System.IO.IOException) {
-      mccStopStringLiteralDfa_0(5, active0, active1, active2);
+      mccStopStringLiteralDfa_0(5, active0, active1, 0L);
       return 6;
    }
    switch((int)curChar) {
-      case 68:
-         return mccMoveStringLiteralDfa7_0(active0, 0L, active1, 0L, active2, 4L);
       case 69:
-         return mccMoveStringLiteralDfa7_0(active0, 2L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa7_0(active0, 2L, active1, 0L);
       case 76:
-         return mccMoveStringLiteralDfa7_0(active0, 128L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa7_0(active0, 128L, active1, 0L);
       case 77:
-         return mccMoveStringLiteralDfa7_0(active0, 1024L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa7_0(active0, 1024L, active1, 0L);
       case 95:
-         return mccMoveStringLiteralDfa7_0(active0, 28L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa7_0(active0, 28L, active1, 0L);
       case 97:
-         return mccMoveStringLiteralDfa7_0(active0, 78812993478983680L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa7_0(active0, 78812993478983680L, active1, 0L);
       case 99:
-         return mccMoveStringLiteralDfa7_0(active0, 134217728L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa7_0(active0, 134217728L, active1, 0L);
+      case 100:
+         return mccMoveStringLiteralDfa7_0(active0, 576460752303423488L, active1, 0L);
       case 101:
-         if ((active0 & 576460752303423488L) != 0L)
-            return mccStartNfaWithStates_0(6, 59, 32);
-         return mccMoveStringLiteralDfa7_0(active0, 0L, active1, 32L, active2, 0L);
+         if ((active0 & 1152921504606846976L) != 0L)
+            return mccStartNfaWithStates_0(6, 60, 32);
+         return mccMoveStringLiteralDfa7_0(active0, 0L, active1, 128L);
       case 108:
-         return mccMoveStringLiteralDfa7_0(active0, 4611686018427387904L, active1, 2048L, active2, 0L);
+         if ((active1 & 4096L) != 0L)
+            return mccStartNfaWithStates_0(6, 76, 32);
+         return mccMoveStringLiteralDfa7_0(active0, -9223372036854775808L, active1, 16384L);
       case 110:
-         return mccMoveStringLiteralDfa7_0(active0, 4325376L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa7_0(active0, 4325376L, active1, 0L);
       case 116:
          if ((active0 & 274877906944L) != 0L)
             return mccStartNfaWithStates_0(6, 38, 32);
-         return mccMoveStringLiteralDfa7_0(active0, 1152921504606846976L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa7_0(active0, 2305843009213693952L, active1, 0L);
       case 117:
-         return mccMoveStringLiteralDfa7_0(active0, 137438953472L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa7_0(active0, 137438953472L, active1, 0L);
       case 121:
          if ((active0 & 35184372088832L) != 0L)
             return mccStartNfaWithStates_0(6, 45, 32);
@@ -841,67 +839,67 @@ private int mccMoveStringLiteralDfa6_0(long old0, long active0, long old1, long 
       default :
          break;
    }
-   return mccStartNfa_0(5, active0, active1, active2);
+   return mccStartNfa_0(5, active0, active1, 0L);
 }
-private int mccMoveStringLiteralDfa7_0(long old0, long active0, long old1, long active1, long old2, long active2)
+private int mccMoveStringLiteralDfa7_0(long old0, long active0, long old1, long active1)
 {
-   if (((active0 &= old0) | (active1 &= old1) | (active2 &= old2)) == 0L)
-      return mccStartNfa_0(5, old0, old1, old2); 
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return mccStartNfa_0(5, old0, old1, 0L);
    try { curChar = input_stream.ReadChar(); }
    catch(System.IO.IOException) {
-      mccStopStringLiteralDfa_0(6, active0, active1, active2);
+      mccStopStringLiteralDfa_0(6, active0, active1, 0L);
       return 7;
    }
    switch((int)curChar) {
       case 40:
-         return mccMoveStringLiteralDfa8_0(active0, 4194304L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 4194304L, active1, 0L);
       case 42:
-         return mccMoveStringLiteralDfa8_0(active0, 131072L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 131072L, active1, 0L);
       case 65:
-         return mccMoveStringLiteralDfa8_0(active0, 2L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 2L, active1, 0L);
       case 66:
-         return mccMoveStringLiteralDfa8_0(active0, 8L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 8L, active1, 0L);
       case 67:
-         return mccMoveStringLiteralDfa8_0(active0, 4L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 4L, active1, 0L);
       case 69:
-         if ((active2 & 4L) != 0L)
-            return mccStartNfaWithStates_0(7, 130, 32);
-         return mccMoveStringLiteralDfa8_0(active0, 16L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 16L, active1, 0L);
       case 71:
-         return mccMoveStringLiteralDfa8_0(active0, 1024L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 1024L, active1, 0L);
       case 95:
-         return mccMoveStringLiteralDfa8_0(active0, 128L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 128L, active1, 0L);
       case 99:
-         return mccMoveStringLiteralDfa8_0(active0, 74309393851613184L, active1, 0L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 74309393851613184L, active1, 0L);
       case 101:
          if ((active0 & 137438953472L) != 0L)
             return mccStartNfaWithStates_0(7, 37, 32);
-         else if ((active1 & 2048L) != 0L)
-            return mccStartNfaWithStates_0(7, 75, 32);
-         return mccMoveStringLiteralDfa8_0(active0, 1152921504606846976L, active1, 0L, active2, 0L);
+         else if ((active0 & 576460752303423488L) != 0L)
+            return mccStartNfaWithStates_0(7, 59, 32);
+         else if ((active1 & 16384L) != 0L)
+            return mccStartNfaWithStates_0(7, 78, 32);
+         return mccMoveStringLiteralDfa8_0(active0, 2305843009213693952L, active1, 0L);
       case 108:
          if ((active0 & 4503599627370496L) != 0L)
             return mccStartNfaWithStates_0(7, 52, 32);
          break;
       case 110:
-         return mccMoveStringLiteralDfa8_0(active0, 0L, active1, 32L, active2, 0L);
+         return mccMoveStringLiteralDfa8_0(active0, 0L, active1, 128L);
       case 116:
          if ((active0 & 134217728L) != 0L)
             return mccStartNfaWithStates_0(7, 27, 32);
          break;
       case 121:
-         if ((active0 & 4611686018427387904L) != 0L)
-            return mccStartNfaWithStates_0(7, 62, 32);
+         if ((active0 & -9223372036854775808L) != 0L)
+            return mccStartNfaWithStates_0(7, 63, 32);
          break;
       default :
          break;
    }
-   return mccStartNfa_0(6, active0, active1, active2);
+   return mccStartNfa_0(6, active0, active1, 0L);
 }
-private int mccMoveStringLiteralDfa8_0(long old0, long active0, long old1, long active1, long old2, long active2)
+private int mccMoveStringLiteralDfa8_0(long old0, long active0, long old1, long active1)
 {
-   if (((active0 &= old0) | (active1 &= old1) | (active2 &= old2)) == 0L)
-      return mccStartNfa_0(6, old0, old1, old2); 
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return mccStartNfa_0(6, old0, old1, 0L);
    try { curChar = input_stream.ReadChar(); }
    catch(System.IO.IOException) {
       mccStopStringLiteralDfa_0(7, active0, active1, 0L);
@@ -929,8 +927,8 @@ private int mccMoveStringLiteralDfa8_0(long old0, long active0, long old1, long 
       case 99:
          return mccMoveStringLiteralDfa9_0(active0, 4194304L, active1, 0L);
       case 100:
-         if ((active0 & 1152921504606846976L) != 0L)
-            return mccStartNfaWithStates_0(8, 60, 32);
+         if ((active0 & 2305843009213693952L) != 0L)
+            return mccStartNfaWithStates_0(8, 61, 32);
          break;
       case 101:
          if ((active0 & 2251799813685248L) != 0L)
@@ -939,8 +937,8 @@ private int mccMoveStringLiteralDfa8_0(long old0, long active0, long old1, long 
             return mccStartNfaWithStates_0(8, 56, 32);
          break;
       case 116:
-         if ((active1 & 32L) != 0L)
-            return mccStartNfaWithStates_0(8, 69, 32);
+         if ((active1 & 128L) != 0L)
+            return mccStartNfaWithStates_0(8, 71, 32);
          break;
       default :
          break;
@@ -1329,8 +1327,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                      mccCheckNAddStates(0, 6);
                   else if (curChar == 36)
                   {
-                     if (kind > 137)
-                        kind = 137;
+                     if (kind > 139)
+                        kind = 139;
                      mccCheckNAdd(32);
                   }
                   else if (curChar == 34)
@@ -1343,14 +1341,14 @@ private int mccMoveNfa_0(int startState, int curPos)
                      mccstateSet[mccnewStateCnt++] = 2;
                   if ((287667426198290432 & l) != 0L)
                   {
-                     if (kind > 77)
-                        kind = 77;
+                     if (kind > 80)
+                        kind = 80;
                      mccCheckNAddTwoStates(5, 6);
                   }
                   else if (curChar == 48)
                   {
-                     if (kind > 77)
-                        kind = 77;
+                     if (kind > 80)
+                        kind = 80;
                      mccCheckNAddStates(12, 16);
                   }
                   break;
@@ -1369,15 +1367,15 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 4:
                   if ((287667426198290432 & l) == 0L)
                      break;
-                  if (kind > 77)
-                     kind = 77;
+                  if (kind > 80)
+                     kind = 80;
                   mccCheckNAddTwoStates(5, 6);
                   break;
                case 5:
                   if ((287948901175001088 & l) == 0L)
                      break;
-                  if (kind > 77)
-                     kind = 77;
+                  if (kind > 80)
+                     kind = 80;
                   mccCheckNAddTwoStates(5, 6);
                   break;
                case 7:
@@ -1387,8 +1385,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 8:
                   if ((287948901175001088 & l) == 0L)
                      break;
-                  if (kind > 81)
-                     kind = 81;
+                  if (kind > 84)
+                     kind = 84;
                   mccCheckNAddStates(17, 19);
                   break;
                case 10:
@@ -1398,8 +1396,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 11:
                   if ((287948901175001088 & l) == 0L)
                      break;
-                  if (kind > 81)
-                     kind = 81;
+                  if (kind > 84)
+                     kind = 84;
                   mccCheckNAddTwoStates(11, 12);
                   break;
                case 13:
@@ -1411,8 +1409,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                      mccCheckNAdd(15);
                   break;
                case 15:
-                  if (curChar == 39 && kind > 86)
-                     kind = 86;
+                  if (curChar == 39 && kind > 89)
+                     kind = 89;
                   break;
                case 17:
                   if ((566935683072 & l) != 0L)
@@ -1447,8 +1445,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                      mccCheckNAddStates(7, 9);
                   break;
                case 26:
-                  if (curChar == 34 && kind > 87)
-                     kind = 87;
+                  if (curChar == 34 && kind > 90)
+                     kind = 90;
                   break;
                case 27:
                   if ((71776119061217280 & l) != 0L)
@@ -1469,15 +1467,15 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 31:
                   if (curChar != 36)
                      break;
-                  if (kind > 137)
-                     kind = 137;
+                  if (kind > 139)
+                     kind = 139;
                   mccCheckNAdd(32);
                   break;
                case 32:
                   if ((287948970162897407 & l) == 0L)
                      break;
-                  if (kind > 137)
-                     kind = 137;
+                  if (kind > 139)
+                     kind = 139;
                   mccCheckNAdd(32);
                   break;
                case 33:
@@ -1507,8 +1505,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 41:
                   if ((287948901175001088 & l) == 0L)
                      break;
-                  if (kind > 81)
-                     kind = 81;
+                  if (kind > 84)
+                     kind = 84;
                   mccCheckNAddTwoStates(41, 12);
                   break;
                case 42:
@@ -1518,15 +1516,15 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 43:
                   if (curChar != 46)
                      break;
-                  if (kind > 81)
-                     kind = 81;
+                  if (kind > 84)
+                     kind = 84;
                   mccCheckNAddStates(27, 29);
                   break;
                case 44:
                   if ((287948901175001088 & l) == 0L)
                      break;
-                  if (kind > 81)
-                     kind = 81;
+                  if (kind > 84)
+                     kind = 84;
                   mccCheckNAddStates(27, 29);
                   break;
                case 46:
@@ -1536,29 +1534,29 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 47:
                   if ((287948901175001088 & l) == 0L)
                      break;
-                  if (kind > 81)
-                     kind = 81;
+                  if (kind > 84)
+                     kind = 84;
                   mccCheckNAddTwoStates(47, 12);
                   break;
                case 48:
                   if (curChar != 48)
                      break;
-                  if (kind > 77)
-                     kind = 77;
+                  if (kind > 80)
+                     kind = 80;
                   mccCheckNAddStates(12, 16);
                   break;
                case 50:
                   if ((287948901175001088 & l) == 0L)
                      break;
-                  if (kind > 77)
-                     kind = 77;
+                  if (kind > 80)
+                     kind = 80;
                   mccCheckNAddTwoStates(50, 6);
                   break;
                case 51:
                   if ((71776119061217280 & l) == 0L)
                      break;
-                  if (kind > 77)
-                     kind = 77;
+                  if (kind > 80)
+                     kind = 80;
                   mccCheckNAddTwoStates(51, 6);
                   break;
                case 53:
@@ -1580,8 +1578,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 58:
                   if ((287948901175001088 & l) == 0L)
                      break;
-                  if (kind > 81)
-                     kind = 81;
+                  if (kind > 84)
+                     kind = 84;
                   mccCheckNAddTwoStates(58, 12);
                   break;
                case 60:
@@ -1599,8 +1597,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 64:
                   if ((287948901175001088 & l) == 0L)
                      break;
-                  if (kind > 81)
-                     kind = 81;
+                  if (kind > 84)
+                     kind = 84;
                   mccCheckNAddTwoStates(64, 12);
                   break;
                default : break;
@@ -1617,8 +1615,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 3:
                   if ((576460745995190270 & l) == 0L)
                      break;
-                  if (kind > 137)
-                     kind = 137;
+                  if (kind > 139)
+                     kind = 139;
                   mccCheckNAdd(32);
                   break;
                case 1:
@@ -1626,16 +1624,16 @@ private int mccMoveNfa_0(int startState, int curPos)
                      kind = 20;
                   break;
                case 6:
-                  if ((17592186048512 & l) != 0L && kind > 77)
-                     kind = 77;
+                  if ((17592186048512 & l) != 0L && kind > 80)
+                     kind = 80;
                   break;
                case 9:
                   if ((137438953504 & l) != 0L)
                      mccAddStates(35, 36);
                   break;
                case 12:
-                  if ((343597383760 & l) != 0L && kind > 81)
-                     kind = 81;
+                  if ((343597383760 & l) != 0L && kind > 84)
+                     kind = 84;
                   break;
                case 14:
                   if ((-268435457 & l) != 0L)
@@ -1664,8 +1662,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 32:
                   if ((-8646911290859585538 & l) == 0L)
                      break;
-                  if (kind > 137)
-                     kind = 137;
+                  if (kind > 139)
+                     kind = 139;
                   mccCheckNAdd(32);
                   break;
                case 35:
@@ -1687,8 +1685,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 50:
                   if ((541165879422 & l) == 0L)
                      break;
-                  if (kind > 77)
-                     kind = 77;
+                  if (kind > 80)
+                     kind = 80;
                   mccCheckNAddTwoStates(50, 6);
                   break;
                case 52:
@@ -1737,8 +1735,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 3:
                   if (!mccCanMove_1(hiByte, i1, i2, l1, l2))
                      break;
-                  if (kind > 137)
-                     kind = 137;
+                  if (kind > 139)
+                     kind = 139;
                   mccCheckNAdd(32);
                   break;
                case 1:
@@ -1756,8 +1754,8 @@ private int mccMoveNfa_0(int startState, int curPos)
                case 32:
                   if (!mccCanMove_2(hiByte, i1, i2, l1, l2))
                      break;
-                  if (kind > 137)
-                     kind = 137;
+                  if (kind > 139)
+                     kind = 139;
                   mccCheckNAdd(32);
                   break;
                default : break;
@@ -2111,13 +2109,13 @@ null, null, null, null, null, null, null, null, null, "abstract", "base", "bool"
 "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", 
 "do", "double", "else", "enum", "extern", "false", "finally", "float", "for", 
 "goto", "if", "int", "interface", "internal", "is", "lock", "long", "namespace", 
-"new", "null", "private", "protected", "public", "readonly", "return", "short", 
-"static", "switch", "this", "throw", "transient", "true", "try", "using", "var", "void", 
-"volatile", "while", null, null, null, null, null, null, null, null, null, null, null, 
-"(", ")", "{", "}", "[", "]", ";", ",", ".", "=", "<", "!", "~", "?", ":", "==", 
-"<=", ">=", "!=", "||", "&&", "++", "--", "+", "-", "*", "/", "&", "|", "^", "%", 
-"+=", "-=", "*=", "/=", "&=", "|=", "^=", "%=", ">>", ">", "#", "JAVACODE", "out", 
-"in", "params", "<<=", ">>=", "<<", null, null, null, };
+"new", "null", "override", "private", "protected", "public", "readonly", "return", 
+"sealed", "short", "static", "switch", "this", "throw", "transient", "true", "try", 
+"using", "var", "virtual", "void", "volatile", "while", null, null, null, null, null, 
+null, null, null, null, null, null, "(", ")", "{", "}", "[", "]", ";", ",", ".", 
+"=", "<", "!", "~", "?", ":", "==", "<=", ">=", "!=", "||", "&&", "++", "--", "+", 
+"-", "*", "/", "&", "|", "^", "%", "+=", "-=", "*=", "/=", "&=", "|=", "^=", "%=", 
+">>", ">", "#", "out", "in", "params", "<<=", ">>=", "<<", null, null, null, };
 public static readonly string[] lexStateNames = {
    "DEFAULT", 
    "AFTER_EGEN", 
@@ -2131,10 +2129,10 @@ public static readonly int[] mccnewLexState = {
    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
 };
 static readonly long[] mcctoToken = {
-   -134213633, -4046849, 1023, 
+   -134213633, -32374785, 4095, 
 };
 static readonly long[] mcctoSkip = {
    59240448, 0, 0, 
@@ -2375,11 +2373,11 @@ void MoreLexicalActions() {
 void TokenLexicalActions(Token matchedToken)
 {
    switch(mccmatchedKind) {
-      case 127 :
+      case 130 :
         if (image == null)
-            image = new System.Text.StringBuilder(mccstrLiteralImages[127]);
+            image = new System.Text.StringBuilder(mccstrLiteralImages[130]);
          else
-            image.Append(mccstrLiteralImages[127]);
+            image.Append(mccstrLiteralImages[130]);
      matchedToken.kind = GT;
      ((Token.GTToken)matchedToken).realKind = CSharpCCParserConstants.RSIGNEDSHIFT;
      input_stream.Backup(1);

@@ -49,81 +49,84 @@ public  class CSharpCCParserConstants {
   public const int NAMESPACE = 56;
   public const int NEW = 57;
   public const int NULL = 58;
-  public const int PRIVATE = 59;
-  public const int PROTECTED = 60;
-  public const int PUBLIC = 61;
-  public const int READONLY = 62;
-  public const int RETURN = 63;
-  public const int SHORT = 64;
-  public const int STATIC = 65;
-  public const int SWITCH = 66;
-  public const int THIS = 67;
-  public const int THROW = 68;
-  public const int TRANSIENT = 69;
-  public const int TRUE = 70;
-  public const int TRY = 71;
-  public const int USING = 72;
-  public const int VAR = 73;
-  public const int VOID = 74;
-  public const int VOLATILE = 75;
-  public const int WHILE = 76;
-  public const int INTEGER_LITERAL = 77;
-  public const int DECIMAL_LITERAL = 78;
-  public const int HEX_LITERAL = 79;
-  public const int OCTAL_LITERAL = 80;
-  public const int FLOATING_POINT_LITERAL = 81;
-  public const int DECIMAL_FLOATING_POINT_LITERAL = 82;
-  public const int DECIMAL_EXPONENT = 83;
-  public const int HEXADECIMAL_FLOATING_POINT_LITERAL = 84;
-  public const int HEXADECIMAL_EXPONENT = 85;
-  public const int CHARACTER_LITERAL = 86;
-  public const int STRING_LITERAL = 87;
-  public const int LPAREN = 88;
-  public const int RPAREN = 89;
-  public const int LBRACE = 90;
-  public const int RBRACE = 91;
-  public const int LBRACKET = 92;
-  public const int RBRACKET = 93;
-  public const int SEMICOLON = 94;
-  public const int COMMA = 95;
-  public const int DOT = 96;
-  public const int ASSIGN = 97;
-  public const int LT = 98;
-  public const int BANG = 99;
-  public const int TILDE = 100;
-  public const int HOOK = 101;
-  public const int COLON = 102;
-  public const int EQ = 103;
-  public const int LE = 104;
-  public const int GE = 105;
-  public const int NE = 106;
-  public const int SC_OR = 107;
-  public const int SC_AND = 108;
-  public const int INCR = 109;
-  public const int DECR = 110;
-  public const int PLUS = 111;
-  public const int MINUS = 112;
-  public const int STAR = 113;
-  public const int SLASH = 114;
-  public const int BIT_AND = 115;
-  public const int BIT_OR = 116;
-  public const int XOR = 117;
-  public const int REM = 118;
-  public const int PLUSASSIGN = 119;
-  public const int MINUSASSIGN = 120;
-  public const int STARASSIGN = 121;
-  public const int SLASHASSIGN = 122;
-  public const int ANDASSIGN = 123;
-  public const int ORASSIGN = 124;
-  public const int XORASSIGN = 125;
-  public const int REMASSIGN = 126;
-  public const int RSIGNEDSHIFT = 127;
-  public const int GT = 128;
-  public const int LANGLE = 98;
-  public const int RANGLE = 128;
-  public const int IDENTIFIER = 137;
-  public const int LETTER = 138;
-  public const int PART_LETTER = 139;
+  public const int OVERRIDE = 59;
+  public const int PRIVATE = 60;
+  public const int PROTECTED = 61;
+  public const int PUBLIC = 62;
+  public const int READONLY = 63;
+  public const int RETURN = 64;
+  public const int SEALED = 65;
+  public const int SHORT = 66;
+  public const int STATIC = 67;
+  public const int SWITCH = 68;
+  public const int THIS = 69;
+  public const int THROW = 70;
+  public const int TRANSIENT = 71;
+  public const int TRUE = 72;
+  public const int TRY = 73;
+  public const int USING = 74;
+  public const int VAR = 75;
+  public const int VIRTUAL = 76;
+  public const int VOID = 77;
+  public const int VOLATILE = 78;
+  public const int WHILE = 79;
+  public const int INTEGER_LITERAL = 80;
+  public const int DECIMAL_LITERAL = 81;
+  public const int HEX_LITERAL = 82;
+  public const int OCTAL_LITERAL = 83;
+  public const int FLOATING_POINT_LITERAL = 84;
+  public const int DECIMAL_FLOATING_POINT_LITERAL = 85;
+  public const int DECIMAL_EXPONENT = 86;
+  public const int HEXADECIMAL_FLOATING_POINT_LITERAL = 87;
+  public const int HEXADECIMAL_EXPONENT = 88;
+  public const int CHARACTER_LITERAL = 89;
+  public const int STRING_LITERAL = 90;
+  public const int LPAREN = 91;
+  public const int RPAREN = 92;
+  public const int LBRACE = 93;
+  public const int RBRACE = 94;
+  public const int LBRACKET = 95;
+  public const int RBRACKET = 96;
+  public const int SEMICOLON = 97;
+  public const int COMMA = 98;
+  public const int DOT = 99;
+  public const int ASSIGN = 100;
+  public const int LT = 101;
+  public const int BANG = 102;
+  public const int TILDE = 103;
+  public const int HOOK = 104;
+  public const int COLON = 105;
+  public const int EQ = 106;
+  public const int LE = 107;
+  public const int GE = 108;
+  public const int NE = 109;
+  public const int SC_OR = 110;
+  public const int SC_AND = 111;
+  public const int INCR = 112;
+  public const int DECR = 113;
+  public const int PLUS = 114;
+  public const int MINUS = 115;
+  public const int STAR = 116;
+  public const int SLASH = 117;
+  public const int BIT_AND = 118;
+  public const int BIT_OR = 119;
+  public const int XOR = 120;
+  public const int REM = 121;
+  public const int PLUSASSIGN = 122;
+  public const int MINUSASSIGN = 123;
+  public const int STARASSIGN = 124;
+  public const int SLASHASSIGN = 125;
+  public const int ANDASSIGN = 126;
+  public const int ORASSIGN = 127;
+  public const int XORASSIGN = 128;
+  public const int REMASSIGN = 129;
+  public const int RSIGNEDSHIFT = 130;
+  public const int GT = 131;
+  public const int LANGLE = 101;
+  public const int RANGLE = 131;
+  public const int IDENTIFIER = 139;
+  public const int LETTER = 140;
+  public const int PART_LETTER = 141;
 
   public const int DEFAULT = 0;
   public const int AFTER_EGEN = 1;
@@ -191,11 +194,13 @@ public  class CSharpCCParserConstants {
     "\"namespace\"",
     "\"new\"",
     "\"null\"",
+    "\"override\"",
     "\"private\"",
     "\"protected\"",
     "\"public\"",
     "\"readonly\"",
     "\"return\"",
+    "\"sealed\"",
     "\"short\"",
     "\"static\"",
     "\"switch\"",
@@ -206,6 +211,7 @@ public  class CSharpCCParserConstants {
     "\"try\"",
     "\"using\"",
     "\"var\"",
+    "\"virtual\"",
     "\"void\"",
     "\"volatile\"",
     "\"while\"",
@@ -262,7 +268,6 @@ public  class CSharpCCParserConstants {
     "\">>\"",
     "\">\"",
     "\"#\"",
-    "\"JAVACODE\"",
     "\"out\"",
     "\"in\"",
     "\"params\"",

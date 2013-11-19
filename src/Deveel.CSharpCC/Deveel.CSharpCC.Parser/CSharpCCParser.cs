@@ -41,6 +41,8 @@ public class CSharpCCParser : CSharpCCParserConstants {
      public const int EXTERN = 0x0080;
      public const int TRANSIENT = 0x0100;
      public const int VOLATILE = 0x0200;
+         public const int VIRTUAL = 0x0400;
+         public const int SEALED = 0x0800;
 
      public bool isPublic(int modifiers)
      {
@@ -871,11 +873,11 @@ public class CSharpCCParser : CSharpCCParserConstants {
           image = "";
         mcc_consume_token(LANGLE);
         switch ((mcc_ntk==-1)?mcc_mntk():mcc_ntk) {
-        case 129:
+        case 132:
         case IDENTIFIER:
           switch ((mcc_ntk==-1)?mcc_mntk():mcc_ntk) {
-          case 129:
-            mcc_consume_token(129);
+          case 132:
+            mcc_consume_token(132);
           private_rexp = true;
             break;
           default:
@@ -1217,8 +1219,8 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case _PARSER_END:
       mcc_consume_token(_PARSER_END);
       break;
-    case 130:
-      mcc_consume_token(130);
+    case _CODE:
+      mcc_consume_token(_CODE);
       break;
     case _TOKEN:
       mcc_consume_token(_TOKEN);
@@ -1279,12 +1281,15 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case EXTERN:
       case INTERFACE:
       case INTERNAL:
+      case OVERRIDE:
       case PRIVATE:
       case PROTECTED:
       case PUBLIC:
       case READONLY:
+      case SEALED:
       case STATIC:
       case TRANSIENT:
+      case VIRTUAL:
       case VOLATILE:
       case LBRACKET:
       case SEMICOLON:
@@ -1376,6 +1381,17 @@ public class CSharpCCParser : CSharpCCParserConstants {
         mcc_consume_token(VOLATILE);
                 modifiers |= ModifierSet.VOLATILE;
         break;
+      case VIRTUAL:
+        mcc_consume_token(VIRTUAL);
+                      modifiers |= ModifierSet.VIRTUAL;
+        break;
+      case SEALED:
+        mcc_consume_token(SEALED);
+                     modifiers |= ModifierSet.SEALED;
+        break;
+      case OVERRIDE:
+        mcc_consume_token(OVERRIDE);
+        break;
       case LBRACKET:
         Annotation();
         break;
@@ -1405,12 +1421,15 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case EXTERN:
     case INTERFACE:
     case INTERNAL:
+    case OVERRIDE:
     case PRIVATE:
     case PROTECTED:
     case PUBLIC:
     case READONLY:
+    case SEALED:
     case STATIC:
     case TRANSIENT:
+    case VIRTUAL:
     case VOLATILE:
     case LBRACKET:
       modifiers = Modifiers();
@@ -1576,14 +1595,14 @@ public class CSharpCCParser : CSharpCCParserConstants {
 
   public void TypeParameter() {
     switch ((mcc_ntk==-1)?mcc_mntk():mcc_ntk) {
-    case 131:
-    case 132:
+    case 133:
+    case 134:
       switch ((mcc_ntk==-1)?mcc_mntk():mcc_ntk) {
-      case 131:
-        mcc_consume_token(131);
+      case 133:
+        mcc_consume_token(133);
         break;
-      case 132:
-        mcc_consume_token(132);
+      case 134:
+        mcc_consume_token(134);
         break;
       default:
         mcc_la1[56] = mcc_gen;
@@ -1620,13 +1639,16 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case INTERFACE:
       case INTERNAL:
       case LONG:
+      case OVERRIDE:
       case PRIVATE:
       case PROTECTED:
       case PUBLIC:
       case READONLY:
+      case SEALED:
       case SHORT:
       case STATIC:
       case TRANSIENT:
+      case VIRTUAL:
       case VOID:
       case VOLATILE:
       case LBRACE:
@@ -1676,13 +1698,16 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case INTERFACE:
       case INTERNAL:
       case LONG:
+      case OVERRIDE:
       case PRIVATE:
       case PROTECTED:
       case PUBLIC:
       case READONLY:
+      case SEALED:
       case SHORT:
       case STATIC:
       case TRANSIENT:
+      case VIRTUAL:
       case VOID:
       case VOLATILE:
       case LBRACKET:
@@ -1797,6 +1822,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case _IGNORE_CASE:
     case _PARSER_BEGIN:
     case _PARSER_END:
+    case _CODE:
     case _TOKEN:
     case _SPECIAL_TOKEN:
     case _MORE:
@@ -1820,7 +1846,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case DECR:
     case PLUS:
     case MINUS:
-    case 130:
     case IDENTIFIER:
       Expression(null);
       break;
@@ -1838,6 +1863,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case _IGNORE_CASE:
     case _PARSER_BEGIN:
     case _PARSER_END:
+    case _CODE:
     case _TOKEN:
     case _SPECIAL_TOKEN:
     case _MORE:
@@ -1862,7 +1888,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case DECR:
     case PLUS:
     case MINUS:
-    case 130:
     case IDENTIFIER:
       VariableInitializer();
       while (true) {
@@ -1939,7 +1964,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case INT:
     case LONG:
     case SHORT:
-    case 133:
+    case 135:
     case IDENTIFIER:
       FormalParameter();
       while (true) {
@@ -1975,8 +2000,8 @@ public class CSharpCCParser : CSharpCCParserConstants {
 
   public void FormalParameter() {
     switch ((mcc_ntk==-1)?mcc_mntk():mcc_ntk) {
-    case 133:
-      mcc_consume_token(133);
+    case 135:
+      mcc_consume_token(135);
       break;
     default:
       mcc_la1[72] = mcc_gen;
@@ -2011,6 +2036,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case _IGNORE_CASE:
       case _PARSER_BEGIN:
       case _PARSER_END:
+      case _CODE:
       case _TOKEN:
       case _SPECIAL_TOKEN:
       case _MORE:
@@ -2040,11 +2066,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case LONG:
       case NEW:
       case NULL:
+      case OVERRIDE:
       case PRIVATE:
       case PROTECTED:
       case PUBLIC:
       case READONLY:
       case RETURN:
+      case SEALED:
       case SHORT:
       case STATIC:
       case SWITCH:
@@ -2053,6 +2081,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case TRANSIENT:
       case TRUE:
       case TRY:
+      case VIRTUAL:
       case VOLATILE:
       case WHILE:
       case INTEGER_LITERAL:
@@ -2065,7 +2094,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case SEMICOLON:
       case INCR:
       case DECR:
-      case 130:
       case IDENTIFIER:
         ;
         break;
@@ -2377,11 +2405,11 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case MINUSASSIGN:
       mcc_consume_token(MINUSASSIGN);
       break;
-    case 134:
-      mcc_consume_token(134);
+    case 136:
+      mcc_consume_token(136);
       break;
-    case 135:
-      mcc_consume_token(135);
+    case 137:
+      mcc_consume_token(137);
       break;
     case ANDASSIGN:
       mcc_consume_token(ANDASSIGN);
@@ -2589,8 +2617,8 @@ public class CSharpCCParser : CSharpCCParserConstants {
         goto label_36;
       }
       switch ((mcc_ntk==-1)?mcc_mntk():mcc_ntk) {
-      case 136:
-        mcc_consume_token(136);
+      case 138:
+        mcc_consume_token(138);
         break;
       default:
         mcc_la1[95] = mcc_gen;
@@ -2697,6 +2725,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case _IGNORE_CASE:
     case _PARSER_BEGIN:
     case _PARSER_END:
+    case _CODE:
     case _TOKEN:
     case _SPECIAL_TOKEN:
     case _MORE:
@@ -2716,7 +2745,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case LPAREN:
     case BANG:
     case TILDE:
-    case 130:
     case IDENTIFIER:
       UnaryExpressionNotPlusMinus();
       break;
@@ -2765,6 +2793,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case _IGNORE_CASE:
         case _PARSER_BEGIN:
         case _PARSER_END:
+        case _CODE:
         case _TOKEN:
         case _SPECIAL_TOKEN:
         case _MORE:
@@ -2782,7 +2811,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case CHARACTER_LITERAL:
         case STRING_LITERAL:
         case LPAREN:
-        case 130:
         case IDENTIFIER:
           PostfixExpression();
           break;
@@ -2956,13 +2984,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case _IGNORE_CASE:
     case _PARSER_BEGIN:
     case _PARSER_END:
+    case _CODE:
     case _TOKEN:
     case _SPECIAL_TOKEN:
     case _MORE:
     case _SKIP:
     case _TOKEN_MGR_DECLS:
     case _EOF:
-    case 130:
     case IDENTIFIER:
       Name(null);
       break;
@@ -3079,6 +3107,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case _IGNORE_CASE:
     case _PARSER_BEGIN:
     case _PARSER_END:
+    case _CODE:
     case _TOKEN:
     case _SPECIAL_TOKEN:
     case _MORE:
@@ -3102,7 +3131,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case DECR:
     case PLUS:
     case MINUS:
-    case 130:
     case IDENTIFIER:
       ArgumentList();
       break;
@@ -3260,6 +3288,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case _IGNORE_CASE:
       case _PARSER_BEGIN:
       case _PARSER_END:
+      case _CODE:
       case _TOKEN:
       case _SPECIAL_TOKEN:
       case _MORE:
@@ -3279,7 +3308,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case LPAREN:
       case INCR:
       case DECR:
-      case 130:
       case IDENTIFIER:
         StatementExpression();
         mcc_consume_token(SEMICOLON);
@@ -3346,6 +3374,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case _IGNORE_CASE:
       case _PARSER_BEGIN:
       case _PARSER_END:
+      case _CODE:
       case _TOKEN:
       case _SPECIAL_TOKEN:
       case _MORE:
@@ -3375,11 +3404,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case LONG:
       case NEW:
       case NULL:
+      case OVERRIDE:
       case PRIVATE:
       case PROTECTED:
       case PUBLIC:
       case READONLY:
       case RETURN:
+      case SEALED:
       case SHORT:
       case STATIC:
       case SWITCH:
@@ -3388,6 +3419,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case TRANSIENT:
       case TRUE:
       case TRY:
+      case VIRTUAL:
       case VOLATILE:
       case WHILE:
       case INTEGER_LITERAL:
@@ -3400,7 +3432,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case SEMICOLON:
       case INCR:
       case DECR:
-      case 130:
       case IDENTIFIER:
         ;
         break;
@@ -3433,6 +3464,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case _IGNORE_CASE:
       case _PARSER_BEGIN:
       case _PARSER_END:
+      case _CODE:
       case _TOKEN:
       case _SPECIAL_TOKEN:
       case _MORE:
@@ -3466,7 +3498,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case SEMICOLON:
       case INCR:
       case DECR:
-      case 130:
       case IDENTIFIER:
         Statement();
         break;
@@ -3517,6 +3548,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case _IGNORE_CASE:
     case _PARSER_BEGIN:
     case _PARSER_END:
+    case _CODE:
     case _TOKEN:
     case _SPECIAL_TOKEN:
     case _MORE:
@@ -3534,7 +3566,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case CHARACTER_LITERAL:
     case STRING_LITERAL:
     case LPAREN:
-    case 130:
     case IDENTIFIER:
       PrimaryExpression();
       switch ((mcc_ntk==-1)?mcc_mntk():mcc_ntk) {
@@ -3549,8 +3580,8 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case ORASSIGN:
       case XORASSIGN:
       case REMASSIGN:
-      case 134:
-      case 135:
+      case 136:
+      case 137:
         switch ((mcc_ntk==-1)?mcc_mntk():mcc_ntk) {
         case INCR:
           mcc_consume_token(INCR);
@@ -3567,8 +3598,8 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case ORASSIGN:
         case XORASSIGN:
         case REMASSIGN:
-        case 134:
-        case 135:
+        case 136:
+        case 137:
           AssignmentOperator();
           Expression(null);
           break;
@@ -3614,6 +3645,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case _IGNORE_CASE:
         case _PARSER_BEGIN:
         case _PARSER_END:
+        case _CODE:
         case _TOKEN:
         case _SPECIAL_TOKEN:
         case _MORE:
@@ -3643,11 +3675,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case LONG:
         case NEW:
         case NULL:
+        case OVERRIDE:
         case PRIVATE:
         case PROTECTED:
         case PUBLIC:
         case READONLY:
         case RETURN:
+        case SEALED:
         case SHORT:
         case STATIC:
         case SWITCH:
@@ -3656,6 +3690,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case TRANSIENT:
         case TRUE:
         case TRY:
+        case VIRTUAL:
         case VOLATILE:
         case WHILE:
         case INTEGER_LITERAL:
@@ -3668,7 +3703,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case SEMICOLON:
         case INCR:
         case DECR:
-        case 130:
         case IDENTIFIER:
           ;
           break;
@@ -3752,6 +3786,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case _IGNORE_CASE:
       case _PARSER_BEGIN:
       case _PARSER_END:
+      case _CODE:
       case _TOKEN:
       case _SPECIAL_TOKEN:
       case _MORE:
@@ -3772,15 +3807,18 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case LONG:
       case NEW:
       case NULL:
+      case OVERRIDE:
       case PRIVATE:
       case PROTECTED:
       case PUBLIC:
       case READONLY:
+      case SEALED:
       case SHORT:
       case STATIC:
       case THIS:
       case TRANSIENT:
       case TRUE:
+      case VIRTUAL:
       case VOLATILE:
       case INTEGER_LITERAL:
       case FLOATING_POINT_LITERAL:
@@ -3791,13 +3829,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case SEMICOLON:
       case INCR:
       case DECR:
-      case 130:
       case IDENTIFIER:
         switch ((mcc_ntk==-1)?mcc_mntk():mcc_ntk) {
         case _LOOKAHEAD:
         case _IGNORE_CASE:
         case _PARSER_BEGIN:
         case _PARSER_END:
+        case _CODE:
         case _TOKEN:
         case _SPECIAL_TOKEN:
         case _MORE:
@@ -3818,15 +3856,18 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case LONG:
         case NEW:
         case NULL:
+        case OVERRIDE:
         case PRIVATE:
         case PROTECTED:
         case PUBLIC:
         case READONLY:
+        case SEALED:
         case SHORT:
         case STATIC:
         case THIS:
         case TRANSIENT:
         case TRUE:
+        case VIRTUAL:
         case VOLATILE:
         case INTEGER_LITERAL:
         case FLOATING_POINT_LITERAL:
@@ -3836,7 +3877,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case LBRACKET:
         case INCR:
         case DECR:
-        case 130:
         case IDENTIFIER:
           ForInit();
           break;
@@ -3851,6 +3891,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case _IGNORE_CASE:
         case _PARSER_BEGIN:
         case _PARSER_END:
+        case _CODE:
         case _TOKEN:
         case _SPECIAL_TOKEN:
         case _MORE:
@@ -3874,7 +3915,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case DECR:
         case PLUS:
         case MINUS:
-        case 130:
         case IDENTIFIER:
           Expression(null);
           break;
@@ -3889,6 +3929,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case _IGNORE_CASE:
         case _PARSER_BEGIN:
         case _PARSER_END:
+        case _CODE:
         case _TOKEN:
         case _SPECIAL_TOKEN:
         case _MORE:
@@ -3908,7 +3949,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
         case LPAREN:
         case INCR:
         case DECR:
-        case 130:
         case IDENTIFIER:
           ForUpdate();
           break;
@@ -3937,6 +3977,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case _IGNORE_CASE:
       case _PARSER_BEGIN:
       case _PARSER_END:
+      case _CODE:
       case _TOKEN:
       case _SPECIAL_TOKEN:
       case _MORE:
@@ -3956,7 +3997,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
       case LPAREN:
       case INCR:
       case DECR:
-      case 130:
       case IDENTIFIER:
         StatementExpressionList();
         break;
@@ -4018,6 +4058,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case _IGNORE_CASE:
     case _PARSER_BEGIN:
     case _PARSER_END:
+    case _CODE:
     case _TOKEN:
     case _SPECIAL_TOKEN:
     case _MORE:
@@ -4041,7 +4082,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case DECR:
     case PLUS:
     case MINUS:
-    case 130:
     case IDENTIFIER:
       Expression(null);
       break;
@@ -4217,6 +4257,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case _IGNORE_CASE:
     case _PARSER_BEGIN:
     case _PARSER_END:
+    case _CODE:
     case _TOKEN:
     case _SPECIAL_TOKEN:
     case _MORE:
@@ -4240,7 +4281,6 @@ public class CSharpCCParser : CSharpCCParserConstants {
     case DECR:
     case PLUS:
     case MINUS:
-    case 130:
     case IDENTIFIER:
       ConditionalExpression();
       break;
@@ -4582,200 +4622,183 @@ public class CSharpCCParser : CSharpCCParserConstants {
     finally { mcc_save(42, xla); }
   }
 
-  private bool mcc_3R_294() {
-    if (mcc_3R_145()) return true;
+  private bool mcc_3R_220() {
+    if (mcc_3R_226()) return true;
     return false;
   }
 
-  private bool mcc_3R_204() {
-    if (mcc_scan_token(IF)) return true;
-    if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_83()) return true;
-    if (mcc_scan_token(RPAREN)) return true;
-    if (mcc_3R_168()) return true;
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_286()) mcc_scanpos = xsp;
-    return false;
-  }
-
-  private bool mcc_3R_218() {
-    if (mcc_3R_224()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_301() {
+  private bool mcc_3R_303() {
     if (mcc_scan_token(_DEFAULT)) return true;
     if (mcc_scan_token(COLON)) return true;
     return false;
   }
 
-  private bool mcc_3R_132() {
+  private bool mcc_3R_134() {
     if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_131()) return true;
+    if (mcc_3R_133()) return true;
     return false;
   }
 
-  private bool mcc_3R_300() {
+  private bool mcc_3R_302() {
     if (mcc_scan_token(CASE)) return true;
-    if (mcc_3R_83()) return true;
+    if (mcc_3R_85()) return true;
     if (mcc_scan_token(COLON)) return true;
     return false;
   }
 
-  private bool mcc_3R_293() {
+  private bool mcc_3R_295() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_300()) {
+    if (mcc_3R_302()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_301()) return true;
+    if (mcc_3R_303()) return true;
     }
     return false;
   }
 
-  private bool mcc_3R_280() {
+  private bool mcc_3R_282() {
     if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_254()) return true;
+    if (mcc_3R_256()) return true;
     return false;
   }
 
-  private bool mcc_3R_198() {
+  private bool mcc_3R_200() {
     if (mcc_scan_token(LBRACE)) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_218()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_220()) { mcc_scanpos = xsp; break; }
     }
     if (mcc_scan_token(RBRACE)) return true;
     return false;
   }
 
-  private bool mcc_3R_285() {
-    if (mcc_3R_293()) return true;
+  private bool mcc_3R_287() {
+    if (mcc_3R_295()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_294()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_296()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_276() {
-    if (mcc_3R_78()) return true;
+  private bool mcc_3R_278() {
+    if (mcc_3R_80()) return true;
     return false;
   }
 
-  private bool mcc_3R_203() {
+  private bool mcc_3R_205() {
     if (mcc_scan_token(SWITCH)) return true;
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_83()) return true;
+    if (mcc_3R_85()) return true;
     if (mcc_scan_token(RPAREN)) return true;
     if (mcc_scan_token(LBRACE)) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_285()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_287()) { mcc_scanpos = xsp; break; }
     }
     if (mcc_scan_token(RBRACE)) return true;
     return false;
   }
 
-  private bool mcc_3R_299() {
-    if (mcc_3R_82()) return true;
-    if (mcc_3R_83()) return true;
+  private bool mcc_3R_301() {
+    if (mcc_3R_84()) return true;
+    if (mcc_3R_85()) return true;
     return false;
   }
 
-  private bool mcc_3R_144() {
+  private bool mcc_3R_146() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(131)) {
+    if (mcc_scan_token(133)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(132)) return true;
+    if (mcc_scan_token(134)) return true;
     }
     return false;
   }
 
-  private bool mcc_3R_131() {
+  private bool mcc_3R_133() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_144()) mcc_scanpos = xsp;
+    if (mcc_3R_146()) mcc_scanpos = xsp;
     if (mcc_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
   private bool mcc_3_9() {
     if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_71()) return true;
+    if (mcc_3R_73()) return true;
     return false;
   }
 
-  private bool mcc_3R_292() {
+  private bool mcc_3R_294() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(109)) {
+    if (mcc_scan_token(112)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(110)) {
+    if (mcc_scan_token(113)) {
     mcc_scanpos = xsp;
-    if (mcc_3R_299()) return true;
+    if (mcc_3R_301()) return true;
     }
     }
     return false;
   }
 
-  private bool mcc_3R_101() {
+  private bool mcc_3R_103() {
     if (mcc_scan_token(LANGLE)) return true;
-    if (mcc_3R_131()) return true;
+    if (mcc_3R_133()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_132()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_134()) { mcc_scanpos = xsp; break; }
     }
     if (mcc_scan_token(RANGLE)) return true;
     return false;
   }
 
-  private bool mcc_3R_221() {
+  private bool mcc_3R_223() {
     if (mcc_3R_52()) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_292()) mcc_scanpos = xsp;
+    if (mcc_3R_294()) mcc_scanpos = xsp;
     return false;
   }
 
-  private bool mcc_3R_71() {
+  private bool mcc_3R_73() {
     if (mcc_scan_token(IDENTIFIER)) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_276()) mcc_scanpos = xsp;
+    if (mcc_3R_278()) mcc_scanpos = xsp;
     return false;
   }
 
-  private bool mcc_3R_220() {
-    if (mcc_3R_226()) return true;
+  private bool mcc_3R_222() {
+    if (mcc_3R_228()) return true;
     return false;
   }
 
-  private bool mcc_3R_202() {
+  private bool mcc_3R_204() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_219()) {
+    if (mcc_3R_221()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_220()) {
+    if (mcc_3R_222()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_221()) return true;
+    if (mcc_3R_223()) return true;
     }
     }
     return false;
   }
 
-  private bool mcc_3R_219() {
-    if (mcc_3R_225()) return true;
+  private bool mcc_3R_221() {
+    if (mcc_3R_227()) return true;
     return false;
   }
 
-  private bool mcc_3R_262() {
-    if (mcc_3R_71()) return true;
+  private bool mcc_3R_264() {
+    if (mcc_3R_73()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
@@ -4784,152 +4807,162 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_271() {
+  private bool mcc_3R_273() {
     if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_136()) return true;
+    if (mcc_3R_138()) return true;
     return false;
   }
 
-  private bool mcc_3R_248() {
+  private bool mcc_3R_250() {
     if (mcc_scan_token(LBRACE)) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_262()) mcc_scanpos = xsp;
+    if (mcc_3R_264()) mcc_scanpos = xsp;
     if (mcc_scan_token(RBRACE)) return true;
     return false;
   }
 
-  private bool mcc_3R_247() {
-    if (mcc_3R_261()) return true;
+  private bool mcc_3R_249() {
+    if (mcc_3R_263()) return true;
     return false;
   }
 
   private bool mcc_3_38() {
-    if (mcc_3R_91()) return true;
-    if (mcc_3R_73()) return true;
+    if (mcc_3R_93()) return true;
+    if (mcc_3R_75()) return true;
     if (mcc_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private bool mcc_3R_167() {
-    if (mcc_3R_91()) return true;
-    if (mcc_3R_73()) return true;
-    if (mcc_3R_254()) return true;
+  private bool mcc_3R_169() {
+    if (mcc_3R_93()) return true;
+    if (mcc_3R_75()) return true;
+    if (mcc_3R_256()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_280()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_282()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_239() {
+  private bool mcc_3R_241() {
     if (mcc_scan_token(ENUM)) return true;
     if (mcc_scan_token(IDENTIFIER)) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_247()) mcc_scanpos = xsp;
-    if (mcc_3R_248()) return true;
+    if (mcc_3R_249()) mcc_scanpos = xsp;
+    if (mcc_3R_250()) return true;
     return false;
   }
 
-  private bool mcc_3R_261() {
+  private bool mcc_3R_263() {
     if (mcc_scan_token(COLON)) return true;
-    if (mcc_3R_136()) return true;
+    if (mcc_3R_138()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_271()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_273()) { mcc_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private bool mcc_3R_159() {
+    if (mcc_3R_171()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_158() {
+    if (mcc_3R_170()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_147() {
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_157()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_158()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_159()) return true;
+    }
     }
     return false;
   }
 
   private bool mcc_3R_157() {
     if (mcc_3R_169()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_156() {
-    if (mcc_3R_168()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_145() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_155()) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_156()) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_157()) return true;
-    }
-    }
-    return false;
-  }
-
-  private bool mcc_3R_155() {
-    if (mcc_3R_167()) return true;
     if (mcc_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  private bool mcc_3R_194() {
+  private bool mcc_3R_196() {
     if (mcc_scan_token(INTERFACE)) return true;
     return false;
   }
 
-  private bool mcc_3R_169() {
+  private bool mcc_3R_171() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_scan_token(35)) {
     mcc_scanpos = xsp;
-    if (mcc_3R_194()) return true;
+    if (mcc_3R_196()) return true;
     }
     if (mcc_scan_token(IDENTIFIER)) return true;
     xsp = mcc_scanpos;
-    if (mcc_3R_245()) mcc_scanpos = xsp;
+    if (mcc_3R_247()) mcc_scanpos = xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_246()) mcc_scanpos = xsp;
-    if (mcc_3R_198()) return true;
+    if (mcc_3R_248()) mcc_scanpos = xsp;
+    if (mcc_3R_200()) return true;
     return false;
   }
 
-  private bool mcc_3R_246() {
-    if (mcc_3R_261()) return true;
+  private bool mcc_3R_248() {
+    if (mcc_3R_263()) return true;
     return false;
   }
 
-  private bool mcc_3R_245() {
-    if (mcc_3R_101()) return true;
+  private bool mcc_3R_247() {
+    if (mcc_3R_103()) return true;
     return false;
   }
 
-  private bool mcc_3R_133() {
-    if (mcc_3R_145()) return true;
+  private bool mcc_3R_135() {
+    if (mcc_3R_147()) return true;
     return false;
   }
 
-  private bool mcc_3R_103() {
+  private bool mcc_3R_105() {
     if (mcc_scan_token(LBRACE)) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_133()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_135()) { mcc_scanpos = xsp; break; }
     }
     if (mcc_scan_token(RBRACE)) return true;
     return false;
   }
 
-  private bool mcc_3R_90() {
+  private bool mcc_3R_92() {
     if (mcc_scan_token(IDENTIFIER)) return true;
     if (mcc_scan_token(COLON)) return true;
-    if (mcc_3R_168()) return true;
+    if (mcc_3R_170()) return true;
     return false;
   }
 
   private bool mcc_3_35() {
     if (mcc_scan_token(LBRACKET)) return true;
     if (mcc_scan_token(RBRACKET)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_195() {
+    if (mcc_3R_216()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_194() {
+    if (mcc_3R_215()) return true;
     return false;
   }
 
@@ -4948,13 +4981,28 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
+  private bool mcc_3R_71() {
+    if (mcc_scan_token(SEALED)) return true;
+    return false;
+  }
+
   private bool mcc_3R_190() {
     if (mcc_3R_211()) return true;
     return false;
   }
 
+  private bool mcc_3R_70() {
+    if (mcc_scan_token(VIRTUAL)) return true;
+    return false;
+  }
+
   private bool mcc_3R_189() {
     if (mcc_3R_210()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_72() {
+    if (mcc_3R_102()) return true;
     return false;
   }
 
@@ -4968,13 +5016,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_70() {
-    if (mcc_3R_100()) return true;
+  private bool mcc_3R_186() {
+    if (mcc_3R_207()) return true;
     return false;
   }
 
-  private bool mcc_3R_186() {
-    if (mcc_3R_207()) return true;
+  private bool mcc_3R_185() {
+    if (mcc_3R_206()) return true;
     return false;
   }
 
@@ -4989,8 +5037,8 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_185() {
-    if (mcc_3R_206()) return true;
+  private bool mcc_3R_184() {
+    if (mcc_3R_205()) return true;
     return false;
   }
 
@@ -5004,18 +5052,14 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_184() {
-    if (mcc_3R_205()) return true;
+  private bool mcc_3R_183() {
+    if (mcc_3R_204()) return true;
+    if (mcc_scan_token(SEMICOLON)) return true;
     return false;
   }
 
   private bool mcc_3R_67() {
     if (mcc_scan_token(EXTERN)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_183() {
-    if (mcc_3R_204()) return true;
     return false;
   }
 
@@ -5025,7 +5069,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
   }
 
   private bool mcc_3R_182() {
-    if (mcc_3R_203()) return true;
+    if (mcc_3R_105()) return true;
     return false;
   }
 
@@ -5034,54 +5078,24 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_181() {
-    if (mcc_3R_202()) return true;
-    if (mcc_scan_token(SEMICOLON)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_63() {
-    if (mcc_scan_token(PRIVATE)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_180() {
-    if (mcc_3R_103()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_62() {
-    if (mcc_scan_token(PROTECTED)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_162() {
-    if (mcc_3R_80()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_61() {
-    if (mcc_scan_token(STATIC)) return true;
+  private bool mcc_3R_164() {
+    if (mcc_3R_82()) return true;
     return false;
   }
 
   private bool mcc_3_37() {
-    if (mcc_3R_90()) return true;
+    if (mcc_3R_92()) return true;
     return false;
   }
 
-  private bool mcc_3R_168() {
+  private bool mcc_3R_170() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_3_37()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_180()) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(94)) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_181()) {
-    mcc_scanpos = xsp;
     if (mcc_3R_182()) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(97)) {
     mcc_scanpos = xsp;
     if (mcc_3R_183()) {
     mcc_scanpos = xsp;
@@ -5103,7 +5117,11 @@ public class CSharpCCParser : CSharpCCParserConstants {
     mcc_scanpos = xsp;
     if (mcc_3R_192()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_193()) return true;
+    if (mcc_3R_193()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_194()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_195()) return true;
     }
     }
     }
@@ -5119,6 +5137,26 @@ public class CSharpCCParser : CSharpCCParserConstants {
     }
     }
     }
+    return false;
+  }
+
+  private bool mcc_3R_63() {
+    if (mcc_scan_token(PRIVATE)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_177() {
+    if (mcc_3R_200()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_62() {
+    if (mcc_scan_token(PROTECTED)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_61() {
+    if (mcc_scan_token(STATIC)) return true;
     return false;
   }
 
@@ -5127,8 +5165,9 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_175() {
-    if (mcc_3R_198()) return true;
+  private bool mcc_3R_199() {
+    if (mcc_scan_token(LBRACKET)) return true;
+    if (mcc_scan_token(RBRACKET)) return true;
     return false;
   }
 
@@ -5155,7 +5194,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
     mcc_scanpos = xsp;
     if (mcc_3R_69()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_70()) return true;
+    if (mcc_3R_70()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_71()) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(59)) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_72()) return true;
     }
     }
     }
@@ -5166,39 +5211,36 @@ public class CSharpCCParser : CSharpCCParserConstants {
     }
     }
     }
-    return false;
-  }
-
-  private bool mcc_3R_91() {
-    Token xsp;
-    while (true) {
-      xsp = mcc_scanpos;
-      if (mcc_3_8()) { mcc_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  private bool mcc_3R_197() {
-    if (mcc_scan_token(LBRACKET)) return true;
-    if (mcc_scan_token(RBRACKET)) return true;
+    }
+    }
     return false;
   }
 
   private bool mcc_3_34() {
     if (mcc_scan_token(LBRACKET)) return true;
-    if (mcc_3R_83()) return true;
+    if (mcc_3R_85()) return true;
     if (mcc_scan_token(RBRACKET)) return true;
     return false;
   }
 
-  private bool mcc_3R_174() {
+  private bool mcc_3R_176() {
     Token xsp;
-    if (mcc_3R_197()) return true;
+    if (mcc_3R_199()) return true;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_197()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_199()) { mcc_scanpos = xsp; break; }
     }
-    if (mcc_3R_134()) return true;
+    if (mcc_3R_136()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_93() {
+    Token xsp;
+    while (true) {
+      xsp = mcc_scanpos;
+      if (mcc_3_8()) { mcc_scanpos = xsp; break; }
+    }
     return false;
   }
 
@@ -5216,37 +5258,51 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_161() {
+  private bool mcc_3R_163() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_3_36()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_174()) return true;
+    if (mcc_3R_176()) return true;
     }
     return false;
   }
 
-  private bool mcc_3R_146() {
+  private bool mcc_3R_148() {
     if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_83()) return true;
+    if (mcc_3R_85()) return true;
     return false;
   }
 
-  private bool mcc_3R_164() {
-    if (mcc_3R_78()) return true;
+  private bool mcc_3R_166() {
+    if (mcc_3R_80()) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_175()) mcc_scanpos = xsp;
+    if (mcc_3R_177()) mcc_scanpos = xsp;
+    return false;
+  }
+
+  private bool mcc_3R_165() {
+    if (mcc_3R_163()) return true;
     return false;
   }
 
   private bool mcc_3R_59() {
-    if (mcc_3R_100()) return true;
+    if (mcc_3R_102()) return true;
     return false;
   }
 
-  private bool mcc_3R_163() {
-    if (mcc_3R_161()) return true;
+  private bool mcc_3R_121() {
+    if (mcc_scan_token(NEW)) return true;
+    if (mcc_3R_138()) return true;
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_164()) mcc_scanpos = xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_165()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_166()) return true;
+    }
     return false;
   }
 
@@ -5260,65 +5316,51 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_119() {
-    if (mcc_scan_token(NEW)) return true;
-    if (mcc_3R_136()) return true;
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_162()) mcc_scanpos = xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_163()) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_164()) return true;
-    }
-    return false;
-  }
-
-  private bool mcc_3R_88() {
+  private bool mcc_3R_90() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_3_33()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_119()) return true;
+    if (mcc_3R_121()) return true;
     }
     return false;
   }
 
   private bool mcc_3_33() {
     if (mcc_scan_token(NEW)) return true;
-    if (mcc_3R_86()) return true;
-    if (mcc_3R_161()) return true;
+    if (mcc_3R_88()) return true;
+    if (mcc_3R_163()) return true;
     return false;
   }
 
-  private bool mcc_3R_135() {
-    if (mcc_3R_83()) return true;
+  private bool mcc_3R_137() {
+    if (mcc_3R_85()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_146()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_148()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_108() {
-    if (mcc_3R_135()) return true;
+  private bool mcc_3R_110() {
+    if (mcc_3R_137()) return true;
     return false;
   }
 
-  private bool mcc_3R_78() {
+  private bool mcc_3R_80() {
     if (mcc_scan_token(LPAREN)) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_108()) mcc_scanpos = xsp;
+    if (mcc_3R_110()) mcc_scanpos = xsp;
     if (mcc_scan_token(RPAREN)) return true;
     return false;
   }
 
-  private bool mcc_3R_81() {
+  private bool mcc_3R_83() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(137)) {
+    if (mcc_scan_token(139)) {
     mcc_scanpos = xsp;
     if (mcc_scan_token(1)) {
     mcc_scanpos = xsp;
@@ -5328,7 +5370,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     mcc_scanpos = xsp;
     if (mcc_scan_token(4)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(130)) {
+    if (mcc_scan_token(5)) {
     mcc_scanpos = xsp;
     if (mcc_scan_token(6)) {
     mcc_scanpos = xsp;
@@ -5355,8 +5397,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_96() {
+  private bool mcc_3R_98() {
     if (mcc_scan_token(STRING_LITERAL)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_174() {
+    if (mcc_scan_token(FALSE)) return true;
     return false;
   }
 
@@ -5365,53 +5412,43 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_172() {
-    if (mcc_scan_token(FALSE)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_159() {
+  private bool mcc_3R_161() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_171()) {
+    if (mcc_3R_173()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_172()) return true;
+    if (mcc_3R_174()) return true;
     }
     return false;
   }
 
-  private bool mcc_3R_171() {
+  private bool mcc_3R_173() {
     if (mcc_scan_token(TRUE)) return true;
     return false;
   }
 
-  private bool mcc_3R_138() {
-    if (mcc_3R_140()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_148() {
-    if (mcc_3R_159()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_199() {
-    if (mcc_3R_96()) return true;
-    return false;
-  }
-
   private bool mcc_3R_140() {
+    if (mcc_3R_142()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_150() {
+    if (mcc_3R_161()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_142() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(77)) {
+    if (mcc_scan_token(80)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(81)) {
+    if (mcc_scan_token(84)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(86)) {
+    if (mcc_scan_token(89)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(87)) {
+    if (mcc_scan_token(90)) {
     mcc_scanpos = xsp;
-    if (mcc_3R_148()) {
+    if (mcc_3R_150()) {
     mcc_scanpos = xsp;
     if (mcc_scan_token(58)) return true;
     }
@@ -5422,46 +5459,46 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_118() {
-    if (mcc_3R_78()) return true;
+  private bool mcc_3R_201() {
+    if (mcc_3R_98()) return true;
     return false;
   }
 
-  private bool mcc_3R_117() {
+  private bool mcc_3R_120() {
+    if (mcc_3R_80()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_119() {
     if (mcc_scan_token(DOT)) return true;
     if (mcc_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private bool mcc_3R_116() {
+  private bool mcc_3R_118() {
     if (mcc_scan_token(LBRACKET)) return true;
-    if (mcc_3R_83()) return true;
+    if (mcc_3R_85()) return true;
     if (mcc_scan_token(RBRACKET)) return true;
     return false;
   }
 
   private bool mcc_3_32() {
-    if (mcc_3R_89()) return true;
+    if (mcc_3R_91()) return true;
     return false;
   }
 
-  private bool mcc_3R_178() {
-    if (mcc_3R_199()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_87() {
+  private bool mcc_3R_89() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_3_31()) {
     mcc_scanpos = xsp;
     if (mcc_3_32()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_116()) {
+    if (mcc_3R_118()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_117()) {
+    if (mcc_3R_119()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_118()) return true;
+    if (mcc_3R_120()) return true;
     }
     }
     }
@@ -5471,74 +5508,79 @@ public class CSharpCCParser : CSharpCCParserConstants {
 
   private bool mcc_3_31() {
     if (mcc_scan_token(DOT)) return true;
-    if (mcc_3R_88()) return true;
+    if (mcc_3R_90()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_180() {
+    if (mcc_3R_201()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_129() {
+    if (mcc_3R_94()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_128() {
+    if (mcc_3R_90()) return true;
     return false;
   }
 
   private bool mcc_3R_127() {
-    if (mcc_3R_92()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_126() {
-    if (mcc_3R_88()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_177() {
-    if (mcc_scan_token(TILDE)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_165() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_177()) mcc_scanpos = xsp;
-    if (mcc_scan_token(LBRACKET)) return true;
-    xsp = mcc_scanpos;
-    if (mcc_3R_178()) mcc_scanpos = xsp;
-    if (mcc_scan_token(RBRACKET)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_125() {
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_83()) return true;
+    if (mcc_3R_85()) return true;
     if (mcc_scan_token(RPAREN)) return true;
     return false;
   }
 
   private bool mcc_3_30() {
-    if (mcc_3R_87()) return true;
+    if (mcc_3R_89()) return true;
     return false;
   }
 
-  private bool mcc_3R_124() {
+  private bool mcc_3R_126() {
     if (mcc_scan_token(BASE)) return true;
     if (mcc_scan_token(DOT)) return true;
     if (mcc_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private bool mcc_3R_123() {
-    if (mcc_3R_140()) return true;
+  private bool mcc_3R_179() {
+    if (mcc_scan_token(TILDE)) return true;
     return false;
   }
 
-  private bool mcc_3R_95() {
+  private bool mcc_3R_167() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_123()) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(67)) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_124()) {
-    mcc_scanpos = xsp;
+    if (mcc_3R_179()) mcc_scanpos = xsp;
+    if (mcc_scan_token(LBRACKET)) return true;
+    xsp = mcc_scanpos;
+    if (mcc_3R_180()) mcc_scanpos = xsp;
+    if (mcc_scan_token(RBRACKET)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_125() {
+    if (mcc_3R_142()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_97() {
+    Token xsp;
+    xsp = mcc_scanpos;
     if (mcc_3R_125()) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(69)) {
     mcc_scanpos = xsp;
     if (mcc_3R_126()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_127()) return true;
+    if (mcc_3R_127()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_128()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_129()) return true;
     }
     }
     }
@@ -5547,31 +5589,31 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_298() {
+  private bool mcc_3R_300() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(109)) {
+    if (mcc_scan_token(112)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(110)) return true;
+    if (mcc_scan_token(113)) return true;
     }
     return false;
   }
 
-  private bool mcc_3R_89() {
+  private bool mcc_3R_91() {
     if (mcc_scan_token(DOT)) return true;
-    if (mcc_3R_80()) return true;
+    if (mcc_3R_82()) return true;
     if (mcc_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
   private bool mcc_3_29() {
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_86()) return true;
+    if (mcc_3R_88()) return true;
     return false;
   }
 
   private bool mcc_3R_52() {
-    if (mcc_3R_95()) return true;
+    if (mcc_3R_97()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
@@ -5580,68 +5622,68 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_284() {
+  private bool mcc_3R_286() {
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_73()) return true;
+    if (mcc_3R_75()) return true;
     if (mcc_scan_token(RPAREN)) return true;
-    if (mcc_3R_274()) return true;
+    if (mcc_3R_276()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_285() {
+    if (mcc_scan_token(LPAREN)) return true;
+    if (mcc_3R_75()) return true;
+    if (mcc_scan_token(RPAREN)) return true;
+    if (mcc_3R_262()) return true;
     return false;
   }
 
   private bool mcc_3R_283() {
-    if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_73()) return true;
-    if (mcc_scan_token(RPAREN)) return true;
-    if (mcc_3R_260()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_281() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_283()) {
+    if (mcc_3R_285()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_284()) return true;
+    if (mcc_3R_286()) return true;
     }
     return false;
   }
 
   private bool mcc_3_28() {
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_73()) return true;
+    if (mcc_3R_75()) return true;
     if (mcc_scan_token(LBRACKET)) return true;
     return false;
   }
 
-  private bool mcc_3R_282() {
+  private bool mcc_3R_284() {
     if (mcc_3R_52()) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_298()) mcc_scanpos = xsp;
+    if (mcc_3R_300()) mcc_scanpos = xsp;
     return false;
   }
 
-  private bool mcc_3R_115() {
+  private bool mcc_3R_117() {
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_73()) return true;
+    if (mcc_3R_75()) return true;
     if (mcc_scan_token(RPAREN)) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(100)) {
+    if (mcc_scan_token(103)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(99)) {
+    if (mcc_scan_token(102)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(88)) {
+    if (mcc_scan_token(91)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(137)) {
+    if (mcc_scan_token(139)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(67)) {
+    if (mcc_scan_token(69)) {
     mcc_scanpos = xsp;
     if (mcc_scan_token(28)) {
     mcc_scanpos = xsp;
     if (mcc_scan_token(57)) {
     mcc_scanpos = xsp;
-    if (mcc_3R_138()) return true;
+    if (mcc_3R_140()) return true;
     }
     }
     }
@@ -5652,33 +5694,22 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_152() {
+  private bool mcc_3R_116() {
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_58()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_114() {
-    if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_73()) return true;
+    if (mcc_3R_75()) return true;
     if (mcc_scan_token(LBRACKET)) return true;
     if (mcc_scan_token(RBRACKET)) return true;
     return false;
   }
 
-  private bool mcc_3R_151() {
-    if (mcc_3R_165()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_85() {
+  private bool mcc_3R_87() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_3_27()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_114()) {
+    if (mcc_3R_116()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_115()) return true;
+    if (mcc_3R_117()) return true;
     }
     }
     return false;
@@ -5686,231 +5717,242 @@ public class CSharpCCParser : CSharpCCParserConstants {
 
   private bool mcc_3_27() {
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_86()) return true;
+    if (mcc_3R_88()) return true;
     return false;
   }
 
   private bool mcc_3_26() {
-    if (mcc_3R_85()) return true;
+    if (mcc_3R_87()) return true;
     return false;
   }
 
-  private bool mcc_3R_150() {
+  private bool mcc_3R_154() {
+    if (mcc_scan_token(LPAREN)) return true;
+    if (mcc_3R_58()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_153() {
+    if (mcc_3R_167()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_281() {
+    if (mcc_3R_284()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_152() {
     if (mcc_scan_token(LANGLE)) return true;
     if (mcc_3R_53()) return true;
     return false;
   }
 
-  private bool mcc_3R_279() {
-    if (mcc_3R_282()) return true;
+  private bool mcc_3R_280() {
+    if (mcc_3R_283()) return true;
     return false;
   }
 
-  private bool mcc_3R_141() {
+  private bool mcc_3R_279() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_149()) {
+    if (mcc_scan_token(103)) {
     mcc_scanpos = xsp;
-    if (mcc_3R_150()) {
+    if (mcc_scan_token(102)) return true;
+    }
+    if (mcc_3R_262()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_276() {
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_279()) {
     mcc_scanpos = xsp;
+    if (mcc_3R_280()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_281()) return true;
+    }
+    }
+    return false;
+  }
+
+  private bool mcc_3R_143() {
+    Token xsp;
+    xsp = mcc_scanpos;
     if (mcc_3R_151()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_152()) return true;
+    if (mcc_3R_152()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_153()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_154()) return true;
     }
     }
     }
     return false;
   }
 
-  private bool mcc_3R_149() {
-    if (mcc_3R_96()) return true;
+  private bool mcc_3R_151() {
+    if (mcc_3R_98()) return true;
     return false;
   }
 
-  private bool mcc_3R_278() {
-    if (mcc_3R_281()) return true;
+  private bool mcc_3R_228() {
+    if (mcc_scan_token(DECR)) return true;
+    if (mcc_3R_52()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_272() {
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_scan_token(114)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(115)) return true;
+    }
+    if (mcc_3R_245()) return true;
     return false;
   }
 
   private bool mcc_3R_277() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(100)) {
+    if (mcc_scan_token(116)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(99)) return true;
-    }
-    if (mcc_3R_260()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_274() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_277()) {
+    if (mcc_scan_token(117)) {
     mcc_scanpos = xsp;
-    if (mcc_3R_278()) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_279()) return true;
+    if (mcc_scan_token(121)) return true;
     }
     }
-    return false;
-  }
-
-  private bool mcc_3R_226() {
-    if (mcc_scan_token(DECR)) return true;
-    if (mcc_3R_52()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_270() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_scan_token(111)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(112)) return true;
-    }
-    if (mcc_3R_243()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_275() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_scan_token(113)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(114)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(118)) return true;
-    }
-    }
-    if (mcc_3R_260()) return true;
+    if (mcc_3R_262()) return true;
     return false;
   }
 
   private bool mcc_3_25() {
-    if (mcc_3R_84()) return true;
+    if (mcc_3R_86()) return true;
     return false;
   }
 
-  private bool mcc_3R_225() {
+  private bool mcc_3R_227() {
     if (mcc_scan_token(INCR)) return true;
     if (mcc_3R_52()) return true;
     return false;
   }
 
-  private bool mcc_3R_269() {
-    if (mcc_3R_274()) return true;
+  private bool mcc_3R_271() {
+    if (mcc_3R_276()) return true;
     return false;
   }
 
   private bool mcc_3_24() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(136)) {
+    if (mcc_scan_token(138)) {
     mcc_scanpos = xsp;
     if (mcc_3_25()) return true;
     }
-    if (mcc_3R_237()) return true;
+    if (mcc_3R_239()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_270() {
+    if (mcc_3R_228()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_269() {
+    if (mcc_3R_227()) return true;
     return false;
   }
 
   private bool mcc_3R_268() {
-    if (mcc_3R_226()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_267() {
-    if (mcc_3R_225()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_266() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(111)) {
+    if (mcc_scan_token(114)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(112)) return true;
+    if (mcc_scan_token(115)) return true;
     }
-    if (mcc_3R_260()) return true;
+    if (mcc_3R_262()) return true;
     return false;
   }
 
-  private bool mcc_3R_128() {
-    if (mcc_3R_141()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_260() {
+  private bool mcc_3R_262() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_266()) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_267()) {
-    mcc_scanpos = xsp;
     if (mcc_3R_268()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_269()) return true;
+    if (mcc_3R_269()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_270()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_271()) return true;
     }
     }
     }
     return false;
   }
 
-  private bool mcc_3R_98() {
-    Token xsp;
-    if (mcc_3R_128()) return true;
-    while (true) {
-      xsp = mcc_scanpos;
-      if (mcc_3R_128()) { mcc_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private bool mcc_3R_244() {
+  private bool mcc_3R_246() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(98)) {
+    if (mcc_scan_token(101)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(128)) {
+    if (mcc_scan_token(131)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(104)) {
+    if (mcc_scan_token(107)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(105)) return true;
+    if (mcc_scan_token(108)) return true;
     }
     }
     }
-    if (mcc_3R_230()) return true;
+    if (mcc_3R_232()) return true;
     return false;
   }
 
-  private bool mcc_3R_238() {
+  private bool mcc_3R_240() {
     if (mcc_scan_token(IS)) return true;
-    if (mcc_3R_73()) return true;
+    if (mcc_3R_75()) return true;
     return false;
   }
 
-  private bool mcc_3R_243() {
-    if (mcc_3R_260()) return true;
+  private bool mcc_3R_130() {
+    if (mcc_3R_143()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_245() {
+    if (mcc_3R_262()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_275()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_277()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_237() {
-    if (mcc_3R_243()) return true;
+  private bool mcc_3R_100() {
     Token xsp;
+    if (mcc_3R_130()) return true;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_270()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_130()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_230() {
-    if (mcc_3R_237()) return true;
+  private bool mcc_3R_239() {
+    if (mcc_3R_245()) return true;
+    Token xsp;
+    while (true) {
+      xsp = mcc_scanpos;
+      if (mcc_3R_272()) { mcc_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private bool mcc_3R_232() {
+    if (mcc_3R_239()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
@@ -5919,114 +5961,124 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_228() {
+  private bool mcc_3R_230() {
     if (mcc_scan_token(BIT_AND)) return true;
-    if (mcc_3R_215()) return true;
+    if (mcc_3R_217()) return true;
     return false;
   }
 
-  private bool mcc_3R_231() {
+  private bool mcc_3R_233() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(103)) {
+    if (mcc_scan_token(106)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(106)) return true;
+    if (mcc_scan_token(109)) return true;
     }
-    if (mcc_3R_222()) return true;
+    if (mcc_3R_224()) return true;
     return false;
   }
 
-  private bool mcc_3R_227() {
-    if (mcc_3R_230()) return true;
+  private bool mcc_3R_229() {
+    if (mcc_3R_232()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_244()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_246()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_99() {
+  private bool mcc_3R_218() {
     if (mcc_scan_token(BIT_OR)) return true;
+    if (mcc_3R_172()) return true;
     return false;
   }
 
-  private bool mcc_3R_216() {
-    if (mcc_scan_token(BIT_OR)) return true;
-    if (mcc_3R_170()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_222() {
-    if (mcc_3R_227()) return true;
+  private bool mcc_3R_224() {
+    if (mcc_3R_229()) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_238()) mcc_scanpos = xsp;
+    if (mcc_3R_240()) mcc_scanpos = xsp;
     return false;
   }
 
-  private bool mcc_3R_223() {
+  private bool mcc_3R_225() {
     if (mcc_scan_token(XOR)) return true;
-    if (mcc_3R_195()) return true;
+    if (mcc_3R_197()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_101() {
+    if (mcc_scan_token(BIT_OR)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_198() {
+    if (mcc_scan_token(SC_AND)) return true;
+    if (mcc_3R_160()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_217() {
+    if (mcc_3R_224()) return true;
+    Token xsp;
+    while (true) {
+      xsp = mcc_scanpos;
+      if (mcc_3R_233()) { mcc_scanpos = xsp; break; }
+    }
     return false;
   }
 
   private bool mcc_3R_58() {
-    if (mcc_3R_98()) return true;
+    if (mcc_3R_100()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_99()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_101()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_196() {
-    if (mcc_scan_token(SC_AND)) return true;
-    if (mcc_3R_158()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_215() {
-    if (mcc_3R_222()) return true;
-    Token xsp;
-    while (true) {
-      xsp = mcc_scanpos;
-      if (mcc_3R_231()) { mcc_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private bool mcc_3R_173() {
+  private bool mcc_3R_175() {
     if (mcc_scan_token(SC_OR)) return true;
-    if (mcc_3R_147()) return true;
+    if (mcc_3R_149()) return true;
     return false;
   }
 
-  private bool mcc_3R_195() {
-    if (mcc_3R_215()) return true;
+  private bool mcc_3R_197() {
+    if (mcc_3R_217()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_228()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_230()) { mcc_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private bool mcc_3R_162() {
+    if (mcc_scan_token(HOOK)) return true;
+    if (mcc_3R_85()) return true;
+    if (mcc_scan_token(COLON)) return true;
+    if (mcc_3R_85()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_172() {
+    if (mcc_3R_197()) return true;
+    Token xsp;
+    while (true) {
+      xsp = mcc_scanpos;
+      if (mcc_3R_225()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
   private bool mcc_3R_160() {
-    if (mcc_scan_token(HOOK)) return true;
-    if (mcc_3R_83()) return true;
-    if (mcc_scan_token(COLON)) return true;
-    if (mcc_3R_83()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_170() {
-    if (mcc_3R_195()) return true;
+    if (mcc_3R_172()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_223()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_218()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
@@ -6037,92 +6089,82 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_158() {
-    if (mcc_3R_170()) return true;
+  private bool mcc_3R_149() {
+    if (mcc_3R_160()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_216()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_198()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_147() {
-    if (mcc_3R_158()) return true;
+  private bool mcc_3R_139() {
+    if (mcc_3R_149()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_196()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_175()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_137() {
-    if (mcc_3R_147()) return true;
-    Token xsp;
-    while (true) {
-      xsp = mcc_scanpos;
-      if (mcc_3R_173()) { mcc_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private bool mcc_3R_112() {
-    if (mcc_3R_137()) return true;
+  private bool mcc_3R_114() {
+    if (mcc_3R_139()) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_160()) mcc_scanpos = xsp;
+    if (mcc_3R_162()) mcc_scanpos = xsp;
     return false;
   }
 
-  private bool mcc_3R_97() {
-    if (mcc_scan_token(129)) return true;
+  private bool mcc_3R_84() {
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_scan_token(100)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(124)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(125)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(129)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(122)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(123)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(136)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(137)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(126)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(128)) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(127)) return true;
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private bool mcc_3R_99() {
+    if (mcc_scan_token(132)) return true;
     return false;
   }
 
   private bool mcc_3R_57() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_97()) mcc_scanpos = xsp;
+    if (mcc_3R_99()) mcc_scanpos = xsp;
     if (mcc_3R_53()) return true;
     if (mcc_scan_token(COLON)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_82() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_scan_token(97)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(121)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(122)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(126)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(119)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(120)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(134)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(135)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(123)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(125)) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(124)) return true;
-    }
-    }
-    }
-    }
-    }
-    }
-    }
-    }
-    }
-    }
     return false;
   }
 
@@ -6137,13 +6179,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
   }
 
   private bool mcc_3_23() {
-    if (mcc_3R_82()) return true;
-    if (mcc_3R_83()) return true;
+    if (mcc_3R_84()) return true;
+    if (mcc_3R_85()) return true;
     return false;
   }
 
-  private bool mcc_3R_83() {
-    if (mcc_3R_112()) return true;
+  private bool mcc_3R_85() {
+    if (mcc_3R_114()) return true;
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_3_23()) mcc_scanpos = xsp;
@@ -6156,20 +6198,20 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
+  private bool mcc_3_22() {
+    if (mcc_scan_token(DOT)) return true;
+    if (mcc_3R_83()) return true;
+    return false;
+  }
+
   private bool mcc_3_2() {
     if (mcc_3R_52()) return true;
     if (mcc_scan_token(ASSIGN)) return true;
     return false;
   }
 
-  private bool mcc_3_22() {
-    if (mcc_scan_token(DOT)) return true;
-    if (mcc_3R_81()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_92() {
-    if (mcc_3R_81()) return true;
+  private bool mcc_3R_94() {
+    if (mcc_3R_83()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
@@ -6185,7 +6227,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
   }
 
   private bool mcc_3R_55() {
-    if (mcc_3R_96()) return true;
+    if (mcc_3R_98()) return true;
     return false;
   }
 
@@ -6196,7 +6238,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     mcc_scanpos = xsp;
     if (mcc_3R_55()) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(98)) {
+    if (mcc_scan_token(101)) {
     mcc_scanpos = xsp;
     if (mcc_3R_56()) return true;
     }
@@ -6210,48 +6252,48 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_265() {
-    if (mcc_3R_73()) return true;
+  private bool mcc_3R_267() {
+    if (mcc_3R_75()) return true;
     return false;
   }
 
   private bool mcc_3_43() {
     if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_94()) return true;
+    if (mcc_3R_96()) return true;
     return false;
   }
 
-  private bool mcc_3R_257() {
+  private bool mcc_3R_259() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(74)) {
+    if (mcc_scan_token(77)) {
     mcc_scanpos = xsp;
-    if (mcc_3R_265()) return true;
+    if (mcc_3R_267()) return true;
     }
     return false;
   }
 
   private bool mcc_3_21() {
-    if (mcc_3R_80()) return true;
+    if (mcc_3R_82()) return true;
     return false;
   }
 
-  private bool mcc_3R_176() {
+  private bool mcc_3R_178() {
     if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_111()) return true;
+    if (mcc_3R_113()) return true;
     return false;
   }
 
-  private bool mcc_3R_139() {
+  private bool mcc_3R_141() {
     if (mcc_scan_token(LBRACE)) return true;
-    if (mcc_3R_94()) return true;
+    if (mcc_3R_96()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
       if (mcc_3_43()) { mcc_scanpos = xsp; break; }
     }
     xsp = mcc_scanpos;
-    if (mcc_scan_token(95)) mcc_scanpos = xsp;
+    if (mcc_scan_token(98)) mcc_scanpos = xsp;
     if (mcc_scan_token(RBRACE)) return true;
     return false;
   }
@@ -6262,13 +6304,13 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_201() {
+  private bool mcc_3R_203() {
     if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_200()) return true;
+    if (mcc_3R_202()) return true;
     return false;
   }
 
-  private bool mcc_3R_86() {
+  private bool mcc_3R_88() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_scan_token(29)) {
@@ -6277,7 +6319,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     mcc_scanpos = xsp;
     if (mcc_scan_token(31)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(64)) {
+    if (mcc_scan_token(66)) {
     mcc_scanpos = xsp;
     if (mcc_scan_token(50)) {
     mcc_scanpos = xsp;
@@ -6296,58 +6338,58 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
+  private bool mcc_3R_124() {
+    if (mcc_3R_114()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_123() {
+    if (mcc_3R_141()) return true;
+    return false;
+  }
+
   private bool mcc_3R_122() {
-    if (mcc_3R_112()) return true;
+    if (mcc_3R_102()) return true;
     return false;
   }
 
-  private bool mcc_3R_121() {
-    if (mcc_3R_139()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_120() {
-    if (mcc_3R_100()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_94() {
+  private bool mcc_3R_96() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_120()) {
+    if (mcc_3R_122()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_121()) {
+    if (mcc_3R_123()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_122()) return true;
+    if (mcc_3R_124()) return true;
     }
     }
     return false;
   }
 
   private bool mcc_3_19() {
-    if (mcc_3R_80()) return true;
+    if (mcc_3R_82()) return true;
     return false;
   }
 
-  private bool mcc_3R_166() {
-    if (mcc_3R_179()) return true;
+  private bool mcc_3R_168() {
+    if (mcc_3R_181()) return true;
     return false;
   }
 
-  private bool mcc_3R_111() {
-    if (mcc_3R_79()) return true;
+  private bool mcc_3R_113() {
+    if (mcc_3R_81()) return true;
     return false;
   }
 
-  private bool mcc_3R_93() {
+  private bool mcc_3R_95() {
     if (mcc_scan_token(IDENTIFIER)) return true;
     if (mcc_scan_token(ASSIGN)) return true;
     return false;
   }
 
-  private bool mcc_3R_154() {
+  private bool mcc_3R_156() {
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_94()) return true;
+    if (mcc_3R_96()) return true;
     if (mcc_scan_token(RPAREN)) return true;
     return false;
   }
@@ -6358,40 +6400,40 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_200() {
+  private bool mcc_3R_202() {
     if (mcc_scan_token(IDENTIFIER)) return true;
     if (mcc_scan_token(ASSIGN)) return true;
-    if (mcc_3R_94()) return true;
+    if (mcc_3R_96()) return true;
     return false;
   }
 
-  private bool mcc_3R_153() {
+  private bool mcc_3R_155() {
     if (mcc_scan_token(LPAREN)) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_166()) mcc_scanpos = xsp;
+    if (mcc_3R_168()) mcc_scanpos = xsp;
     if (mcc_scan_token(RPAREN)) return true;
     return false;
   }
 
-  private bool mcc_3R_80() {
+  private bool mcc_3R_82() {
     if (mcc_scan_token(LANGLE)) return true;
-    if (mcc_3R_111()) return true;
+    if (mcc_3R_113()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_176()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_178()) { mcc_scanpos = xsp; break; }
     }
     if (mcc_scan_token(RANGLE)) return true;
     return false;
   }
 
-  private bool mcc_3R_179() {
-    if (mcc_3R_200()) return true;
+  private bool mcc_3R_181() {
+    if (mcc_3R_202()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_201()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_203()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
@@ -6405,7 +6447,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_136() {
+  private bool mcc_3R_138() {
     if (mcc_scan_token(IDENTIFIER)) return true;
     Token xsp;
     xsp = mcc_scanpos;
@@ -6417,25 +6459,25 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_143() {
+  private bool mcc_3R_145() {
     if (mcc_scan_token(LBRACKET)) return true;
-    if (mcc_3R_92()) return true;
+    if (mcc_3R_94()) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_154()) mcc_scanpos = xsp;
+    if (mcc_3R_156()) mcc_scanpos = xsp;
     if (mcc_scan_token(RBRACKET)) return true;
     return false;
   }
 
   private bool mcc_3_42() {
     if (mcc_scan_token(LBRACKET)) return true;
-    if (mcc_3R_92()) return true;
+    if (mcc_3R_94()) return true;
     if (mcc_scan_token(LPAREN)) return true;
     return false;
   }
 
-  private bool mcc_3R_110() {
-    if (mcc_3R_136()) return true;
+  private bool mcc_3R_112() {
+    if (mcc_3R_138()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
@@ -6444,8 +6486,8 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_109() {
-    if (mcc_3R_86()) return true;
+  private bool mcc_3R_111() {
+    if (mcc_3R_88()) return true;
     Token xsp;
     if (mcc_3_17()) return true;
     while (true) {
@@ -6455,79 +6497,79 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_79() {
+  private bool mcc_3R_81() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_109()) {
+    if (mcc_3R_111()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_110()) return true;
+    if (mcc_3R_112()) return true;
     }
     return false;
   }
 
   private bool mcc_3_41() {
     if (mcc_scan_token(LBRACKET)) return true;
-    if (mcc_3R_92()) return true;
+    if (mcc_3R_94()) return true;
     if (mcc_scan_token(LPAREN)) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_93()) {
+    if (mcc_3R_95()) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(89)) return true;
+    if (mcc_scan_token(92)) return true;
     }
     return false;
   }
 
-  private bool mcc_3R_142() {
+  private bool mcc_3R_144() {
     if (mcc_scan_token(LBRACKET)) return true;
-    if (mcc_3R_92()) return true;
+    if (mcc_3R_94()) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_153()) mcc_scanpos = xsp;
+    if (mcc_3R_155()) mcc_scanpos = xsp;
     if (mcc_scan_token(RBRACKET)) return true;
     return false;
   }
 
-  private bool mcc_3R_102() {
-    if (mcc_3R_86()) return true;
+  private bool mcc_3R_104() {
+    if (mcc_3R_88()) return true;
     return false;
   }
 
   private bool mcc_3_16() {
-    if (mcc_3R_79()) return true;
+    if (mcc_3R_81()) return true;
     return false;
   }
 
-  private bool mcc_3R_73() {
+  private bool mcc_3R_75() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_3_16()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_102()) return true;
+    if (mcc_3R_104()) return true;
     }
     return false;
   }
 
-  private bool mcc_3R_130() {
-    if (mcc_3R_143()) return true;
+  private bool mcc_3R_132() {
+    if (mcc_3R_145()) return true;
     return false;
   }
 
-  private bool mcc_3R_129() {
-    if (mcc_3R_142()) return true;
+  private bool mcc_3R_131() {
+    if (mcc_3R_144()) return true;
     return false;
   }
 
-  private bool mcc_3R_113() {
+  private bool mcc_3R_115() {
     return false;
   }
 
-  private bool mcc_3R_100() {
+  private bool mcc_3R_102() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_129()) {
+    if (mcc_3R_131()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_130()) return true;
+    if (mcc_3R_132()) return true;
     }
     return false;
   }
@@ -6535,51 +6577,287 @@ public class CSharpCCParser : CSharpCCParserConstants {
   private bool mcc_3_15() {
     if (mcc_scan_token(COLON)) return true;
     if (mcc_scan_token(THIS)) return true;
-    if (mcc_3R_78()) return true;
+    if (mcc_3R_80()) return true;
     return false;
   }
 
-  private bool mcc_3R_75() {
+  private bool mcc_3R_77() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(65)) mcc_scanpos = xsp;
-    if (mcc_3R_103()) return true;
+    if (mcc_scan_token(67)) mcc_scanpos = xsp;
+    if (mcc_3R_105()) return true;
     return false;
   }
 
   private bool mcc_3_14() {
-    if (mcc_3R_77()) return true;
+    if (mcc_3R_79()) return true;
     return false;
   }
 
-  private bool mcc_3R_84() {
+  private bool mcc_3R_86() {
     Token xsp;
     xsp = mcc_scanpos;
     lookingAhead = true;
     mcc_semLA = GetToken(1).kind == GT &&
                 ((Token.GTToken)GetToken(1)).realKind == CSharpCCParserConstants.RSIGNEDSHIFT;
     lookingAhead = false;
-    if (!mcc_semLA || mcc_3R_113()) return true;
+    if (!mcc_semLA || mcc_3R_115()) return true;
     if (mcc_scan_token(RANGLE)) return true;
     if (mcc_scan_token(RANGLE)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_109() {
+    if (mcc_scan_token(COLON)) return true;
+    if (mcc_scan_token(BASE)) return true;
+    if (mcc_3R_80()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_108() {
+    if (mcc_scan_token(COLON)) return true;
+    if (mcc_scan_token(THIS)) return true;
+    if (mcc_3R_80()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_79() {
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_108()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_109()) return true;
+    }
+    return false;
+  }
+
+  private bool mcc_3R_293() {
+    if (mcc_scan_token(FINALLY)) return true;
+    if (mcc_3R_105()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_254() {
+    if (mcc_3R_147()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_292() {
+    if (mcc_scan_token(CATCH)) return true;
+    if (mcc_scan_token(LPAREN)) return true;
+    if (mcc_3R_274()) return true;
+    if (mcc_scan_token(RPAREN)) return true;
+    if (mcc_3R_105()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_253() {
+    if (mcc_3R_79()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_216() {
+    if (mcc_scan_token(TRY)) return true;
+    if (mcc_3R_105()) return true;
+    Token xsp;
+    while (true) {
+      xsp = mcc_scanpos;
+      if (mcc_3R_292()) { mcc_scanpos = xsp; break; }
+    }
+    xsp = mcc_scanpos;
+    if (mcc_3R_293()) mcc_scanpos = xsp;
+    return false;
+  }
+
+  private bool mcc_3R_251() {
+    if (mcc_3R_103()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_242() {
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_251()) mcc_scanpos = xsp;
+    if (mcc_scan_token(IDENTIFIER)) return true;
+    if (mcc_3R_252()) return true;
+    if (mcc_scan_token(LBRACE)) return true;
+    xsp = mcc_scanpos;
+    if (mcc_3R_253()) mcc_scanpos = xsp;
+    while (true) {
+      xsp = mcc_scanpos;
+      if (mcc_3R_254()) { mcc_scanpos = xsp; break; }
+    }
+    if (mcc_scan_token(RBRACE)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_275() {
+    if (mcc_scan_token(COMMA)) return true;
+    if (mcc_3R_274()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_215() {
+    if (mcc_scan_token(LOCK)) return true;
+    if (mcc_scan_token(LPAREN)) return true;
+    if (mcc_3R_85()) return true;
+    if (mcc_scan_token(RPAREN)) return true;
+    if (mcc_3R_105()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_274() {
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_scan_token(135)) mcc_scanpos = xsp;
+    if (mcc_3R_75()) return true;
+    if (mcc_scan_token(139)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_265() {
+    if (mcc_3R_274()) return true;
+    Token xsp;
+    while (true) {
+      xsp = mcc_scanpos;
+      if (mcc_3R_275()) { mcc_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private bool mcc_3R_214() {
+    if (mcc_scan_token(THROW)) return true;
+    if (mcc_3R_85()) return true;
+    if (mcc_scan_token(SEMICOLON)) return true;
+    return false;
+  }
+
+  private bool mcc_3_13() {
+    if (mcc_scan_token(COMMA)) return true;
+    if (mcc_3R_78()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_252() {
+    if (mcc_scan_token(LPAREN)) return true;
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_265()) mcc_scanpos = xsp;
+    if (mcc_scan_token(RPAREN)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_291() {
+    if (mcc_3R_85()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_257() {
+    if (mcc_scan_token(COMMA)) return true;
+    if (mcc_3R_256()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_260() {
+    if (mcc_scan_token(IDENTIFIER)) return true;
+    if (mcc_3R_252()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_261() {
+    if (mcc_3R_105()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_258() {
+    if (mcc_3R_103()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_244() {
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_258()) mcc_scanpos = xsp;
+    if (mcc_3R_259()) return true;
+    if (mcc_3R_260()) return true;
+    xsp = mcc_scanpos;
+    if (mcc_3R_261()) {
+    mcc_scanpos = xsp;
+    if (mcc_scan_token(97)) return true;
+    }
+    return false;
+  }
+
+  private bool mcc_3R_213() {
+    if (mcc_scan_token(RETURN)) return true;
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_291()) mcc_scanpos = xsp;
+    if (mcc_scan_token(SEMICOLON)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_219() {
+    if (mcc_3R_78()) return true;
+    Token xsp;
+    while (true) {
+      xsp = mcc_scanpos;
+      if (mcc_3_13()) { mcc_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private bool mcc_3R_299() {
+    if (mcc_3R_305()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_266() {
+    if (mcc_scan_token(ASSIGN)) return true;
+    if (mcc_3R_78()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_212() {
+    if (mcc_scan_token(GOTO)) return true;
+    if (mcc_scan_token(SEMICOLON)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_136() {
+    if (mcc_scan_token(LBRACE)) return true;
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_219()) mcc_scanpos = xsp;
+    xsp = mcc_scanpos;
+    if (mcc_scan_token(98)) mcc_scanpos = xsp;
+    if (mcc_scan_token(RBRACE)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_309() {
+    if (mcc_scan_token(COMMA)) return true;
+    if (mcc_3R_204()) return true;
     return false;
   }
 
   private bool mcc_3R_107() {
-    if (mcc_scan_token(COLON)) return true;
-    if (mcc_scan_token(BASE)) return true;
-    if (mcc_3R_78()) return true;
+    if (mcc_3R_85()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_211() {
+    if (mcc_scan_token(CONTINUE)) return true;
+    if (mcc_scan_token(SEMICOLON)) return true;
     return false;
   }
 
   private bool mcc_3R_106() {
-    if (mcc_scan_token(COLON)) return true;
-    if (mcc_scan_token(THIS)) return true;
-    if (mcc_3R_78()) return true;
+    if (mcc_3R_136()) return true;
     return false;
   }
 
-  private bool mcc_3R_77() {
+  private bool mcc_3R_78() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_3R_106()) {
@@ -6589,335 +6867,99 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_291() {
-    if (mcc_scan_token(FINALLY)) return true;
-    if (mcc_3R_103()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_252() {
-    if (mcc_3R_145()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_290() {
-    if (mcc_scan_token(CATCH)) return true;
-    if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_272()) return true;
-    if (mcc_scan_token(RPAREN)) return true;
-    if (mcc_3R_103()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_251() {
-    if (mcc_3R_77()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_214() {
-    if (mcc_scan_token(TRY)) return true;
-    if (mcc_3R_103()) return true;
-    Token xsp;
-    while (true) {
-      xsp = mcc_scanpos;
-      if (mcc_3R_290()) { mcc_scanpos = xsp; break; }
-    }
-    xsp = mcc_scanpos;
-    if (mcc_3R_291()) mcc_scanpos = xsp;
-    return false;
-  }
-
-  private bool mcc_3R_249() {
-    if (mcc_3R_101()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_240() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_249()) mcc_scanpos = xsp;
-    if (mcc_scan_token(IDENTIFIER)) return true;
-    if (mcc_3R_250()) return true;
-    if (mcc_scan_token(LBRACE)) return true;
-    xsp = mcc_scanpos;
-    if (mcc_3R_251()) mcc_scanpos = xsp;
-    while (true) {
-      xsp = mcc_scanpos;
-      if (mcc_3R_252()) { mcc_scanpos = xsp; break; }
-    }
-    if (mcc_scan_token(RBRACE)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_273() {
-    if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_272()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_213() {
-    if (mcc_scan_token(LOCK)) return true;
-    if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_83()) return true;
-    if (mcc_scan_token(RPAREN)) return true;
-    if (mcc_3R_103()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_272() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_scan_token(133)) mcc_scanpos = xsp;
-    if (mcc_3R_73()) return true;
-    if (mcc_scan_token(137)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_263() {
-    if (mcc_3R_272()) return true;
-    Token xsp;
-    while (true) {
-      xsp = mcc_scanpos;
-      if (mcc_3R_273()) { mcc_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private bool mcc_3R_212() {
-    if (mcc_scan_token(THROW)) return true;
-    if (mcc_3R_83()) return true;
-    if (mcc_scan_token(SEMICOLON)) return true;
-    return false;
-  }
-
-  private bool mcc_3_13() {
-    if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_76()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_250() {
-    if (mcc_scan_token(LPAREN)) return true;
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_263()) mcc_scanpos = xsp;
-    if (mcc_scan_token(RPAREN)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_289() {
-    if (mcc_3R_83()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_255() {
-    if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_254()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_258() {
-    if (mcc_scan_token(IDENTIFIER)) return true;
-    if (mcc_3R_250()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_259() {
-    if (mcc_3R_103()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_256() {
-    if (mcc_3R_101()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_242() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_256()) mcc_scanpos = xsp;
-    if (mcc_3R_257()) return true;
-    if (mcc_3R_258()) return true;
-    xsp = mcc_scanpos;
-    if (mcc_3R_259()) {
-    mcc_scanpos = xsp;
-    if (mcc_scan_token(94)) return true;
-    }
-    return false;
-  }
-
-  private bool mcc_3R_211() {
-    if (mcc_scan_token(RETURN)) return true;
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_289()) mcc_scanpos = xsp;
-    if (mcc_scan_token(SEMICOLON)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_217() {
-    if (mcc_3R_76()) return true;
-    Token xsp;
-    while (true) {
-      xsp = mcc_scanpos;
-      if (mcc_3_13()) { mcc_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private bool mcc_3R_297() {
-    if (mcc_3R_303()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_264() {
-    if (mcc_scan_token(ASSIGN)) return true;
-    if (mcc_3R_76()) return true;
-    return false;
-  }
-
   private bool mcc_3R_210() {
-    if (mcc_scan_token(GOTO)) return true;
-    if (mcc_scan_token(SEMICOLON)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_134() {
-    if (mcc_scan_token(LBRACE)) return true;
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_217()) mcc_scanpos = xsp;
-    xsp = mcc_scanpos;
-    if (mcc_scan_token(95)) mcc_scanpos = xsp;
-    if (mcc_scan_token(RBRACE)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_307() {
-    if (mcc_scan_token(COMMA)) return true;
-    if (mcc_3R_202()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_105() {
-    if (mcc_3R_83()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_209() {
-    if (mcc_scan_token(CONTINUE)) return true;
-    if (mcc_scan_token(SEMICOLON)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_104() {
-    if (mcc_3R_134()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_76() {
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_104()) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_105()) return true;
-    }
-    return false;
-  }
-
-  private bool mcc_3R_208() {
     if (mcc_scan_token(BREAK)) return true;
     if (mcc_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  private bool mcc_3R_74() {
+  private bool mcc_3R_76() {
     if (mcc_scan_token(LBRACKET)) return true;
     if (mcc_scan_token(RBRACKET)) return true;
     return false;
   }
 
-  private bool mcc_3R_253() {
+  private bool mcc_3R_255() {
     if (mcc_scan_token(LBRACKET)) return true;
     if (mcc_scan_token(RBRACKET)) return true;
     return false;
   }
 
-  private bool mcc_3R_303() {
-    if (mcc_3R_306()) return true;
+  private bool mcc_3R_305() {
+    if (mcc_3R_308()) return true;
     return false;
   }
 
-  private bool mcc_3R_296() {
-    if (mcc_3R_83()) return true;
+  private bool mcc_3R_298() {
+    if (mcc_3R_85()) return true;
     return false;
   }
 
-  private bool mcc_3R_254() {
-    if (mcc_scan_token(137)) return true;
+  private bool mcc_3R_256() {
+    if (mcc_scan_token(139)) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_264()) mcc_scanpos = xsp;
+    if (mcc_3R_266()) mcc_scanpos = xsp;
     return false;
   }
 
-  private bool mcc_3R_286() {
+  private bool mcc_3R_288() {
     if (mcc_scan_token(ELSE)) return true;
-    if (mcc_3R_168()) return true;
+    if (mcc_3R_170()) return true;
     return false;
   }
 
   private bool mcc_3_40() {
-    if (mcc_3R_73()) return true;
+    if (mcc_3R_75()) return true;
     if (mcc_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
   private bool mcc_3_11() {
-    if (mcc_3R_73()) return true;
+    if (mcc_3R_75()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_74()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_76()) { mcc_scanpos = xsp; break; }
     }
     if (mcc_scan_token(IDENTIFIER)) return true;
     xsp = mcc_scanpos;
-    if (mcc_scan_token(95)) {
+    if (mcc_scan_token(98)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(97)) {
+    if (mcc_scan_token(100)) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(94)) return true;
+    if (mcc_scan_token(97)) return true;
     }
     }
     return false;
   }
 
-  private bool mcc_3R_306() {
-    if (mcc_3R_202()) return true;
+  private bool mcc_3R_308() {
+    if (mcc_3R_204()) return true;
     Token xsp;
     while (true) {
       xsp = mcc_scanpos;
-      if (mcc_3R_307()) { mcc_scanpos = xsp; break; }
+      if (mcc_3R_309()) { mcc_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private bool mcc_3R_72() {
-    if (mcc_3R_101()) return true;
+  private bool mcc_3R_74() {
+    if (mcc_3R_103()) return true;
     return false;
   }
 
-  private bool mcc_3R_241() {
-    if (mcc_3R_73()) return true;
+  private bool mcc_3R_243() {
+    if (mcc_3R_75()) return true;
     Token xsp;
-    while (true) {
-      xsp = mcc_scanpos;
-      if (mcc_3R_253()) { mcc_scanpos = xsp; break; }
-    }
-    if (mcc_3R_254()) return true;
     while (true) {
       xsp = mcc_scanpos;
       if (mcc_3R_255()) { mcc_scanpos = xsp; break; }
+    }
+    if (mcc_3R_256()) return true;
+    while (true) {
+      xsp = mcc_scanpos;
+      if (mcc_3R_257()) { mcc_scanpos = xsp; break; }
     }
     if (mcc_scan_token(SEMICOLON)) return true;
     return false;
@@ -6926,14 +6968,51 @@ public class CSharpCCParser : CSharpCCParserConstants {
   private bool mcc_3_10() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_72()) mcc_scanpos = xsp;
+    if (mcc_3R_74()) mcc_scanpos = xsp;
     if (mcc_scan_token(IDENTIFIER)) return true;
     if (mcc_scan_token(LPAREN)) return true;
     return false;
   }
 
-  private bool mcc_3R_305() {
-    if (mcc_3R_306()) return true;
+  private bool mcc_3R_307() {
+    if (mcc_3R_308()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_238() {
+    if (mcc_3R_244()) return true;
+    return false;
+  }
+
+  private bool mcc_3_39() {
+    if (mcc_3R_75()) return true;
+    if (mcc_scan_token(IDENTIFIER)) return true;
+    if (mcc_scan_token(COLON)) return true;
+    return false;
+  }
+
+  private bool mcc_3R_306() {
+    if (mcc_3R_169()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_304() {
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_306()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_307()) return true;
+    }
+    return false;
+  }
+
+  private bool mcc_3R_237() {
+    if (mcc_3R_243()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_297() {
+    if (mcc_3R_304()) return true;
     return false;
   }
 
@@ -6942,25 +7021,16 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3_39() {
-    if (mcc_3R_73()) return true;
-    if (mcc_scan_token(IDENTIFIER)) return true;
-    if (mcc_scan_token(COLON)) return true;
-    return false;
-  }
-
-  private bool mcc_3R_304() {
-    if (mcc_3R_167()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_302() {
+  private bool mcc_3R_290() {
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_304()) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_305()) return true;
-    }
+    if (mcc_3R_297()) mcc_scanpos = xsp;
+    if (mcc_scan_token(SEMICOLON)) return true;
+    xsp = mcc_scanpos;
+    if (mcc_3R_298()) mcc_scanpos = xsp;
+    if (mcc_scan_token(SEMICOLON)) return true;
+    xsp = mcc_scanpos;
+    if (mcc_3R_299()) mcc_scanpos = xsp;
     return false;
   }
 
@@ -6969,60 +7039,32 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_295() {
-    if (mcc_3R_302()) return true;
+  private bool mcc_3R_289() {
+    if (mcc_3R_75()) return true;
+    if (mcc_scan_token(IDENTIFIER)) return true;
+    if (mcc_scan_token(COLON)) return true;
+    if (mcc_3R_85()) return true;
     return false;
   }
 
   private bool mcc_3R_234() {
-    if (mcc_3R_240()) return true;
+    if (mcc_3R_171()) return true;
     return false;
   }
 
-  private bool mcc_3R_288() {
+  private bool mcc_3R_231() {
+    if (mcc_3R_93()) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_295()) mcc_scanpos = xsp;
-    if (mcc_scan_token(SEMICOLON)) return true;
-    xsp = mcc_scanpos;
-    if (mcc_3R_296()) mcc_scanpos = xsp;
-    if (mcc_scan_token(SEMICOLON)) return true;
-    xsp = mcc_scanpos;
-    if (mcc_3R_297()) mcc_scanpos = xsp;
-    return false;
-  }
-
-  private bool mcc_3R_233() {
-    if (mcc_3R_239()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_287() {
-    if (mcc_3R_73()) return true;
-    if (mcc_scan_token(IDENTIFIER)) return true;
-    if (mcc_scan_token(COLON)) return true;
-    if (mcc_3R_83()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_232() {
-    if (mcc_3R_169()) return true;
-    return false;
-  }
-
-  private bool mcc_3R_229() {
-    if (mcc_3R_91()) return true;
-    Token xsp;
-    xsp = mcc_scanpos;
-    if (mcc_3R_232()) {
-    mcc_scanpos = xsp;
-    if (mcc_3R_233()) {
-    mcc_scanpos = xsp;
     if (mcc_3R_234()) {
     mcc_scanpos = xsp;
     if (mcc_3R_235()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_236()) return true;
+    if (mcc_3R_236()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_237()) {
+    mcc_scanpos = xsp;
+    if (mcc_3R_238()) return true;
     }
     }
     }
@@ -7030,55 +7072,72 @@ public class CSharpCCParser : CSharpCCParserConstants {
     return false;
   }
 
-  private bool mcc_3R_207() {
+  private bool mcc_3R_209() {
     if (mcc_scan_token(FOR)) return true;
     if (mcc_scan_token(LPAREN)) return true;
     Token xsp;
     xsp = mcc_scanpos;
-    if (mcc_3R_287()) {
+    if (mcc_3R_289()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_288()) return true;
+    if (mcc_3R_290()) return true;
     }
     if (mcc_scan_token(RPAREN)) return true;
-    if (mcc_3R_168()) return true;
+    if (mcc_3R_170()) return true;
     return false;
   }
 
-  private bool mcc_3R_206() {
+  private bool mcc_3R_208() {
     if (mcc_scan_token(DO)) return true;
-    if (mcc_3R_168()) return true;
+    if (mcc_3R_170()) return true;
     if (mcc_scan_token(WHILE)) return true;
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_83()) return true;
+    if (mcc_3R_85()) return true;
     if (mcc_scan_token(RPAREN)) return true;
     if (mcc_scan_token(SEMICOLON)) return true;
     return false;
   }
 
   private bool mcc_3_12() {
-    if (mcc_3R_75()) return true;
+    if (mcc_3R_77()) return true;
     return false;
   }
 
-  private bool mcc_3R_224() {
+  private bool mcc_3R_226() {
     Token xsp;
     xsp = mcc_scanpos;
     if (mcc_3_12()) {
     mcc_scanpos = xsp;
-    if (mcc_3R_229()) {
+    if (mcc_3R_231()) {
     mcc_scanpos = xsp;
-    if (mcc_scan_token(94)) return true;
+    if (mcc_scan_token(97)) return true;
     }
     }
     return false;
   }
 
-  private bool mcc_3R_205() {
+  private bool mcc_3R_207() {
     if (mcc_scan_token(WHILE)) return true;
     if (mcc_scan_token(LPAREN)) return true;
-    if (mcc_3R_83()) return true;
+    if (mcc_3R_85()) return true;
     if (mcc_scan_token(RPAREN)) return true;
-    if (mcc_3R_168()) return true;
+    if (mcc_3R_170()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_296() {
+    if (mcc_3R_147()) return true;
+    return false;
+  }
+
+  private bool mcc_3R_206() {
+    if (mcc_scan_token(IF)) return true;
+    if (mcc_scan_token(LPAREN)) return true;
+    if (mcc_3R_85()) return true;
+    if (mcc_scan_token(RPAREN)) return true;
+    if (mcc_3R_170()) return true;
+    Token xsp;
+    xsp = mcc_scanpos;
+    if (mcc_3R_288()) mcc_scanpos = xsp;
     return false;
   }
 
@@ -7105,19 +7164,19 @@ public class CSharpCCParser : CSharpCCParserConstants {
       mcc_gla1_4();
    }
    private static void mcc_gla1_0() {
-      mcc_la1_0 = new int[] {-1610610720,6,6,0,-1610610720,0,0,0,0,0,0,0,960,0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4062,0,134217728,0,134217728,0,134217728,0,0,0,0,0,0,0,0,0,0,-1476395008,0,-1610612736,-1476395008,0,0,0,268439518,268439518,0,0,0,0,-1610612736,0,0,-134213666,0,0,-1610612736,-1610612736,0,-1610612736,-1610612736,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,268439518,0,0,268439518,268435456,0,0,0,0,268439518,0,0,0,268439518,0,0,0,0,0,0,0,1342181342,-134213666,1342181342,0,0,0,268439518,0,-134213666,0,0,-1207955490,268439518,268439518,-1207955490,268439518,0,268439518,0,0,0,0,0,0,268439518,0,};
+      mcc_la1_0 = new int[] {-1610610720,6,6,0,-1610610720,0,0,0,0,0,0,0,960,0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4094,0,134217728,0,134217728,0,134217728,0,0,0,0,0,0,0,0,0,0,-1476395008,0,-1610612736,-1476395008,0,0,0,268439550,268439550,0,0,0,0,-1610612736,0,0,-134213634,0,0,-1610612736,-1610612736,0,-1610612736,-1610612736,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,268439550,0,0,268439550,268435456,0,0,0,0,268439550,0,0,0,268439550,0,0,0,0,0,0,0,1342181374,-134213634,1342181374,0,0,0,268439550,0,-134213634,0,0,-1207955458,268439550,268439550,-1207955458,268439550,0,268439550,0,0,0,0,0,0,268439550,0,};
    }
    private static void mcc_gla1_1() {
-      mcc_la1_1 = new int[] {949240068,0,0,4096,949240068,940572672,940572672,0,0,0,0,0,0,0,0,0,0,0,2,8192,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2014841864,0,2014316544,525320,2014841864,524296,0,0,0,0,0,0,0,0,0,2023509260,525320,8667396,2023509260,0,0,0,100667392,100667392,0,0,0,0,8667396,0,0,-18884180,0,0,8667396,8667396,0,8667396,8667396,0,0,0,0,0,0,0,0,0,0,2097152,0,0,0,0,0,0,0,0,100667392,0,0,100667392,100667392,0,0,0,0,100667392,0,67112960,4096,100667392,0,0,0,0,33554432,0,0,-2042392416,-18884180,-2041868120,0,0,0,100667392,65,-18884180,65,512,2123651332,100667392,100667392,2123651332,100667392,0,100667392,2,8192,0,0,0,0,100667392,0,};
+      mcc_la1_1 = new int[] {1888764164,0,0,4096,1888764164,1880096768,1880096768,0,0,0,0,0,0,0,0,0,0,0,2,8192,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-132641784,0,-133167104,525320,-132641784,524296,0,0,0,0,0,0,0,0,0,-123974388,525320,8667396,-123974388,0,0,0,100667392,100667392,0,0,0,0,8667396,0,0,-18884180,0,0,8667396,8667396,0,8667396,8667396,0,0,0,0,0,0,0,0,0,0,2097152,0,0,0,0,0,0,0,0,100667392,0,0,100667392,100667392,0,0,0,0,100667392,0,67112960,4096,100667392,0,0,0,0,33554432,0,0,105091232,-18884180,105615528,0,0,0,100667392,65,-18884180,65,512,-23832316,100667392,100667392,-23832316,100667392,0,100667392,2,8192,0,0,0,0,100667392,0,};
    }
    private static void mcc_gla1_2() {
-      mcc_la1_2 = new int[] {1025,2,2,8396864,1025,0,0,-2147483648,0,0,268435456,0,0,67108864,0,0,0,8192,0,0,0,8388608,0,0,335544448,16777216,0,0,8388608,0,0,293601280,8192,-2147483648,67108864,67108864,293601280,0,-2147483648,8388608,0,0,256,1342179362,0,268437538,0,1342179362,0,0,0,-2147483648,0,0,16777216,-2147483648,0,0,1409289251,0,1025,1342180387,268435456,-2147483648,0,96608328,96608328,-2147483648,0,1140850688,-2147483648,1,0,0,1438791935,0,2,1,1,-2147483648,1,1025,-2147483648,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29499464,0,0,29499464,29499464,16777216,0,0,16777216,29499464,285212672,12722240,64,29499464,-2147483648,0,67108864,285212672,0,268435456,268435456,1170354396,1438791935,1170354396,-2147483648,0,0,29499464,0,1438791935,0,0,297937003,29499464,29499464,1371678827,29499464,-2147483648,29499464,0,0,0,16777216,16777216,-2147483648,365043784,-2147483648,};
+      mcc_la1_2 = new int[] {8196,8,8,67174656,8196,0,0,0,0,0,-2147483648,0,0,536870912,0,0,0,65536,0,0,0,67108864,0,0,-1610612224,134217728,0,0,67108864,0,0,-1946157056,65536,0,536870912,536870912,-1946157056,0,0,67108864,0,0,1024,-2147463030,0,-2147463030,0,-2147463030,0,0,0,0,0,0,134217728,0,0,0,-1610583922,0,8196,-2147454834,-2147483648,0,0,772866336,772866336,0,0,536870912,0,4,0,0,-1374563329,0,8,4,4,0,4,8196,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,235995424,0,0,235995424,235995424,134217728,0,0,134217728,235995424,-2013265920,101777664,256,235995424,0,0,536870912,-2013265920,0,-2147483648,-2147483648,772899697,-1374563329,772899697,0,0,0,235995424,0,-1374563329,0,0,-1911467602,235995424,235995424,-1911467602,235995424,0,235995424,0,0,0,134217728,134217728,0,-1374617312,0,};
    }
    private static void mcc_gla1_3() {
-      mcc_la1_3 = new int[] {4,0,0,0,4,0,0,0,4,4,0,1048576,0,0,64,1048576,0,0,0,0,1,4,163872,163872,0,0,0,0,0,4,1048576,20,0,0,163872,163872,20,16,0,0,65536,0,0,0,2,0,0,0,0,4,64,0,64,0,0,0,0,0,4,0,4,4,0,0,2,122904,122904,0,4,0,0,0,0,4,24576,64,0,0,0,0,0,0,0,2139095042,32,2048,4096,1048576,2097152,524288,1152,1152,0,772,772,0,98304,98304,4587520,4587520,98304,122904,24,24,0,24,0,24576,24576,0,0,1,0,0,122904,0,4,0,0,0,0,0,24576,24576,24576,0,2139119618,2139119618,24576,0,24576,0,0,24576,122904,24576,24576,24576,0,122904,0,0,0,0,0,0,122904,0,};
+      mcc_la1_3 = new int[] {32,0,0,0,32,0,0,4,32,32,0,8388608,0,0,512,8388608,0,0,0,0,8,32,1310976,1310976,0,0,0,0,0,32,8388608,160,0,4,1310976,1310976,160,128,4,0,524288,0,0,2,16,0,0,2,0,32,512,4,512,0,0,4,0,0,34,0,32,34,0,4,16,983232,983232,4,32,2,4,0,0,32,196610,512,0,0,0,4,0,0,4,-67108848,256,16384,32768,8388608,16777216,4194304,9216,9216,0,6176,6176,0,786432,786432,36700160,36700160,786432,983232,192,192,0,192,0,196608,196608,0,0,8,0,0,983232,4,32,0,0,0,0,0,196610,196610,196610,4,-66912240,-66912240,196608,0,196610,0,0,196608,983232,196608,196610,196608,4,983232,0,0,0,0,0,4,983232,4,};
    }
    private static void mcc_gla1_4() {
-      mcc_la1_4 = new int[] {512,512,512,0,512,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,514,0,0,0,0,0,0,0,0,0,0,0,0,0,516,0,0,0,0,0,0,0,0,0,0,0,512,0,0,24,24,512,0,512,512,0,0,0,516,516,0,0,0,0,544,32,0,516,0,0,0,512,0,0,512,0,192,0,0,0,0,0,0,0,0,0,1,1,256,0,0,0,0,0,516,0,0,516,512,0,0,0,0,516,0,0,0,516,0,0,0,0,0,0,0,516,516,516,0,192,192,516,0,516,0,0,516,516,516,516,516,0,516,0,0,512,0,0,0,516,0,};
+      mcc_la1_4 = new int[] {2048,2048,2048,0,2048,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,2064,0,0,0,0,0,0,0,0,0,0,0,0,0,2048,0,0,0,0,0,0,0,0,0,0,0,2048,0,0,96,96,2048,0,2048,2048,0,0,0,2048,2048,0,0,0,0,2176,128,0,2048,0,0,0,2048,0,0,2048,0,771,0,0,0,0,0,0,0,0,0,8,8,1024,0,0,0,0,0,2048,0,0,2048,2048,0,0,0,0,2048,0,0,0,2048,0,0,0,0,0,0,0,2048,2048,2048,0,771,771,2048,0,2048,0,0,2048,2048,2048,2048,2048,0,2048,0,0,2048,0,0,0,2048,0,};
    }
   private MccCalls[] mcc_2_rtns = new MccCalls[43];
   private bool mcc_rescan = false;
@@ -7288,8 +7347,8 @@ public class CSharpCCParser : CSharpCCParserConstants {
 
   public ParseException GenerateParseException() {
     mcc_expentries.Clear();
-    bool[] la1tokens = new bool[140];
-    for (int i = 0; i < 140; i++) {
+    bool[] la1tokens = new bool[142];
+    for (int i = 0; i < 142; i++) {
       la1tokens[i] = false;
     }
     if (mcc_kind >= 0) {
@@ -7317,7 +7376,7 @@ public class CSharpCCParser : CSharpCCParserConstants {
         }
       }
     }
-    for (int i = 0; i < 140; i++) {
+    for (int i = 0; i < 142; i++) {
       if (la1tokens[i]) {
         mcc_expentry = new int[1];
         mcc_expentry[0] = i;

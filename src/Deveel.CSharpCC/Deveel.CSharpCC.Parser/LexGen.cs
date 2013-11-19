@@ -89,9 +89,9 @@ namespace Deveel.CSharpCC.Parser {
                         kind == CSharpCCParserConstants.USING) {
                         for (; i < CSharpCCGlobals.cu_to_insertion_point_1.Count; i++) {
                             kind = CSharpCCGlobals.cu_to_insertion_point_1[i].kind;
-                            if (kind == SEMICOLON ||
+                            if (kind == CSharpCCParserConstants.SEMICOLON ||
                                 kind == CSharpCCParserConstants.ABSTRACT ||
-                                kind == FINAL ||
+                                kind == CSharpCCParserConstants.SEALED ||
                                 kind == CSharpCCParserConstants.PUBLIC ||
                                 kind == CSharpCCParserConstants.CLASS ||
                                 kind == CSharpCCParserConstants.INTERFACE) {
@@ -100,7 +100,7 @@ namespace Deveel.CSharpCC.Parser {
                                 for (j = l; j < i; j++) {
                                     CSharpCCGlobals.PrintToken(CSharpCCGlobals.cu_to_insertion_point_1[j], ostr);
                                 }
-                                if (kind == SEMICOLON)
+                                if (kind == CSharpCCParserConstants.SEMICOLON)
                                     CSharpCCGlobals.PrintToken(CSharpCCGlobals.cu_to_insertion_point_1[j], ostr);
                                 ostr.WriteLine("");
                                 break;
