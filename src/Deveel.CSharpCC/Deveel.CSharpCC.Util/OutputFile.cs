@@ -16,7 +16,7 @@ namespace Deveel.CSharpCC.Util {
 		private readonly String compatibleVersion;
 		private readonly String[] options;
 
-		private bool needToWrite;
+		internal bool needToWrite;
 
 		private const String MD5_LINE_PART_1 = "/* CSharpCC - OriginalChecksum=";
 		private const String MD5_LINE_PART_1q = "/\\* CSharpCC - OriginalChecksum=";
@@ -150,18 +150,42 @@ namespace Deveel.CSharpCC.Util {
 			// Write the trailer (checksum).
 			// Possibly rename the .java.tmp to .java??
 			if (pw != null) {
-				pw.WriteLine(MD5_LINE_PART_1 + getMD5sum() + MD5_LINE_PART_2);
+				pw.WriteLine(MD5_LINE_PART_1 + GetMd5Sum() + MD5_LINE_PART_2);
 				pw.CloseWriter();
 			}
 		}
 
-		private String getMD5sum() {
+		private String GetMd5Sum() {
 			pw.Flush();
 			byte[] digest = dos.Hash;
 			return ToHexString(digest);
 		}
 
-		  private readonly static char[] HEX_DIGITS = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+		public TextWriter GetTextWriter() {
+			if (pw == null) {
+				HashAlgorithm digest;
+				try {
+					digest = HashAlgorithm.Create("MD5");
+				} catch (TargetException e) {
+					throw new IOException("No MD5 implementation", e);
+				}
+
+				dos = new DigestOutputStream(new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write), digest);
+				pw = new TrapCloseTextWriter(this, dos);
+
+				// Write the headers....
+				String version = compatibleVersion ?? typeof(OutputFile).Assembly.GetName().Version.ToString();
+				pw.WriteLine("/* " + CSharpCCGlobals.GetIdString(toolName, Path.GetFileName(file)) + " Version " + version + " */");
+				if (options != null) {
+					pw.WriteLine("/* CSharpCCOptions:" + Options.GetOptionsString(options) + " */");
+				}
+			}
+
+			return pw;
+		}
+
+
+		private readonly static char[] HEX_DIGITS = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 		private static string ToHexString(byte[] bytes) {
 			StringBuilder sb = new StringBuilder(32);

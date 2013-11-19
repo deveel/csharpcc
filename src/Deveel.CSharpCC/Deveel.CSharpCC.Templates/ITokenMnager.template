@@ -1,0 +1,13 @@
+﻿/// <summary>
+/// An interface that allows the parser to read tokens
+/// </summary>
+${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}interface TokenManager {
+	/// <summary>
+	/// This gets the next token from the input stream.
+	/// </summary>
+	/// <returns>
+	/// Returns a <see cref="Token"/> object that is the next one
+	/// read from the input stream.
+	/// </returns>
+	Token GetNextToken();
+}

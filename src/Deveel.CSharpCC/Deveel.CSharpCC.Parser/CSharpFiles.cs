@@ -2,15 +2,18 @@
 using System.IO;
 using System.Text;
 
+using Deveel.CSharpCC.Util;
+
 namespace Deveel.CSharpCC.Parser {
 	public static class CSharpFiles {
-		static String ReplaceBackslash(String str) {
+		private static String ReplaceBackslash(String str) {
 			StringBuilder b;
 			int i = 0, len = str.Length;
 
-			while (i < len && str[i++] != '\\') ;
+			while (i < len && str[i++] != '\\')
+				;
 
-			if (i == len)  // No backslash found.
+			if (i == len) // No backslash found.
 				return str;
 
 			char c;
@@ -24,7 +27,7 @@ namespace Deveel.CSharpCC.Parser {
 			return b.ToString();
 		}
 
-	    internal static double GetVersion(String fileName) {
+		internal static double GetVersion(String fileName) {
 			string commentHeader = "/* " + CSharpCCGlobals.GetIdString(CSharpCCGlobals.ToolNames, fileName) + " Version ";
 			string file = Path.Combine(Options.getOutputDirectory().FullName, ReplaceBackslash(fileName));
 
@@ -72,5 +75,73 @@ namespace Deveel.CSharpCC.Parser {
 			}
 		}
 
+		private static void GenerateFile(string fileName, string templateName, string[] options) {
+			try {
+				string file = Path.Combine(Options.getOutputDirectory().FullName, fileName);
+				OutputFile outputFile = new OutputFile(file, typeof(CSharpFiles).Assembly.GetName().Version.ToString(), options);
+
+				if (!outputFile.needToWrite) {
+					return;
+				}
+
+				TextWriter ostr = outputFile.GetTextWriter();
+
+				bool nsFound = false;
+				if (CSharpCCGlobals.cu_to_insertion_point_1.Count != 0 &&
+					CSharpCCGlobals.cu_to_insertion_point_1[0].kind == CSharpCCParserConstants.NAMESPACE) {
+					for (int i = 1; i < CSharpCCGlobals.cu_to_insertion_point_1.Count; i++) {
+						if (CSharpCCGlobals.cu_to_insertion_point_1[i].kind == CSharpCCParserConstants.SEMICOLON) {
+							CSharpCCGlobals.cline = CSharpCCGlobals.cu_to_insertion_point_1[0].beginLine;
+							CSharpCCGlobals.ccol = CSharpCCGlobals.cu_to_insertion_point_1[0].beginColumn;
+							for (int j = 0; j <= i; j++) {
+								CSharpCCGlobals.PrintToken(CSharpCCGlobals.cu_to_insertion_point_1[j], ostr);
+							}
+
+							nsFound = true;
+							ostr.WriteLine("{");
+							ostr.WriteLine();
+							ostr.WriteLine();
+							break;
+						}
+					}
+				}
+
+				CSharpFileGenetor generator = new CSharpFileGenetor(templateName, Options.getOptions());
+				generator.Generate(ostr);
+
+				if (nsFound)
+					ostr.WriteLine("}");
+
+				ostr.Close();
+			} catch (IOException e) {
+				Console.Error.WriteLine("Failed to create  " + fileName + ": " + e.Message);
+				CSharpCCErrors.SemanticError("Could not open file " + fileName + " for writing.");
+				throw new InvalidOperationException();
+			}			
+		}
+
+		public static void GenerateICharStream() {
+			GenerateFile("ICharStream.cs", "Deveel.CSharpCC.Templates.ICharStream.template", new String[] { "STATIC", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
+		}
+
+		public static void GenerateParseException() {
+			GenerateFile("ParseException.cs", "Deveel.CSharpCC.Templates.ParseException.template", new string[] { "KEEP_LINE_COL", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
+		}
+
+		public static void GenerateTokenManagerError() {
+			GenerateFile("TokenManagerError.cs", "Deveel.CSharpCC.Templates.TokenManagerError.template", new string[] { "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
+		}
+
+		public static void GenerateToken() {
+			GenerateFile("Token.cs", "Deveel.CSharpCC.Templates.Token-2.0.template", new String[] {"TOKEN_EXTENDS", "KEEP_LINE_COL", "SUPPORT_CLASS_VISIBILITY_PUBLIC"});
+		}
+
+		public static void GenerateITokenManager() {
+			GenerateFile("ITokenManager.cs", "Deveel.CSharpCC.Templates.ITokenManager.template", new String[] { "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
+		}
+
+		public static void GenerateSimpleCharStream() {
+			GenerateFile("SimpleCharStream.cs", "Deveel.CSharpCC.Templates.SimpleCharStream.template", new String[] { "STATIC", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
+		}
 	}
 }
