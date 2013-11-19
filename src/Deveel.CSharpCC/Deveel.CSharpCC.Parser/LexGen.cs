@@ -85,6 +85,7 @@ namespace Deveel.CSharpCC.Parser {
 
                     // TODO: write the namespace ...
                     kind = CSharpCCGlobals.cu_to_insertion_point_1[l].kind;
+					int gKind = kind;
                     if (kind == CSharpCCParserConstants.NAMESPACE ||
                         kind == CSharpCCParserConstants.USING) {
                         for (; i < CSharpCCGlobals.cu_to_insertion_point_1.Count; i++) {
@@ -100,9 +101,14 @@ namespace Deveel.CSharpCC.Parser {
                                 for (j = l; j < i; j++) {
                                     CSharpCCGlobals.PrintToken(CSharpCCGlobals.cu_to_insertion_point_1[j], ostr);
                                 }
-                                if (kind == CSharpCCParserConstants.SEMICOLON)
-                                    CSharpCCGlobals.PrintToken(CSharpCCGlobals.cu_to_insertion_point_1[j], ostr);
-                                ostr.WriteLine("");
+	                            if (kind == CSharpCCParserConstants.SEMICOLON) {
+									if (gKind == CSharpCCParserConstants.USING) {
+										CSharpCCGlobals.PrintToken((Token)(CSharpCCGlobals.cu_to_insertion_point_1[j]), ostr);
+									} else {
+										ostr.WriteLine(" {");
+									}
+	                            }
+	                            ostr.WriteLine("");
                                 break;
                             }
                         }
@@ -116,8 +122,7 @@ namespace Deveel.CSharpCC.Parser {
                 if (Options.getSupportClassVisibilityPublic()) {
                     ostr.Write("public ");
                 }
-                ostr.WriteLine("class " + tokMgrClassName);
-                ostr.WriteLine("{"); // }
+                ostr.WriteLine("class " + tokMgrClassName + " : " + CSharpCCGlobals.cu_name + "Constants {");
             } catch (IOException) {
                 CSharpCCErrors.SemanticError("Could not create file : " + tokMgrClassName + ".cs\n");
                 throw new InvalidOperationException();
@@ -295,216 +300,221 @@ namespace Deveel.CSharpCC.Parser {
             throw new InvalidOperationException(); // Should never come here
         }
 
-        public static void start() {
-            if (!Options.getBuildTokenManager() ||
-                Options.getUserTokenManager() ||
-                CSharpCCErrors.ErrorCount > 0)
-                return;
+		public static void start() {
+			if (!Options.getBuildTokenManager() ||
+			    Options.getUserTokenManager() ||
+			    CSharpCCErrors.ErrorCount > 0)
+				return;
 
-            keepLineCol = Options.getKeepLineColumn();
-            List<RegularExpression> choices = new List<RegularExpression>();
-            IEnumerator e;
-            TokenProduction tp;
-            int i, j;
+			keepLineCol = Options.getKeepLineColumn();
+			List<RegularExpression> choices = new List<RegularExpression>();
+			IEnumerator e;
+			TokenProduction tp;
+			int i, j;
 
-            staticString = (Options.getStatic() ? "static " : "");
-            tokMgrClassName = CSharpCCGlobals.cu_name + "TokenManager";
+			staticString = (Options.getStatic() ? "static " : "");
+			tokMgrClassName = CSharpCCGlobals.cu_name + "TokenManager";
 
-            PrintClassHead();
-            BuildLexStatesTable();
+			PrintClassHead();
+			BuildLexStatesTable();
 
-            e = allTpsForState.Keys.GetEnumerator();
+			e = allTpsForState.Keys.GetEnumerator();
 
-            bool ignoring = false;
+			bool ignoring = false;
 
-            while (e.MoveNext()) {
-                NfaState.ReInit();
-                RStringLiteral.ReInit();
+			while (e.MoveNext()) {
+				NfaState.ReInit();
+				RStringLiteral.ReInit();
 
-                String key = (String) e.Current;
+				String key = (String) e.Current;
 
-                lexStateIndex = GetIndex(key);
-                lexStateSuffix = "_" + lexStateIndex;
-                IList<TokenProduction> allTps = allTpsForState[key];
-                initStates[key] = initialState = new NfaState();
-                ignoring = false;
+				lexStateIndex = GetIndex(key);
+				lexStateSuffix = "_" + lexStateIndex;
+				IList<TokenProduction> allTps = allTpsForState[key];
+				initStates[key] = initialState = new NfaState();
+				ignoring = false;
 
-                singlesToSkip[lexStateIndex] = new NfaState();
-                singlesToSkip[lexStateIndex].dummy = true;
+				singlesToSkip[lexStateIndex] = new NfaState();
+				singlesToSkip[lexStateIndex].dummy = true;
 
-                if (key.Equals("DEFAULT"))
-                    defaultLexState = lexStateIndex;
+				if (key.Equals("DEFAULT"))
+					defaultLexState = lexStateIndex;
 
-                for (i = 0; i < allTps.Count; i++) {
-                    tp = allTps[i];
-                    int kind = tp.Kind;
-                    bool ignore = tp.IgnoreCase;
-                    IList<RegExprSpec> rexps = tp.RegexSpecs;
+				for (i = 0; i < allTps.Count; i++) {
+					tp = allTps[i];
+					int kind = tp.Kind;
+					bool ignore = tp.IgnoreCase;
+					IList<RegExprSpec> rexps = tp.RegexSpecs;
 
-                    if (i == 0)
-                        ignoring = ignore;
+					if (i == 0)
+						ignoring = ignore;
 
-                    for (j = 0; j < rexps.Count; j++) {
-                        RegExprSpec respec = rexps[j];
-                        curRE = respec.RegularExpression;
+					for (j = 0; j < rexps.Count; j++) {
+						RegExprSpec respec = rexps[j];
+						curRE = respec.RegularExpression;
 
-                        rexprs[curKind = curRE.Ordinal] = curRE;
-                        lexStates[curRE.Ordinal] = lexStateIndex;
-                        ignoreCase[curRE.Ordinal] = ignore;
+						rexprs[curKind = curRE.Ordinal] = curRE;
+						lexStates[curRE.Ordinal] = lexStateIndex;
+						ignoreCase[curRE.Ordinal] = ignore;
 
-                        if (curRE.IsPrivate) {
-                            kinds[curRE.Ordinal] = -1;
-                            continue;
-                        }
+						if (curRE.IsPrivate) {
+							kinds[curRE.Ordinal] = -1;
+							continue;
+						}
 
-                        if (curRE is RStringLiteral &&
-                            !((RStringLiteral) curRE).Image.Equals("")) {
-                            ((RStringLiteral) curRE).GenerateDfa(ostr, curRE.Ordinal);
-                            if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
-                                mixed[lexStateIndex] = true;
-                        } else if (curRE.CanMatchAnyChar) {
-                            if (canMatchAnyChar[lexStateIndex] == -1 ||
-                                canMatchAnyChar[lexStateIndex] > curRE.Ordinal)
-                                canMatchAnyChar[lexStateIndex] = curRE.Ordinal;
-                        } else {
-                            Nfa temp;
+						if (curRE is RStringLiteral &&
+						    !((RStringLiteral) curRE).Image.Equals("")) {
+							((RStringLiteral) curRE).GenerateDfa(ostr, curRE.Ordinal);
+							if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
+								mixed[lexStateIndex] = true;
+						} else if (curRE.CanMatchAnyChar) {
+							if (canMatchAnyChar[lexStateIndex] == -1 ||
+							    canMatchAnyChar[lexStateIndex] > curRE.Ordinal)
+								canMatchAnyChar[lexStateIndex] = curRE.Ordinal;
+						} else {
+							Nfa temp;
 
-                            if (curRE is RChoice)
-                                choices.Add(curRE);
+							if (curRE is RChoice)
+								choices.Add(curRE);
 
-                            temp = curRE.GenerateNfa(ignore);
-                            temp.End.isFinal = true;
-                            temp.End.kind = curRE.Ordinal;
-                            initialState.AddMove(temp.Start);
-                        }
+							temp = curRE.GenerateNfa(ignore);
+							temp.End.isFinal = true;
+							temp.End.kind = curRE.Ordinal;
+							initialState.AddMove(temp.Start);
+						}
 
-                        if (kinds.Length < curRE.Ordinal) {
-                            int[] tmp = new int[curRE.Ordinal + 1];
+						if (kinds.Length < curRE.Ordinal) {
+							int[] tmp = new int[curRE.Ordinal + 1];
 
-                            Array.Copy(kinds, 0, tmp, 0, kinds.Length);
-                            kinds = tmp;
-                        }
-                        //System.out.println("   ordina : " + curRE.ordinal);
+							Array.Copy(kinds, 0, tmp, 0, kinds.Length);
+							kinds = tmp;
+						}
+						//System.out.println("   ordina : " + curRE.ordinal);
 
-                        kinds[curRE.Ordinal] = kind;
+						kinds[curRE.Ordinal] = kind;
 
-                        if (respec.NextState != null &&
-                            !respec.NextState.Equals(lexStateName[lexStateIndex]))
-                            newLexState[curRE.Ordinal] = respec.NextState;
+						if (respec.NextState != null &&
+						    !respec.NextState.Equals(lexStateName[lexStateIndex]))
+							newLexState[curRE.Ordinal] = respec.NextState;
 
-                        if (respec.Action != null && respec.Action.ActionTokens != null &&
-                            respec.Action.ActionTokens.Count > 0)
-                            actions[curRE.Ordinal] = respec.Action;
+						if (respec.Action != null && respec.Action.ActionTokens != null &&
+						    respec.Action.ActionTokens.Count > 0)
+							actions[curRE.Ordinal] = respec.Action;
 
-                        switch (kind) {
-                            case TokenProduction.SPECIAL:
-                                hasSkipActions |= (actions[curRE.Ordinal] != null) ||
-                                                  (newLexState[curRE.Ordinal] != null);
-                                hasSpecial = true;
-                                toSpecial[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
-                                toSkip[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
-                                break;
-                            case TokenProduction.SKIP:
-                                hasSkipActions |= (actions[curRE.Ordinal] != null);
-                                hasSkip = true;
-                                toSkip[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
-                                break;
-                            case TokenProduction.MORE:
-                                hasMoreActions |= (actions[curRE.Ordinal] != null);
-                                hasMore = true;
-                                toMore[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
+						switch (kind) {
+							case TokenProduction.SPECIAL:
+								hasSkipActions |= (actions[curRE.Ordinal] != null) ||
+								                  (newLexState[curRE.Ordinal] != null);
+								hasSpecial = true;
+								toSpecial[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
+								toSkip[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
+								break;
+							case TokenProduction.SKIP:
+								hasSkipActions |= (actions[curRE.Ordinal] != null);
+								hasSkip = true;
+								toSkip[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
+								break;
+							case TokenProduction.MORE:
+								hasMoreActions |= (actions[curRE.Ordinal] != null);
+								hasMore = true;
+								toMore[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
 
-                                if (newLexState[curRE.Ordinal] != null)
-                                    canReachOnMore[GetIndex(newLexState[curRE.Ordinal])] = true;
-                                else
-                                    canReachOnMore[lexStateIndex] = true;
+								if (newLexState[curRE.Ordinal] != null)
+									canReachOnMore[GetIndex(newLexState[curRE.Ordinal])] = true;
+								else
+									canReachOnMore[lexStateIndex] = true;
 
-                                break;
-                            case TokenProduction.TOKEN:
-                                hasTokenActions |= (actions[curRE.Ordinal] != null);
-                                toToken[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
-                                break;
-                        }
-                    }
-                }
+								break;
+							case TokenProduction.TOKEN:
+								hasTokenActions |= (actions[curRE.Ordinal] != null);
+								toToken[curRE.Ordinal/64] |= 1L << (curRE.Ordinal%64);
+								break;
+						}
+					}
+				}
 
-                // Generate a static block for initializing the nfa transitions
-                NfaState.ComputeClosures();
+				// Generate a static block for initializing the nfa transitions
+				NfaState.ComputeClosures();
 
-                for (i = 0; i < initialState.epsilonMoves.Count; i++)
-                    initialState.epsilonMoves[i].GenerateCode();
+				for (i = 0; i < initialState.epsilonMoves.Count; i++)
+					initialState.epsilonMoves[i].GenerateCode();
 
-                if (hasNfa[lexStateIndex] = (NfaState.generatedStates != 0)) {
-                    initialState.GenerateCode();
-                    initialState.GenerateInitMoves(ostr);
-                }
+				if (hasNfa[lexStateIndex] = (NfaState.generatedStates != 0)) {
+					initialState.GenerateCode();
+					initialState.GenerateInitMoves(ostr);
+				}
 
-                if (initialState.kind != Int32.MaxValue && initialState.kind != 0) {
-                    if ((toSkip[initialState.kind/64] & (1L << initialState.kind)) != 0L ||
-                        (toSpecial[initialState.kind/64] & (1L << initialState.kind)) != 0L)
-                        hasSkipActions = true;
-                    else if ((toMore[initialState.kind/64] & (1L << initialState.kind)) != 0L)
-                        hasMoreActions = true;
-                    else
-                        hasTokenActions = true;
+				if (initialState.kind != Int32.MaxValue && initialState.kind != 0) {
+					if ((toSkip[initialState.kind/64] & (1L << initialState.kind)) != 0L ||
+					    (toSpecial[initialState.kind/64] & (1L << initialState.kind)) != 0L)
+						hasSkipActions = true;
+					else if ((toMore[initialState.kind/64] & (1L << initialState.kind)) != 0L)
+						hasMoreActions = true;
+					else
+						hasTokenActions = true;
 
-                    if (initMatch[lexStateIndex] == 0 ||
-                        initMatch[lexStateIndex] > initialState.kind) {
-                        initMatch[lexStateIndex] = initialState.kind;
-                        hasEmptyMatch = true;
-                    }
-                } else if (initMatch[lexStateIndex] == 0)
-                    initMatch[lexStateIndex] = Int32.MaxValue;
+					if (initMatch[lexStateIndex] == 0 ||
+					    initMatch[lexStateIndex] > initialState.kind) {
+						initMatch[lexStateIndex] = initialState.kind;
+						hasEmptyMatch = true;
+					}
+				} else if (initMatch[lexStateIndex] == 0)
+					initMatch[lexStateIndex] = Int32.MaxValue;
 
-                RStringLiteral.FillSubString();
+				RStringLiteral.FillSubString();
 
-                if (hasNfa[lexStateIndex] && !mixed[lexStateIndex])
-                    RStringLiteral.GenerateNfaStartStates(ostr, initialState);
+				if (hasNfa[lexStateIndex] && !mixed[lexStateIndex])
+					RStringLiteral.GenerateNfaStartStates(ostr, initialState);
 
-                RStringLiteral.DumpDfaCode(ostr);
+				RStringLiteral.DumpDfaCode(ostr);
 
-                if (hasNfa[lexStateIndex])
-                    NfaState.DumpMoveNfa(ostr);
+				if (hasNfa[lexStateIndex])
+					NfaState.DumpMoveNfa(ostr);
 
-                if (stateSetSize < NfaState.generatedStates)
-                    stateSetSize = NfaState.generatedStates;
-            }
+				if (stateSetSize < NfaState.generatedStates)
+					stateSetSize = NfaState.generatedStates;
+			}
 
-            for (i = 0; i < choices.Count; i++)
-                ((RChoice) choices[i]).CheckUnmatchability();
+			for (i = 0; i < choices.Count; i++)
+				((RChoice) choices[i]).CheckUnmatchability();
 
-            NfaState.DumpStateSets(ostr);
-            CheckEmptyStringMatch();
-            NfaState.DumpNonAsciiMoveMethods(ostr);
-            RStringLiteral.DumpStrLiteralImages(ostr);
-            DumpStaticVarDeclarations();
-            DumpFillToken();
-            DumpGetNextToken();
+			NfaState.DumpStateSets(ostr);
+			CheckEmptyStringMatch();
+			NfaState.DumpNonAsciiMoveMethods(ostr);
+			RStringLiteral.DumpStrLiteralImages(ostr);
+			DumpStaticVarDeclarations();
+			DumpFillToken();
+			DumpGetNextToken();
 
-            if (Options.getDebugTokenManager()) {
-                NfaState.DumpStatesForKind(ostr);
-                DumpDebugMethods();
-            }
+			if (Options.getDebugTokenManager()) {
+				NfaState.DumpStatesForKind(ostr);
+				DumpDebugMethods();
+			}
 
-            if (hasLoop) {
-                ostr.WriteLine(staticString + "int[] ccEmptyLineNo = new int[" + maxLexStates + "];");
-                ostr.WriteLine(staticString + "int[] ccEmptyColNo = new int[" + maxLexStates + "];");
-                ostr.WriteLine(staticString + "bool[] ccBeenHere = new bool[" + maxLexStates + "];");
-            }
+			if (hasLoop) {
+				ostr.WriteLine(staticString + "int[] ccEmptyLineNo = new int[" + maxLexStates + "];");
+				ostr.WriteLine(staticString + "int[] ccEmptyColNo = new int[" + maxLexStates + "];");
+				ostr.WriteLine(staticString + "bool[] ccBeenHere = new bool[" + maxLexStates + "];");
+			}
 
-            if (hasSkipActions)
-                DumpSkipActions();
-            if (hasMoreActions)
-                DumpMoreActions();
-            if (hasTokenActions)
-                DumpTokenActions();
+			if (hasSkipActions)
+				DumpSkipActions();
+			if (hasMoreActions)
+				DumpMoreActions();
+			if (hasTokenActions)
+				DumpTokenActions();
 
-            NfaState.PrintBoilerPlate(ostr);
-            ostr.WriteLine( /*{*/ "}");
-            ostr.Close();
-        }
+			NfaState.PrintBoilerPlate(ostr);
+			ostr.WriteLine( /*{*/ "}");
 
-        private static void CheckEmptyStringMatch() {
+			if (CSharpCCGlobals.cu_to_insertion_point_1.Count != 0 &&
+			    CSharpCCGlobals.cu_to_insertion_point_1[0].kind == CSharpCCParserConstants.NAMESPACE)
+				ostr.WriteLine("}");
+				
+			ostr.Close();
+		}
+
+		private static void CheckEmptyStringMatch() {
             int i, j, k, len;
             bool[] seen = new bool[maxLexStates];
             bool[] done = new bool[maxLexStates];
