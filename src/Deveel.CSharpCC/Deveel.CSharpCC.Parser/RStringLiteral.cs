@@ -195,10 +195,11 @@ namespace Deveel.CSharpCC.Parser {
 				}
 
 				String toPrint = "\"";
-
+                toPrint += CSharpCCGlobals.AddEscapes(image);
+                /*
 				for (int j = 0; j < image.Length; j++) {
 					if (image[j] <= 0xff)
-						toPrint += ("\\" + ((int) image[j]).ToString("O"));
+						toPrint += ("\\" + Convert.ToString(image[j], 8));
 					else {
 						String hexVal = "0x" + ((int) image[j]).ToString("X");
 
@@ -207,7 +208,7 @@ namespace Deveel.CSharpCC.Parser {
 						toPrint += ("\\u" + hexVal);
 					}
 				}
-
+                */
 				toPrint += ("\", ");
 
 				if ((charCnt += toPrint.Length) >= 80) {
@@ -437,7 +438,7 @@ namespace Deveel.CSharpCC.Parser {
 				tab = (IDictionary<string, KindInfo>) charPosKind[i];
 				String[] keys = ReArrange(tab);
 
-				ostr.Write("private " + (Options.getStatic() ? "static " : "") + "int " + "ccMoveStringLiteralDfa" + i + LexGen.lexStateSuffix + "(");
+				ostr.Write("private " + (Options.getStatic() ? "static " : "") + "int ccMoveStringLiteralDfa" + i + LexGen.lexStateSuffix + "(");
 
 				if (i != 0) {
 					if (i == 1) {
@@ -516,8 +517,7 @@ namespace Deveel.CSharpCC.Parser {
 					}
 
 					if (i != 0 && Options.getDebugTokenManager()) {
-						ostr.WriteLine("   if (jjmatchedKind != 0 && jjmatchedKind != 0x" +
-						             Int32.MaxValue.ToString("X") + ")");
+						ostr.WriteLine("   if (ccMatchedKind != 0 && ccMatchedKind != 0x" + Int32.MaxValue.ToString("X") + ")");
 						ostr.WriteLine("      debugStream.WriteLine(\"   Currently matched the first \" + " +
 						             "(ccMatchedPos + 1) + \" characters as a \" + tokenImage[ccMatchedKind] + \" token.\");");
 
@@ -573,7 +573,7 @@ namespace Deveel.CSharpCC.Parser {
 					             "TokenMgrError.AddEscapes(curChar.ToString()) + \" (\" + (int)curChar + \") " +
 					             "at line \" + inputStream.EndLine + \" column \" + inputStream.EndColumn);");
 
-				ostr.Write("   switch(curChar)");
+				ostr.Write("   switch((int)curChar)");
 				ostr.WriteLine("   {");
 
 				for (int q = 0; q < keys.Length; q++) {

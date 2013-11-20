@@ -81,7 +81,7 @@ namespace Deveel.CSharpCC.Parser {
 				help_message();
 				return 1;
 			} else {
-				Console.Out.WriteLine("(type \"javacc\" with no arguments for help)");
+				Console.Out.WriteLine("(type \"csharpcc\" with no arguments for help)");
 			}
 
 			if (Options.IsOption(args[args.Length - 1])) {

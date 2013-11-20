@@ -745,7 +745,7 @@ namespace Deveel.CSharpCC.Parser {
             int i = 0, j = 0;
             char hiByte;
             int cnt = 0;
-            long[][] loBytes = new long[256][];
+            long[,] loBytes = new long[256,4];
 
             if ((charMoves == null || charMoves[0] == 0) &&
                 (rangeMoves == null || rangeMoves[0] == 0))
@@ -757,7 +757,7 @@ namespace Deveel.CSharpCC.Parser {
                         break;
 
                     hiByte = (char) (charMoves[i] >> 8);
-                    loBytes[hiByte][(charMoves[i] & 0xff)/64] |= (1L << ((charMoves[i] & 0xff)%64));
+                    loBytes[hiByte, (charMoves[i] & 0xff)/64] |= (1L << ((charMoves[i] & 0xff)%64));
                 }
             }
 
@@ -773,23 +773,23 @@ namespace Deveel.CSharpCC.Parser {
 
                     if (hiByte == (char) (rangeMoves[i + 1] >> 8)) {
                         for (c = (char) (rangeMoves[i] & 0xff); c <= r; c++)
-                            loBytes[hiByte][c/64] |= (1L << (c%64));
+                            loBytes[hiByte, c/64] |= (1L << (c%64));
 
                         continue;
                     }
 
                     for (c = (char) (rangeMoves[i] & 0xff); c <= 0xff; c++)
-                        loBytes[hiByte][c/64] |= (1L << (c%64));
+                        loBytes[hiByte, c/64] |= (1L << (c%64));
 
                     while (++hiByte < (char) (rangeMoves[i + 1] >> 8)) {
-                        loBytes[hiByte][0] |= Int64.MaxValue /* 0xffffffffffffffffL */;
-                        loBytes[hiByte][1] |= Int64.MaxValue /* 0xffffffffffffffffL */;
-                        loBytes[hiByte][2] |= Int64.MaxValue /* 0xffffffffffffffffL */;
-                        loBytes[hiByte][3] |= Int64.MaxValue /* 0xffffffffffffffffL */;
+                        loBytes[hiByte, 0] |= Int64.MaxValue /* 0xffffffffffffffffL */;
+                        loBytes[hiByte, 1] |= Int64.MaxValue /* 0xffffffffffffffffL */;
+                        loBytes[hiByte, 2] |= Int64.MaxValue /* 0xffffffffffffffffL */;
+                        loBytes[hiByte, 3] |= Int64.MaxValue /* 0xffffffffffffffffL */;
                     }
 
                     for (int x = 0; x <= r;x++)
-                        loBytes[hiByte][x/64] |= (1L << (c%64));
+                        loBytes[hiByte, x/64] |= (1L << (c%64));
                 }
             }
 
@@ -799,20 +799,20 @@ namespace Deveel.CSharpCC.Parser {
             for (i = 0; i <= 255; i++) {
                 if (done[i] ||
                     (done[i] =
-                        loBytes[i][0] == 0 &&
-                        loBytes[i][1] == 0 &&
-                        loBytes[i][2] == 0 &&
-                        loBytes[i][3] == 0))
+                        loBytes[i,0] == 0 &&
+                        loBytes[i,1] == 0 &&
+                        loBytes[i,2] == 0 &&
+                        loBytes[i,3] == 0))
                     continue;
 
                 for (j = i + 1; j < 256; j++) {
                     if (done[j])
                         continue;
 
-                    if (loBytes[i][0] == loBytes[j][0] &&
-                        loBytes[i][1] == loBytes[j][1] &&
-                        loBytes[i][2] == loBytes[j][2] &&
-                        loBytes[i][3] == loBytes[j][3]) {
+                    if (loBytes[i,0] == loBytes[j, 0] &&
+                        loBytes[i,1] == loBytes[j, 1] &&
+                        loBytes[i,2] == loBytes[j, 2] &&
+                        loBytes[i,3] == loBytes[j, 3]) {
                         done[j] = true;
                         if (common == null) {
                             done[i] = true;
@@ -842,10 +842,10 @@ namespace Deveel.CSharpCC.Parser {
 
                     tmpIndices[cnt++] = ind;
 
-                    tmp = "{\n   0x" + loBytes[i][0].ToString("X") + "L, " +
-                          "0x" + loBytes[i][1].ToString("X") + "L, " +
-                          "0x" + loBytes[i][2].ToString("X") + "L, " +
-                          "0x" + loBytes[i][3].ToString("X") + "L\n};";
+                    tmp = "{\n   0x" + loBytes[i, 0].ToString("X") + "L, " +
+                          "0x" + loBytes[i, 1].ToString("X") + "L, " +
+                          "0x" + loBytes[i, 2].ToString("X") + "L, " +
+                          "0x" + loBytes[i, 3].ToString("X") + "L\n};";
                     if (!lohiByteTab.TryGetValue(tmp, out ind)) {
                         allBitVectors.Add(tmp);
 
@@ -863,28 +863,21 @@ namespace Deveel.CSharpCC.Parser {
             nonAsciiMoveIndices = new int[cnt];
             Array.Copy(tmpIndices, 0, nonAsciiMoveIndices, 0, cnt);
 
-/*
-      System.out.println("state : " + stateName + " cnt : " + cnt);
-      while (cnt > 0)
-      {
-         System.out.print(nonAsciiMoveIndices[cnt - 1] + ", " + nonAsciiMoveIndices[cnt - 2] + ", ");
-         cnt -= 2;
-      }
-      System.out.println("");
-*/
-
             for (i = 0; i < 256; i++) {
-                if (done[i])
-                    loBytes[i] = null;
-                else {
-                    //System.out.print(i + ", ");
+                if (done[i]) {
+                    //TODO: Check this!!!
+                    loBytes[i,0] = 0;
+                    loBytes[i, 1] = 0;
+                    loBytes[i, 2] = 0;
+                    loBytes[i, 3] = 0;
+                } else {
                     String tmp;
                     int ind;
 
-                    tmp = "{\n   0x" + loBytes[i][0].ToString("X") + "L, " +
-                          "0x" + loBytes[i][1].ToString("X") + "L, " +
-                          "0x" + loBytes[i][2].ToString("X") + "L, " +
-                          "0x" + loBytes[i][3].ToString("X") + "L\n};";
+                    tmp = "{\n   0x" + loBytes[i, 0].ToString("X") + "L, " +
+                          "0x" + loBytes[i, 1].ToString("X") + "L, " +
+                          "0x" + loBytes[i, 2].ToString("X") + "L, " +
+                          "0x" + loBytes[i, 3].ToString("X") + "L\n};";
 
                     if (!lohiByteTab.TryGetValue(tmp, out ind)) {
                         allBitVectors.Add(tmp);
@@ -2202,7 +2195,7 @@ namespace Deveel.CSharpCC.Parser {
 
         //private static bool boilerPlateDumped = false;
         internal static void PrintBoilerPlate(TextWriter ostr) {
-            ostr.WriteLine("private" + (Options.getStatic() ? "static " : "") + " void " +"ccCheckNAdd(int state)");
+            ostr.WriteLine("private " + (Options.getStatic() ? "static " : "") + "void " +"ccCheckNAdd(int state)");
             ostr.WriteLine("{");
             ostr.WriteLine("   if (ccRounds[state] != ccRound)");
             ostr.WriteLine("   {");
@@ -2225,7 +2218,7 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("}");
             ostr.WriteLine("");
             if (jjCheckNAddStatesDualNeeded) {
-                ostr.WriteLine("private" + (Options.getStatic() ? "static " : "") + " void " + "ccCheckNAddStates(int start, int end)");
+                ostr.WriteLine("private " + (Options.getStatic() ? "static " : "") + "void " + "ccCheckNAddStates(int start, int end)");
                 ostr.WriteLine("{");
                 ostr.WriteLine("   do {");
                 ostr.WriteLine("      ccCheckNAdd(ccNextStates[start]);");
@@ -2235,7 +2228,7 @@ namespace Deveel.CSharpCC.Parser {
             }
 
             if (jjCheckNAddStatesUnaryNeeded) {
-                ostr.WriteLine("private " + (Options.getStatic() ? "static " : "") + " void " + "ccCheckNAddStates(int start)");
+                ostr.WriteLine("private " + (Options.getStatic() ? "static " : "") + "void " + "ccCheckNAddStates(int start)");
                 ostr.WriteLine("{");
                 ostr.WriteLine("   ccCheckNAdd(ccNextStates[start]);");
                 ostr.WriteLine("   ccCheckNAdd(ccNextStates[start + 1]);");
@@ -2474,9 +2467,9 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("      try { curChar = inputStream.ReadChar(); }");
 
             if (LexGen.mixed[LexGen.lexStateIndex])
-                ostr.WriteLine("      catch(System.IO.IOException e) { break; }");
+                ostr.WriteLine("      catch(System.IO.IOException) { break; }");
             else
-                ostr.WriteLine("      catch(System.IO..IOException e) { return curPos; }");
+                ostr.WriteLine("      catch(System.IO.IOException) { return curPos; }");
 
             if (Options.getDebugTokenManager())
                 ostr.WriteLine("      debugStream.WriteLine(" + (LexGen.maxLexStates > 1
@@ -2557,7 +2550,7 @@ namespace Deveel.CSharpCC.Parser {
             bool moreThanOne = false;
             int cnt = 0;
 
-            ostr.Write("internal static final int[][] kindForState = ");
+            ostr.Write("internal static readonly int[][] kindForState = ");
 
             if (kinds == null) {
                 ostr.WriteLine("null;");

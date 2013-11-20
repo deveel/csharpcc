@@ -75,7 +75,7 @@ namespace Deveel.CSharpCC.Parser {
 		}
 
 		private void SetupOptions() {
-			
+			Options.SetCmdLineOption("STATIC=false");
 		}
 
 		private string MakeUpGrammar() {

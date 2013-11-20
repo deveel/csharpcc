@@ -3,7 +3,7 @@
 namespace Deveel.CSharpCC.Parser {
 	public class CharacterRange {
 		public CharacterRange(char left, char right) {
-			if (right > left)
+			if (left > right)
 				CSharpCCErrors.SemanticError(this,
 				                             "Invalid range : \"" + (int) left + "\" - \"" + (int) right +
 				                             "\". First character shoud be less than or equal to the second one in a range.");

@@ -34,7 +34,7 @@ namespace Deveel.CSharpCC.Parser {
 					new StreamWriter(
 						new BufferedStream(
 							new FileStream(Path.Combine(Options.getOutputDirectory().FullName, CSharpCCGlobals.cu_name + "Constants.cs"),
-							               FileMode.CreateNew, FileAccess.Read), 8192));
+							               FileMode.OpenOrCreate, FileAccess.Write), 8192));
 			} catch (IOException) {
 				CSharpCCErrors.SemanticError("Could not open file " + CSharpCCGlobals.cu_name + "Constants.cs for writing.");
 				throw new InvalidOperationException();
@@ -44,21 +44,24 @@ namespace Deveel.CSharpCC.Parser {
 			tn.Add(CSharpCCGlobals.ToolName);
 			ostr.WriteLine("/* " + CSharpCCGlobals.GetIdString(tn, CSharpCCGlobals.cu_name + "Constants.cs") + " */");
 
+            bool namespaceInserted = false;
 			if (CSharpCCGlobals.cu_to_insertion_point_1.Count != 0 &&
 			    CSharpCCGlobals. cu_to_insertion_point_1[0].kind == CSharpCCParserConstants.NAMESPACE) {
+                namespaceInserted = true;
 				for (int i = 1; i < CSharpCCGlobals.cu_to_insertion_point_1.Count; i++) {
 					if (CSharpCCGlobals.cu_to_insertion_point_1[i].kind == CSharpCCParserConstants.SEMICOLON) {
 						CSharpCCGlobals.PrintTokenSetup(CSharpCCGlobals.cu_to_insertion_point_1[0]);
 						for (int j = 0; j <= i; j++) {
 							t = (CSharpCCGlobals.cu_to_insertion_point_1[j]);
-							CSharpCCGlobals.PrintToken(t, ostr);
+                            if (t.kind != CSharpCCParserConstants.SEMICOLON)
+							    CSharpCCGlobals.PrintToken(t, ostr);
 						}
 						CSharpCCGlobals.PrintTrailingComments(t, ostr);
-						ostr.WriteLine("");
-						ostr.WriteLine("");
 						break;
 					}
 				}
+
+                ostr.WriteLine("{");
 			}
 			ostr.WriteLine("");
 			ostr.WriteLine("/// <summary>");
@@ -70,22 +73,22 @@ namespace Deveel.CSharpCC.Parser {
 			ostr.WriteLine("class " + CSharpCCGlobals.cu_name + "Constants {");
 			ostr.WriteLine("");
 			ostr.WriteLine("  /// <summary> End of File</summary>");
-			ostr.WriteLine("  public int EOF = 0;");
+			ostr.WriteLine("  public const int EOF = 0;");
 
 			foreach (RegularExpression re in CSharpCCGlobals.ordered_named_tokens) {
 				ostr.WriteLine("  /// <summary>RegularExpression Id.</summary>");
-				ostr.WriteLine("  public int " + re.Label + " = " + re.Ordinal + ";");
+				ostr.WriteLine("  public const int " + re.Label + " = " + re.Ordinal + ";");
 			}
 			ostr.WriteLine("");
 			if (!Options.getUserTokenManager() && Options.getBuildTokenManager()) {
 				for (int i = 0; i < LexGen.lexStateName.Length; i++) {
 					ostr.WriteLine("  /// <summary>Lexical state.</summary>");
-					ostr.WriteLine("  public int " + LexGen.lexStateName[i] + " = " + i + ";");
+					ostr.WriteLine("  public const int " + LexGen.lexStateName[i] + " = " + i + ";");
 				}
 				ostr.WriteLine("");
 			}
 			ostr.WriteLine("  /// <summary>Literal token values.</summary>");
-			ostr.WriteLine("  public static string[] TokenImage = {");
+			ostr.WriteLine("  public static readonly string[] TokenImage = {");
 			ostr.WriteLine("    \"<EOF>\",");
 
 			foreach (TokenProduction tp in CSharpCCGlobals.rexprlist) {
@@ -111,7 +114,8 @@ namespace Deveel.CSharpCC.Parser {
 			ostr.WriteLine("  };");
 			ostr.WriteLine("");
 			ostr.WriteLine("}");
-
+            if (namespaceInserted)
+                ostr.WriteLine("}");
 			ostr.Close();
 		}
 

@@ -231,7 +231,7 @@ namespace Deveel.CSharpCC.Parser {
                                 if (Options.getCacheTokens()) {
                                     retval += "cc_nt.Kind) {\u0001";
                                 } else {
-                                    retval += "(cc_ntk==-1)?cc_ntk():cc_ntk) {\u0001";
+                                    retval += "(cc_ntKind==-1)?cc_ntk():cc_ntKind) {\u0001";
                                 }
                                 for (int i = 0; i < CSharpCCGlobals.tokenCount; i++) {
                                     casedValues[i] = false;

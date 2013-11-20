@@ -1,4 +1,6 @@
-﻿[Serializable]
+﻿using System;
+
+[Serializable]
 ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class TokenManagerError : System.InvalidOperationException {
 	public TokenManagerError() {
 	}
@@ -43,9 +45,9 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class TokenManagerError : System.Inva
 	internal static string AddEscapes(string str) {
 		System.Text.StringBuilder retval = new System.Text.StringBuilder();
 		char ch;
-		for (int i = 0; i < str.length(); i++) {
+		for (int i = 0; i < str.Length; i++) {
 			switch (str[i]) {
-				case 0 :
+				case '\0' :
 					continue;
 				case '\b':
 					retval.Append("\\b");
@@ -76,7 +78,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class TokenManagerError : System.Inva
 						string s = "0000" + System.Convert.ToString(ch, 16);
 						retval.Append("\\u" + s.Substring(s.Length - 4, 4));
 					} else {
-						retval.append(ch);
+						retval.Append(ch);
 					}
 					continue;
 			}

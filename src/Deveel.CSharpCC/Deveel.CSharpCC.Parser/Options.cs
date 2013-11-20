@@ -226,7 +226,7 @@ namespace Deveel.CSharpCC.Parser {
 
             Val = UpgradeValue(name, Val);
 
-            optionValues.Add(name, Val);
+            optionValues[name] = Val;
             cmdLineSetting.Add(name);
         }
 
@@ -464,7 +464,7 @@ namespace Deveel.CSharpCC.Parser {
 
         public static String getGrammarEncoding() {
             if (StringValue("GRAMMAR_ENCODING").Equals("")) {
-                return Encoding.Default.EncodingName;
+                return Encoding.Default.BodyName;
             } else {
                 return StringValue("GRAMMAR_ENCODING");
             }
@@ -482,9 +482,9 @@ namespace Deveel.CSharpCC.Parser {
 
         public static String stringBufOrBuild() {
             if (getGenerateStringBuilder()) {
-                return "StringBuilder";
+                return "System.Text.StringBuilder";
             } else {
-                return "StringBuilder";
+                return "System.Text.StringBuilder";
             }
         }
 

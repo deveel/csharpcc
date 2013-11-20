@@ -106,17 +106,20 @@
     <Content Include="Deveel.CSharpCC.Parser\CSharpCC.cc" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Deveel.CSharpCC.Templates\ICharStream.template" />
+    <EmbeddedResource Include="Templates\ICharStream.template" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Deveel.CSharpCC.Templates\ITokenMnager.template" />
-    <EmbeddedResource Include="Deveel.CSharpCC.Templates\Token-2.0.template" />
+    <EmbeddedResource Include="Templates\ITokenMnager.template" />
+    <EmbeddedResource Include="Templates\Token-2.0.template" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Deveel.CSharpCC.Templates\ParseException.template" />
+    <EmbeddedResource Include="Templates\ParseException.template" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Deveel.CSharpCC.Templates\TokenManagerError.template" />
+    <EmbeddedResource Include="Templates\TokenManagerError.template" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\SimpleCharStream.template" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

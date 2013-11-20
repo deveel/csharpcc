@@ -8,6 +8,7 @@ namespace Deveel.CSharpCC.Parser {
         private static TextWriter ostr;
         private static String staticString;
         private static String tokMgrClassName;
+	    private static bool namespaceInserted;
 
         // Hashtable of vectors
         private static IDictionary<string, IList<TokenProduction>> allTpsForState = new Dictionary<string, IList<TokenProduction>>();
@@ -104,8 +105,9 @@ namespace Deveel.CSharpCC.Parser {
 	                            if (kind == CSharpCCParserConstants.SEMICOLON) {
 									if (gKind == CSharpCCParserConstants.USING) {
 										CSharpCCGlobals.PrintToken((Token)(CSharpCCGlobals.cu_to_insertion_point_1[j]), ostr);
-									} else {
+									} else if (gKind == CSharpCCParserConstants.NAMESPACE) {
 										ostr.WriteLine(" {");
+									    namespaceInserted = true;
 									}
 	                            }
 	                            ostr.WriteLine("");
@@ -507,8 +509,7 @@ namespace Deveel.CSharpCC.Parser {
 			NfaState.PrintBoilerPlate(ostr);
 			ostr.WriteLine( /*{*/ "}");
 
-			if (CSharpCCGlobals.cu_to_insertion_point_1.Count != 0 &&
-			    CSharpCCGlobals.cu_to_insertion_point_1[0].kind == CSharpCCParserConstants.NAMESPACE)
+			if (namespaceInserted)
 				ostr.WriteLine("}");
 				
 			ostr.Close();
@@ -627,7 +628,7 @@ namespace Deveel.CSharpCC.Parser {
 
             if (hasSkip || hasSpecial) {
                 // Bit vector for SKIP
-                ostr.Write("static final long[] ccToSkip = {");
+                ostr.Write("static readonly long[] ccToSkip = {");
                 for (i = 0; i < maxOrdinal/64 + 1; i++) {
                     if (i%4 == 0)
                         ostr.Write("\n   ");
@@ -667,7 +668,7 @@ namespace Deveel.CSharpCC.Parser {
                     charStreamName = "SimpleCharStream";
             }
 
-            ostr.WriteLine("internal" + staticString + " " + charStreamName + " inputStream;");
+            ostr.WriteLine("internal " + staticString + " " + charStreamName + " inputStream;");
 
             ostr.WriteLine("private " + staticString + "readonly int[] ccRounds = new int[" + stateSetSize + "];");
             ostr.WriteLine("private " + staticString + "readonly int[] ccStateSet = new int[" + (2*stateSetSize) + "];");
@@ -694,8 +695,8 @@ namespace Deveel.CSharpCC.Parser {
 
             if (Options.getStatic() && !Options.getUserCharStream()) {
                 ostr.WriteLine("   if (inputStream != null)");
-                ostr.WriteLine("      throw new TokenMgrError(\"ERROR: Second call to constructor of static lexer. " +
-                               "You must use ReInit() to initialize the static variables.\", TokenMgrError.STATIC_LEXER_ERROR);");
+                ostr.WriteLine("      throw new TokenManagerError(\"ERROR: Second call to constructor of static lexer. " +
+                               "You must use ReInit() to initialize the static variables.\", TokenManagerError.STATIC_LEXER_ERROR);");
             } else if (!Options.getUserCharStream()) {
                 if (Options.getUnicodeEscape())
                     ostr.WriteLine("   if (CharStream.staticFlag)");
@@ -759,8 +760,8 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("public " + staticString + "void SwitchTo(int lexState)");
             ostr.WriteLine("{");
             ostr.WriteLine("   if (lexState >= " + lexStateName.Length + " || lexState < 0)");
-            ostr.WriteLine("      throw new TokenMgrError(\"Error: Ignoring invalid lexical state : \"" +
-                           " + lexState + \". State unchanged.\", TokenMgrError.INVALID_LEXICAL_STATE);");
+            ostr.WriteLine("      throw new TokenManagerError(\"Error: Ignoring invalid lexical state : \"" +
+                           " + lexState + \". State unchanged.\", TokenManagerError.INVALID_LEXICAL_STATE);");
             ostr.WriteLine("   else");
             ostr.WriteLine("      curLexState = lexState;");
             ostr.WriteLine("}");
@@ -895,7 +896,7 @@ namespace Deveel.CSharpCC.Parser {
 
             if (hasMoreActions || hasSkipActions || hasTokenActions) {
                 ostr.WriteLine("   image = ccImage;");
-                ostr.WriteLine("   image.SetLength(0);");
+                ostr.WriteLine("   image.Length = 0;");
                 ostr.WriteLine("   ccImageLen = 0;");
             }
 
@@ -951,7 +952,7 @@ namespace Deveel.CSharpCC.Parser {
                                            ? "\"<\" + lexStateNames[curLexState] + \">\" + "
                                            : "") +
                                        "\"Skipping character : \" + " +
-                                       "TokenMgrError.AddEscapes(curChar.ToString()) + \" (\" + (int)curChar + \")\");");
+                                       "TokenManagerError.AddEscapes(curChar.ToString()) + \" (\" + (int)curChar + \")\");");
                     }
                     ostr.WriteLine(prefix + "      curChar = inputStream.BeginToken();");
 
@@ -979,7 +980,7 @@ namespace Deveel.CSharpCC.Parser {
                     ostr.WriteLine("      debugStream.WriteLine(" +
                                    (maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                                    "\"Current character : \" + " +
-                                   "TokenMgrError.AddEscapes(curChar.ToString()) + \" (\" + (int)curChar + \") " +
+                                   "TokenManagerError.AddEscapes(curChar.ToString()) + \" (\" + (int)curChar + \") " +
                                    "at line \" + inputStream.EndLine + \" column \" + inputStream.EndColumn);");
 
                 ostr.WriteLine(prefix + "curPos = ccMoveStringLiteralDfa0_" + i + "();");
@@ -1037,12 +1038,12 @@ namespace Deveel.CSharpCC.Parser {
                         Options.getUserCharStream())
                         ostr.WriteLine("    debugStream.WriteLine(" +
                                        "\"****** FOUND A \" + tokenImage[ccMatchedKind] + \" MATCH " +
-                                       "(\" + TokenMgrError.AddEscapes(new String(inputStream.GetSuffix(ccMatchedPos + 1))) + " +
+                                       "(\" + TokenManagerError.AddEscapes(new String(inputStream.GetSuffix(ccMatchedPos + 1))) + " +
                                        "\") ******\\n\");");
                     else
                         ostr.WriteLine("    debugStream.WriteLine(" +
                                        "\"****** FOUND A \" + tokenImage[ccMatchedKind] + \" MATCH " +
-                                       "(\" + TokenMgrError.AddEscapes(new String(inputStream.GetSuffix(ccMatchedPos + 1))) + " +
+                                       "(\" + TokenManagerError.AddEscapes(new String(inputStream.GetSuffix(ccMatchedPos + 1))) + " +
                                        "\") ******\\n\");");
                 }
 
@@ -1137,7 +1138,7 @@ namespace Deveel.CSharpCC.Parser {
                             ostr.WriteLine("   debugStream.WriteLine(" +
                                            (maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                                            "\"Current character : \" + " +
-                                           "TokenMgrError.AddEscapes(curChar.ToString()) + \" (\" + (int)curChar + \") " +
+                                           "TokenManagerError.AddEscapes(curChar.ToString()) + \" (\" + (int)curChar + \") " +
                                            "at line \" + inputStream.EndLine + \" column \" + inputStream.EndColumn);");
                         ostr.WriteLine(prefix + "         continue;");
                         ostr.WriteLine(prefix + "      }");
@@ -1166,15 +1167,16 @@ namespace Deveel.CSharpCC.Parser {
                 ostr.WriteLine(prefix + "      errorAfter = curPos <= 1 ? \"\" : inputStream.GetImage();");
                 ostr.WriteLine(prefix + "   }");
                 ostr.WriteLine(prefix +
-                               "   throw new TokenMgrError(EOFSeen, curLexState, errorLine, errorColumn, errorAfter, curChar, TokenMgrError.LEXICAL_ERROR);");
+                               "   throw new TokenManagerError(EOFSeen, curLexState, errorLine, errorColumn, errorAfter, curChar, TokenManagerError.LEXICAL_ERROR);");
             }
 
             if (hasMore)
                 ostr.WriteLine(prefix + " }");
 
-            ostr.WriteLine("  }");
             //TODO: Check this is the right position for the EOFLoop label!!!
             ostr.WriteLine("  EOFLoop :;");
+
+            ostr.WriteLine("  }");
             ostr.WriteLine("}");
             ostr.WriteLine("");
         }
@@ -1205,10 +1207,10 @@ namespace Deveel.CSharpCC.Parser {
                         ostr.WriteLine("            if (ccBeenHere[" + lexStates[i] + "] &&");
                         ostr.WriteLine("                ccEmptyLineNo[" + lexStates[i] + "] == inputStream.BeginLine &&");
                         ostr.WriteLine("                ccEmptyColNo[" + lexStates[i] + "] == inputStream.BeginColumn)");
-                        ostr.WriteLine("               throw new TokenMgrError(" +
+                        ostr.WriteLine("               throw new TokenManagerError(" +
                                        "(\"Error: Bailing out of infinite loop caused by repeated empty string matches " +
                                        "at line \" + input_stream.BeginLine + \", " +
-                                       "column \" + input_stream.BeginColumn + \".\"), TokenMgrError.LOOP_DETECTED);");
+                                       "column \" + input_stream.BeginColumn + \".\"), TokenManagerError.LOOP_DETECTED);");
                         ostr.WriteLine("            ccEmptyLineNo[" + lexStates[i] + "] = inpuStream.BeginLine;");
                         ostr.WriteLine("            ccEmptyColNo[" + lexStates[i] + "] = inputStream.BeginColumn;");
                         ostr.WriteLine("            ccBeenHere[" + lexStates[i] + "] = true;");
@@ -1276,10 +1278,10 @@ namespace Deveel.CSharpCC.Parser {
                         ostr.WriteLine("            if (ccBeenHere[" + lexStates[i] + "] &&");
                         ostr.WriteLine("                ccEmptyLineNo[" + lexStates[i] + "] == inputStream.BeginLine &&");
                         ostr.WriteLine("                ccEmptyColNo[" + lexStates[i] + "] == input_stream.BeginColumn)");
-                        ostr.WriteLine("               throw new TokenMgrError(" +
+                        ostr.WriteLine("               throw new TokenManagerError(" +
                                        "(\"Error: Bailing out of infinite loop caused by repeated empty string matches " +
                                        "at line \" + inputStream.BeginLine + \", " +
-                                       "column \" + inputStream.BeginColumn + \".\"), TokenMgrError.LOOP_DETECTED);");
+                                       "column \" + inputStream.BeginColumn + \".\"), TokenManagerError.LOOP_DETECTED);");
                         ostr.WriteLine("            ccEmptyLineNo[" + lexStates[i] + "] = inputStream.BeginLine;");
                         ostr.WriteLine("            ccEmptyColNo[" + lexStates[i] + "] = inputStream.BeginColumn;");
                         ostr.WriteLine("            ccBeenHere[" + lexStates[i] + "] = true;");
@@ -1349,10 +1351,10 @@ namespace Deveel.CSharpCC.Parser {
                         ostr.WriteLine("            if (ccBeenHere[" + lexStates[i] + "] &&");
                         ostr.WriteLine("                ccEmptyLineNo[" + lexStates[i] + "] == inputStream.BeginLine &&");
                         ostr.WriteLine("                ccEmptyColNo[" + lexStates[i] + "] == inputStream.BeginColumn)");
-                        ostr.WriteLine("               throw new TokenMgrError(" +
+                        ostr.WriteLine("               throw new TokenManagerError(" +
                                        "(\"Error: Bailing out of infinite loop caused by repeated empty string matches " +
                                        "at line \" + inputStream.BeginLine + \", " +
-                                       "column \" + inputStream.BeginColumn + \".\"), TokenMgrError.LOOP_DETECTED);");
+                                       "column \" + inputStream.BeginColumn + \".\"), TokenManagerError.LOOP_DETECTED);");
                         ostr.WriteLine("            ccEmptyLineNo[" + lexStates[i] + "] = inputStream.BeginLine;");
                         ostr.WriteLine("            ccEmptyColNo[" + lexStates[i] + "] = inputStream.BeginColumn;");
                         ostr.WriteLine("            ccBeenHere[" + lexStates[i] + "] = true;");
@@ -1364,7 +1366,7 @@ namespace Deveel.CSharpCC.Parser {
                         break;
 
                     if (i == 0) {
-                        ostr.WriteLine("      image.SetLength(0);"); // For EOF no image is there
+                        ostr.WriteLine("      image.Length = 0;"); // For EOF no image is there
                     } else {
                         ostr.Write("        image.Append");
 

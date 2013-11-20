@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -28,7 +29,10 @@ namespace Deveel.CSharpCC.Parser {
 		}
 
 		internal static double GetVersion(String fileName) {
-			string commentHeader = "/* " + CSharpCCGlobals.GetIdString(CSharpCCGlobals.ToolNames, fileName) + " Version ";
+            IList<string> tn = new List<string>(CSharpCCGlobals.ToolNames);
+            tn.Add(CSharpCCGlobals.ToolName);
+
+			string commentHeader = "/* " + CSharpCCGlobals.GetIdString(tn, fileName) + " Version ";
 			string file = Path.Combine(Options.getOutputDirectory().FullName, ReplaceBackslash(fileName));
 
 			if (!File.Exists(file)) {
@@ -93,7 +97,7 @@ namespace Deveel.CSharpCC.Parser {
 						if (CSharpCCGlobals.cu_to_insertion_point_1[i].kind == CSharpCCParserConstants.SEMICOLON) {
 							CSharpCCGlobals.cline = CSharpCCGlobals.cu_to_insertion_point_1[0].beginLine;
 							CSharpCCGlobals.ccol = CSharpCCGlobals.cu_to_insertion_point_1[0].beginColumn;
-							for (int j = 0; j <= i; j++) {
+							for (int j = 0; j <= i - 1; j++) {
 								CSharpCCGlobals.PrintToken(CSharpCCGlobals.cu_to_insertion_point_1[j], ostr);
 							}
 
@@ -125,7 +129,7 @@ namespace Deveel.CSharpCC.Parser {
 		}
 
 		public static void GenerateParseException() {
-			GenerateFile("ParseException.cs", "Deveel.CSharpCC.Templates.ParseException.template", new string[] { "KEEP_LINE_COL", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
+			GenerateFile("ParseException.cs", "Deveel.CSharpCC.Templates.ParseException.template", new string[] { "KEEP_LINE_COLUMN", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
 		}
 
 		public static void GenerateTokenManagerError() {
@@ -133,7 +137,7 @@ namespace Deveel.CSharpCC.Parser {
 		}
 
 		public static void GenerateToken() {
-			GenerateFile("Token.cs", "Deveel.CSharpCC.Templates.Token-2.0.template", new String[] {"TOKEN_EXTENDS", "KEEP_LINE_COL", "SUPPORT_CLASS_VISIBILITY_PUBLIC"});
+			GenerateFile("Token.cs", "Deveel.CSharpCC.Templates.Token-2.0.template", new String[] {"TOKEN_EXTENDS", "KEEP_LINE_COLUMN", "SUPPORT_CLASS_VISIBILITY_PUBLIC"});
 		}
 
 		public static void GenerateITokenManager() {

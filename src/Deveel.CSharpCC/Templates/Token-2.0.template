@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Represents a token from an input stream to parse
 /// </summary>
-[Serializable]
+[System.Serializable]
 #if TOKEN_EXTENDS
 ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class Token : ${TOKEN_EXTENDS} {
 #else

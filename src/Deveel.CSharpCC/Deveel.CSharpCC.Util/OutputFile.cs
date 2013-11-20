@@ -56,7 +56,7 @@ namespace Deveel.CSharpCC.Util {
 				}
 
 				pw.Close();
-				String calculatedDigest = ToHexString(digestStream.Hash);
+				String calculatedDigest = ToHexString(digestStream.Hash());
 
 				if (existingMD5 == null || !existingMD5.Equals(calculatedDigest)) {
 					// No checksum in file, or checksum differs.
@@ -111,11 +111,11 @@ namespace Deveel.CSharpCC.Util {
 					}
 				}
 				// If no version line is found, do not output the warning.
-			} catch (FileNotFoundException e1) {
+			} catch (FileNotFoundException) {
 				// This should never happen
 				CSharpCCErrors.SemanticError("Could not open file " + Path.GetFileName(file) + " for writing.");
 				throw new InvalidOperationException();
-			} catch (IOException e2) {
+			} catch (IOException) {
 			}
 		}
 
@@ -151,13 +151,14 @@ namespace Deveel.CSharpCC.Util {
 			// Possibly rename the .java.tmp to .java??
 			if (pw != null) {
 				pw.WriteLine(MD5_LINE_PART_1 + GetMd5Sum() + MD5_LINE_PART_2);
+                pw.Flush();
 				pw.CloseWriter();
 			}
 		}
 
 		private String GetMd5Sum() {
 			pw.Flush();
-			byte[] digest = dos.Hash;
+			byte[] digest = dos.Hash();
 			return ToHexString(digest);
 		}
 
@@ -223,19 +224,23 @@ namespace Deveel.CSharpCC.Util {
 
 		class DigestOutputStream : Stream {
 			private readonly Stream output;
+		    private MemoryStream hashStream;
 			private readonly HashAlgorithm hasher;
 
 			public DigestOutputStream(Stream output, HashAlgorithm hasher) {
 				this.output = output;
 				this.hasher = hasher;
+                hashStream = new MemoryStream(1024);
 			}
 
-			public byte[] Hash {
-				get { return hasher.Hash; }
+			public byte[] Hash() {
+                hashStream.Flush();
+			    byte[] hash = hasher.ComputeHash(hashStream);
+                hashStream = new MemoryStream(1024);
+                return hash;
 			}
 
 			public override void Flush() {
-				hasher.TransformFinalBlock(new byte[0], 0, 0);
 				output.Flush();
 			}
 
@@ -252,8 +257,8 @@ namespace Deveel.CSharpCC.Util {
 			}
 
 			public override void Write(byte[] buffer, int offset, int count) {
-				hasher.TransformBlock(buffer, offset, count, null, 0);
 				output.Write(buffer, offset, count);
+                hashStream.Write(buffer, offset, count);
 			}
 
 			public override bool CanRead {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 
@@ -85,7 +86,7 @@ namespace Deveel.CSharpCC.Util {
 			if (braceDepth != 0)
 				throw new IOException("Mismatched \"{}\" input template string: " + text);
 
-			string variableExpression = text.Substring(startPos + 2, endPos - 1);
+			string variableExpression = text.Substring(startPos + 2, (endPos - (startPos + 2) - 1));
 
 			// Find the end of the variable name
 			String value = null;
@@ -100,7 +101,7 @@ namespace Deveel.CSharpCC.Util {
 					value = SubstituteWithConditional(variableExpression.Substring(0, i), variableExpression.Substring(i + 1));
 					break;
 				} else if (ch != '_' && !Char.IsLetterOrDigit(ch)) {
-					throw new IOException("Invalid variable input " + text);
+					throw new IOException("Invalid variable input " + variableExpression);
 				}
 			}
 
@@ -111,7 +112,12 @@ namespace Deveel.CSharpCC.Util {
 			return text.Substring(0, startPos) + value + text.Substring(endPos);
 		}
 
-		private String SubstituteWithConditional(String variableName, String values) {
+	    private bool IsValidIdentifier(string text) {
+            CodeDomProvider provider = CodeDomProvider.CreateProvider("C#");
+	        return provider.IsValidIdentifier(text);
+	    }
+
+	    private String SubstituteWithConditional(String variableName, String values) {
 			// Split values into true and false values.
 
 			int pos = values.IndexOf(':');
