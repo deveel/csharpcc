@@ -828,10 +828,8 @@ namespace Deveel.CSharpCC.Parser {
                     int ind;
                     String tmp;
 
-                    tmp = "{\n   0x" + common[0].ToString("X") + "L, " +
-                          "0x" + common[1].ToString("X") + "L, " +
-                          "0x" + common[2].ToString("X") + "L, " +
-                          "0x" + common[3].ToString("X") + "L\n};";
+	                tmp = "{\n   " + common[0] + "L, " + common[1] + "L, " + common[2] + "L, " + common[3] + "L\n};";
+
                     if (!lohiByteTab.TryGetValue(tmp, out ind)) {
                         allBitVectors.Add(tmp);
 
@@ -842,10 +840,9 @@ namespace Deveel.CSharpCC.Parser {
 
                     tmpIndices[cnt++] = ind;
 
-                    tmp = "{\n   0x" + loBytes[i, 0].ToString("X") + "L, " +
-                          "0x" + loBytes[i, 1].ToString("X") + "L, " +
-                          "0x" + loBytes[i, 2].ToString("X") + "L, " +
-                          "0x" + loBytes[i, 3].ToString("X") + "L\n};";
+	                tmp = "{\n   " + loBytes[i, 0] + "L, " + loBytes[i, 1] + "L, " + loBytes[i, 2] + "L, " + loBytes[i, 3] + "L\n};";
+
+
                     if (!lohiByteTab.TryGetValue(tmp, out ind)) {
                         allBitVectors.Add(tmp);
 
@@ -874,10 +871,8 @@ namespace Deveel.CSharpCC.Parser {
                     String tmp;
                     int ind;
 
-                    tmp = "{\n   0x" + loBytes[i, 0].ToString("X") + "L, " +
-                          "0x" + loBytes[i, 1].ToString("X") + "L, " +
-                          "0x" + loBytes[i, 2].ToString("X") + "L, " +
-                          "0x" + loBytes[i, 3].ToString("X") + "L\n};";
+					tmp = "{\n   " + loBytes[i, 0] + "L, " + loBytes[i, 1] + "L, " + loBytes[i, 2] + "L, " + loBytes[i, 3] + "L\n};";
+
 
                     if (!lohiByteTab.TryGetValue(tmp, out ind)) {
                         allBitVectors.Add(tmp);
@@ -949,10 +944,12 @@ namespace Deveel.CSharpCC.Parser {
             return true;
         }
 
-        private static String allBits = "{\n   Int64.MaxValue /* 0xffffffffffffffffL */, " +
-                                        "Int64.MaxValue /* 0xffffffffffffffffL */, " +
-                                        "Int64.MaxValue /* 0xffffffffffffffffL */, " +
-                                        "Int64.MaxValue /* 0xffffffffffffffffL */\n};";
+		/*
+		HEX ain't good ...
+        private static String allBits = "{\n   0xffffffffffffffffL, " +"0xffffffffffffffffL, " + "0xffffffffffffffffL, " + "0xffffffffffffffffL \n};";
+		*/
+
+		private static string allBits = "{\n   Int64.MaxValue, Int64.MaxValue, Int64.MaxValue, Int64.MaxValue \n};";
 
         private static bool AllBitsSet(String bitVec) {
             return bitVec.Equals(allBits);
@@ -1618,7 +1615,7 @@ namespace Deveel.CSharpCC.Parser {
                                    (64*byteNum + oneBit) + ")");
                 else
                     ostr.WriteLine("                  " + (elseNeeded ? "else " : "") +
-                                   "if ((0x" + asciiMoves[byteNum].ToString("X") + "L & l) != 0L)");
+                                   "if ((" + asciiMoves[byteNum] + "L & l) != 0L)");
                 prefix = "   ";
             }
 
@@ -1711,7 +1708,7 @@ namespace Deveel.CSharpCC.Parser {
                         ostr.WriteLine("                  if (curChar == " +
                                        (64*byteNum + oneBit) + kindCheck + ")");
                     else
-                        ostr.WriteLine("                  if ((0x" +asciiMoves[byteNum].ToString("X") + "L & l) != 0L" + kindCheck + ")");
+                        ostr.WriteLine("                  if ((" +asciiMoves[byteNum] + "L & l) != 0L" + kindCheck + ")");
 
                     ostr.WriteLine("                     kind = " + kindToPrint + ";");
 
@@ -1728,11 +1725,10 @@ namespace Deveel.CSharpCC.Parser {
             if (kindToPrint != Int32.MaxValue) {
 
                 if (oneBit != -1) {
-                    ostr.WriteLine("                  if (curChar != " +
-                                   (64*byteNum + oneBit) + ")");
+                    ostr.WriteLine("                  if (curChar != " + (64*byteNum + oneBit) + ")");
                     ostr.WriteLine("                     break;");
                 } else if (asciiMoves[byteNum] != Int64.MaxValue /* 0xffffffffffffffffL */) {
-                    ostr.WriteLine("                  if ((0x" + asciiMoves[byteNum].ToString("X") + "L & l) == 0L)");
+                    ostr.WriteLine("                  if ((" + asciiMoves[byteNum] + "L & l) == 0L)");
                     ostr.WriteLine("                     break;");
                 }
 
@@ -1748,7 +1744,7 @@ namespace Deveel.CSharpCC.Parser {
                                    (64*byteNum + oneBit) + ")");
                     prefix = "   ";
                 } else if (asciiMoves[byteNum] != Int64.MaxValue /* 0xffffffffffffffffL */) {
-                    ostr.WriteLine("                  if ((0x" + asciiMoves[byteNum].ToString("X") + "L & l) != 0L)");
+                    ostr.WriteLine("                  if ((" + asciiMoves[byteNum] + "L & l) != 0L)");
                     prefix = "   ";
                 }
             }
@@ -2413,10 +2409,10 @@ namespace Deveel.CSharpCC.Parser {
                                "TokenMgrError.AddEscapes(curChar.ToString()) + \" (\" + (int)curChar + \") " +
                                "at line \" + inputStream.EndLine + \" column \" + inputStream.EndColumn);");
 
-            ostr.WriteLine("   int kind = 0x" + Int32.MaxValue.ToString("X") + ";");
+            ostr.WriteLine("   int kind = Int32.MaxValue;");
             ostr.WriteLine("   for (;;)");
             ostr.WriteLine("   {");
-            ostr.WriteLine("      if (++ccRound == 0x" + Int32.MaxValue.ToString("X") + ")");
+            ostr.WriteLine("      if (++ccRound == Int32.MaxValue)");
             ostr.WriteLine("         ReInitRounds();");
             ostr.WriteLine("      if (curChar < 64)");
             ostr.WriteLine("      {");
@@ -2440,16 +2436,16 @@ namespace Deveel.CSharpCC.Parser {
 
             ostr.WriteLine("      }");
 
-            ostr.WriteLine("      if (kind != 0x" + Int32.MaxValue.ToString("X") + ")");
+            ostr.WriteLine("      if (kind != Int32.MaxValue)");
             ostr.WriteLine("      {");
             ostr.WriteLine("         ccMatchedKind = kind;");
             ostr.WriteLine("         ccMatchedPos = curPos;");
-            ostr.WriteLine("         kind = 0x" + Int32.MaxValue.ToString("X") + ";");
+            ostr.WriteLine("         kind = Int32.MaxValue;");
             ostr.WriteLine("      }");
             ostr.WriteLine("      ++curPos;");
 
             if (Options.getDebugTokenManager()) {
-                ostr.WriteLine("      if (ccMatchedKind != 0 && ccMatchedKind != 0x" + Int32.MaxValue.ToString("X") + ")");
+                ostr.WriteLine("      if (ccMatchedKind != 0 && ccMatchedKind != Int32.MaxValue)");
                 ostr.WriteLine("         debugStream.WriteLine(" +
                                "\"   Currently matched the first \" + (ccMatchedPos + 1) + \" characters as" +
                                " a \" + tokenImage[ccMatchedKind] + \" token.\");");

@@ -127,7 +127,7 @@ namespace Deveel.CSharpCC.Parser {
 						ostr.WriteLine("   private static void cc_la1_init_" + i + "() {");
 						ostr.Write("      cc_la1_" + i + " = new int[] {");
 						foreach (int[] tokenMask in CSharpCCGlobals.maskVals) {
-							ostr.Write("0x" + tokenMask[i].ToString("X") + ",");
+							ostr.Write(tokenMask[i] + ",");
 						}
 						ostr.WriteLine("};");
 						ostr.WriteLine("   }");
@@ -500,7 +500,7 @@ namespace Deveel.CSharpCC.Parser {
 				ostr.WriteLine("  }");
 				ostr.WriteLine("");
 				if (!Options.getCacheTokens()) {
-					ostr.WriteLine("  " + CSharpCCGlobals.staticOpt() + "private int cc_ntk() {");
+					ostr.WriteLine("  private " + CSharpCCGlobals.staticOpt() + "int cc_ntk() {");
 					ostr.WriteLine("    if ((cc_nt=token.Next) == null)");
 					ostr.WriteLine("      return (cc_ntKind = (token.Next = tokenSource.GetNextToken()).Kind);");
 					ostr.WriteLine("    else");
@@ -587,7 +587,7 @@ namespace Deveel.CSharpCC.Parser {
 					else
 						ostr.WriteLine("      exptokseq[i] = cc_expentries[i];");
 					ostr.WriteLine("    }");
-					ostr.WriteLine("    return new ParseException(token, exptokseq, tokenImage);");
+					ostr.WriteLine("    return new ParseException(token, exptokseq, TokenImage);");
 					ostr.WriteLine("  }");
 				} else {
 					ostr.WriteLine("  /** Generate ParseException. */");
@@ -595,7 +595,7 @@ namespace Deveel.CSharpCC.Parser {
 					ostr.WriteLine("    Token errortok = token.Next;");
 					if (Options.getKeepLineColumn())
 						ostr.WriteLine("    int line = errortok.BeginLine, column = errortok.BeginColumn;");
-					ostr.WriteLine("    string mess = (errortok.Kind == 0) ? tokenImage[0] : errortok.Image;");
+					ostr.WriteLine("    string mess = (errortok.Kind == 0) ? TokenImage[0] : errortok.Image;");
 					if (Options.getKeepLineColumn())
 						ostr.WriteLine("    return new ParseException(" +
 							"\"Parse error at line \" + line + \", column \" + column + \".  " +

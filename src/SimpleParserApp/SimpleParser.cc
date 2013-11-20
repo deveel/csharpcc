@@ -1,4 +1,8 @@
-﻿PARSER_BEGIN(SimpleParser)
+﻿options{
+	STATIC=false;
+}
+
+PARSER_BEGIN(SimpleParser)
 namespace Deveel.CSharpCC.Parser;
 			
 using System;

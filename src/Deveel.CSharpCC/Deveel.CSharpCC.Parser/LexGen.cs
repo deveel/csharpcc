@@ -621,7 +621,7 @@ namespace Deveel.CSharpCC.Parser {
                 for (i = 0; i < maxOrdinal/64 + 1; i++) {
                     if (i%4 == 0)
                         ostr.Write("\n   ");
-                    ostr.Write("0x" + toToken[i].ToString("X") + "L, ");
+                    ostr.Write(toToken[i] + "L, ");
                 }
                 ostr.WriteLine("\n};");
             }
@@ -632,7 +632,7 @@ namespace Deveel.CSharpCC.Parser {
                 for (i = 0; i < maxOrdinal/64 + 1; i++) {
                     if (i%4 == 0)
                         ostr.Write("\n   ");
-                    ostr.Write("0x" + toSkip[i].ToString("X") + "L, ");
+                    ostr.Write(toSkip[i] + "L, ");
                 }
                 ostr.WriteLine("\n};");
             }
@@ -643,7 +643,7 @@ namespace Deveel.CSharpCC.Parser {
                 for (i = 0; i < maxOrdinal/64 + 1; i++) {
                     if (i%4 == 0)
                         ostr.Write("\n   ");
-                    ostr.Write("0x" + toSpecial[i].ToString("X") + "L, ");
+                    ostr.Write(toSpecial[i] + "L, ");
                 }
                 ostr.WriteLine("\n};");
             }
@@ -654,7 +654,7 @@ namespace Deveel.CSharpCC.Parser {
                 for (i = 0; i < maxOrdinal/64 + 1; i++) {
                     if (i%4 == 0)
                         ostr.Write("\n   ");
-                    ostr.Write("0x" + toMore[i].ToString("X") + "L, ");
+                    ostr.Write(toMore[i] + "L, ");
                 }
                 ostr.WriteLine("\n};");
             }
@@ -674,9 +674,7 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("private " + staticString + "readonly int[] ccStateSet = new int[" + (2*stateSetSize) + "];");
 
             if (hasMoreActions || hasSkipActions || hasTokenActions) {
-                ostr.WriteLine("private " + staticString + "readonly " + Options.stringBufOrBuild() + " ccImage = new " +
-                               Options.stringBufOrBuild() + "();");
-                ostr.WriteLine("private " + staticString + Options.stringBufOrBuild() + " image = ccImage;");
+				ostr.WriteLine("private " + staticString + Options.stringBufOrBuild() + " image = new " + Options.stringBufOrBuild() + "();");
                 ostr.WriteLine("private " + staticString + "int ccImageLen;");
                 ostr.WriteLine("private " + staticString + "int lengthOfMatch;");
             }
@@ -703,7 +701,7 @@ namespace Deveel.CSharpCC.Parser {
                 else
                     ostr.WriteLine("   if (SimpleCharStream.staticFlag)");
 
-                ostr.WriteLine("      throw new Error(\"ERROR: Cannot use a static ICharStream class with a " +
+                ostr.WriteLine("      throw new InvalidOperationException(\"ERROR: Cannot use a static ICharStream class with a " +
                                "non-static lexical analyzer.\");");
             }
 
@@ -741,9 +739,9 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("private " + staticString + "void ReInitRounds()");
             ostr.WriteLine("{");
             ostr.WriteLine("   int i;");
-            ostr.WriteLine("   ccRound = 0x" + (Int32.MinValue + 1).ToString("X") + ";");
+            ostr.WriteLine("   ccRound = " + (Int32.MinValue + 1) + ";");
             ostr.WriteLine("   for (i = " + stateSetSize + "; i-- > 0;)");
-            ostr.WriteLine("      ccRounds[i] = 0x" + Int32.MinValue.ToString("X") + ";");
+            ostr.WriteLine("      ccRounds[i] = " + Int32.MinValue + ";");
             ostr.WriteLine("}");
 
             // Reinit method for reinitializing the parser (for static parsers).
@@ -895,7 +893,6 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("   }");
 
             if (hasMoreActions || hasSkipActions || hasTokenActions) {
-                ostr.WriteLine("   image = ccImage;");
                 ostr.WriteLine("   image.Length = 0;");
                 ostr.WriteLine("   ccImageLen = 0;");
             }
@@ -904,7 +901,7 @@ namespace Deveel.CSharpCC.Parser {
 
             String prefix = "";
             if (hasMore) {
-                ostr.WriteLine("   for (;;)");
+                ostr.WriteLine("   while (true)");
                 ostr.WriteLine("   {");
                 prefix = "  ";
             }
@@ -930,18 +927,18 @@ namespace Deveel.CSharpCC.Parser {
                     ostr.WriteLine(prefix + "try { inputStream.Backup(0);");
                     if (singlesToSkip[i].asciiMoves[0] != 0L &&
                         singlesToSkip[i].asciiMoves[1] != 0L) {
-                        ostr.WriteLine(prefix + "   while ((curChar < 64" + " && (0x" + (singlesToSkip[i].asciiMoves[0]).ToString("X") +
-                                       "L & (1L << curChar)) != 0L) || \n" + prefix + "          (curChar >> 6) == 1" + " && (0x" +
-                                       (singlesToSkip[i].asciiMoves[1]).ToString("X") + "L & (1L << (curChar & 077))) != 0L)");
+                        ostr.WriteLine(prefix + "   while ((curChar < 64" + " && (" + (singlesToSkip[i].asciiMoves[0]) +
+                                       "L & (1L << curChar)) != 0L) || \n" + prefix + "          (curChar >> 6) == 1" + " && (" +
+                                       (singlesToSkip[i].asciiMoves[1]) + "L & (1L << (curChar & 077))) != 0L)");
                     } else if (singlesToSkip[i].asciiMoves[1] == 0L) {
                         ostr.WriteLine(prefix + "   while (curChar <= " +
-                                       (int) MaxChar(singlesToSkip[i].asciiMoves[0]) + " && (0x" +
-                                       (singlesToSkip[i].asciiMoves[0]).ToString("X") + "L & (1L << curChar)) != 0L)");
+                                       (int) MaxChar(singlesToSkip[i].asciiMoves[0]) + " && (" +
+                                       (singlesToSkip[i].asciiMoves[0]) + "L & (1L << curChar)) != 0L)");
                     } else if (singlesToSkip[i].asciiMoves[0] == 0L) {
                         ostr.WriteLine(prefix + "   while (curChar > 63 && curChar <= " +
                                        ((int) MaxChar(singlesToSkip[i].asciiMoves[1]) + 64) +
-                                       " && (0x" +
-                                       (singlesToSkip[i].asciiMoves[1]).ToString("X") +
+                                       " && (" +
+                                       (singlesToSkip[i].asciiMoves[1]) +
                                        "L & (1L << (curChar & 077))) != 0L)");
                     }
 
@@ -972,7 +969,7 @@ namespace Deveel.CSharpCC.Parser {
                     ostr.WriteLine(prefix + "ccMatchedPos = -1;");
                     ostr.WriteLine(prefix + "curPos = 0;");
                 } else {
-                    ostr.WriteLine(prefix + "ccMatchedKind = 0x" + Int32.MaxValue.ToString("X") + ";");
+                    ostr.WriteLine(prefix + "ccMatchedKind = " + Int32.MaxValue + ";");
                     ostr.WriteLine(prefix + "ccMatchedPos = 0;");
                 }
 
@@ -1010,7 +1007,7 @@ namespace Deveel.CSharpCC.Parser {
             if (maxLexStates > 1)
                 ostr.WriteLine(endSwitch);
             else if (maxLexStates == 0)
-                ostr.WriteLine("       ccMatchedKind = 0x" + Int32.MaxValue.ToString("X") + ";");
+                ostr.WriteLine("       ccMatchedKind = Int32.MaxValue;");
 
             if (maxLexStates > 1)
                 prefix = "  ";
@@ -1018,7 +1015,7 @@ namespace Deveel.CSharpCC.Parser {
                 prefix = "";
 
             if (maxLexStates > 0) {
-                ostr.WriteLine(prefix + "   if (ccMatchedKind != 0x" + Int32.MaxValue.ToString("X") + ")");
+                ostr.WriteLine(prefix + "   if (ccMatchedKind != Int32.MaxValue)");
                 ostr.WriteLine(prefix + "   {");
                 ostr.WriteLine(prefix + "      if (ccMatchedPos + 1 < curPos)");
 
@@ -1129,7 +1126,7 @@ namespace Deveel.CSharpCC.Parser {
                             ostr.WriteLine(prefix + "      curLexState = ccNewLexState[ccMatchedKind];");
                         }
                         ostr.WriteLine(prefix + "      curPos = 0;");
-                        ostr.WriteLine(prefix + "      ccMatchedKind = 0x" + Int32.MaxValue.ToString("X") + ";");
+                        ostr.WriteLine(prefix + "      ccMatchedKind = Int32.MaxValue;");
 
                         ostr.WriteLine(prefix + "      try {");
                         ostr.WriteLine(prefix + "         curChar = inputStream.ReadChar();");

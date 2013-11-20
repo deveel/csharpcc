@@ -517,7 +517,7 @@ namespace Deveel.CSharpCC.Parser {
 					}
 
 					if (i != 0 && Options.getDebugTokenManager()) {
-						ostr.WriteLine("   if (ccMatchedKind != 0 && ccMatchedKind != 0x" + Int32.MaxValue.ToString("X") + ")");
+						ostr.WriteLine("   if (ccMatchedKind != 0 && ccMatchedKind != Int32.MaxValue)");
 						ostr.WriteLine("      debugStream.WriteLine(\"   Currently matched the first \" + " +
 						             "(ccMatchedPos + 1) + \" characters as a \" + tokenImage[ccMatchedKind] + \" token.\");");
 
@@ -552,7 +552,7 @@ namespace Deveel.CSharpCC.Parser {
 
 
 						if (i != 0 && Options.getDebugTokenManager()) {
-							ostr.WriteLine("      if (ccMatchedKind != 0 && ccMatchedKind != 0x" + Int32.MaxValue.ToString("X") + ")");
+							ostr.WriteLine("      if (ccMatchedKind != 0 && ccMatchedKind != Int32.MaxValue)");
 							ostr.WriteLine("         debugStream.WriteLine(\"   Currently matched the first \" + " +
 							             "(ccMatchedPos + 1) + \" characters as a \" + tokenImage[ccMatchedKind] + \" token.\");");
 						}
@@ -650,7 +650,7 @@ namespace Deveel.CSharpCC.Parser {
 
 								int kindToPrint;
 								if (i != 0) {
-									ostr.WriteLine("((active" + j + " & 0x" + (1L << k).ToString("X") + "L) != 0L)");
+									ostr.WriteLine("((active" + j + " & " + (1L << k) + "L) != 0L)");
 								}
 
 								if (intermediateKinds != null &&
@@ -720,14 +720,14 @@ namespace Deveel.CSharpCC.Parser {
 									else
 										atLeastOne = true;
 
-									ostr.Write("0x" + info.validKinds[j].ToString("X") + "L");
+									ostr.Write(info.validKinds[j] + "L");
 								}
 
 							if ((i + 1) <= maxLenForActive[j]) {
 								if (atLeastOne)
 									ostr.Write(", ");
 
-								ostr.Write("0x" + (info.validKinds[j]).ToString("X") + "L");
+								ostr.Write((info.validKinds[j]) + "L");
 							}
 							ostr.WriteLine(");");
 						} else {
@@ -743,7 +743,7 @@ namespace Deveel.CSharpCC.Parser {
 										atLeastOne = true;
 
 									if (info.validKinds[j] != 0L)
-										ostr.Write("active" + j + ", 0x" + (info.validKinds[j]).ToString("X") + "L");
+										ostr.Write("active" + j + ", " + (info.validKinds[j]) + "L");
 									else
 										ostr.Write("active" + j + ", 0L");
 								}
@@ -752,7 +752,7 @@ namespace Deveel.CSharpCC.Parser {
 								if (atLeastOne)
 									ostr.Write(", ");
 								if (info.validKinds[j] != 0L)
-									ostr.Write("active" + j + ", 0x" + (info.validKinds[j]).ToString("X") + "L");
+									ostr.Write("active" + j + ", " + (info.validKinds[j]) + "L");
 								else
 									ostr.Write("active" + j + ", 0L");
 							}
@@ -992,7 +992,7 @@ namespace Deveel.CSharpCC.Parser {
 
 						condGenerated = true;
 
-						ostr.Write("(active" + j + " & 0x" + (actives[j]).ToString("X") + "L) != 0L");
+						ostr.Write("(active" + j + " & " + (actives[j]) + "L) != 0L");
 					}
 
 					if (condGenerated) {

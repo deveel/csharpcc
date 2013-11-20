@@ -79,10 +79,14 @@ namespace Deveel.CSharpCC.Parser {
 			}
 		}
 
-		private static void GenerateFile(string fileName, string templateName, string[] options) {
+		private static void GenerateFile(string fileName, string templateName, string[] optionNames) {
+			GenerateFile(fileName, templateName, Options.getOptions(), optionNames);
+		}
+
+		private static void GenerateFile(string fileName, string templateName, IDictionary<string, object> options, string[] optionNames) {
 			try {
 				string file = Path.Combine(Options.getOutputDirectory().FullName, fileName);
-				OutputFile outputFile = new OutputFile(file, typeof(CSharpFiles).Assembly.GetName().Version.ToString(), options);
+				OutputFile outputFile = new OutputFile(file, typeof(CSharpFiles).Assembly.GetName().Version.ToString(), optionNames);
 
 				if (!outputFile.needToWrite) {
 					return;
@@ -110,7 +114,7 @@ namespace Deveel.CSharpCC.Parser {
 					}
 				}
 
-				CSharpFileGenetor generator = new CSharpFileGenetor(templateName, Options.getOptions());
+				CSharpFileGenetor generator = new CSharpFileGenetor(templateName, options);
 				generator.Generate(ostr);
 
 				if (nsFound)
@@ -145,11 +149,19 @@ namespace Deveel.CSharpCC.Parser {
 		}
 
 		public static void GenerateSimpleCharStream() {
-			GenerateFile("SimpleCharStream.cs", "Deveel.CSharpCC.Templates.SimpleCharStream.template", new String[] { "STATIC", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
+			string prefix = (Options.getStatic() ? "static " : "");
+			IDictionary<string, object> options = new Dictionary<string, object>(Options.getOptions());
+			options["PREFIX"] = prefix;
+
+			GenerateFile("SimpleCharStream.cs", "Deveel.CSharpCC.Templates.SimpleCharStream.template", options, new String[] { "STATIC", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
 		}
 
 		public static void GenerateUnicodeCharStream() {
-			GenerateFile("UnicodeCharStream.cs", "Deveel.CSharpCC.Templates.UnicodeCharStream.template", new String[] { "STATIC", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
+			string prefix = (Options.getStatic() ? "static " : "");
+			IDictionary<string, object> options = new Dictionary<string, object>(Options.getOptions());
+			options["PREFIX"] = prefix;
+
+			GenerateFile("UnicodeCharStream.cs", "Deveel.CSharpCC.Templates.UnicodeCharStream.template", options, new String[] { "STATIC", "SUPPORT_CLASS_VISIBILITY_PUBLIC" });
 		}
 	}
 }
