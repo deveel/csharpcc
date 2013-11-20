@@ -6,27 +6,27 @@ using System;
 
 public class SimpleParser : SimpleParserConstants {
 
-  static  public void Input() {
+   public void Input() {
   Token t; string line;
     cc_consume_token(READ);
     cc_consume_token(AND);
     cc_consume_token(PRINT);
     t = cc_consume_token(STRING_LITERAL);
                                             line = t.Image;
+    cc_consume_token(6);
   Console.Out.WriteLine(line);
   }
 
-  private static bool cc_initialized_once = false;
   /** Generated Token Manager. */
-  public static  SimpleParserTokenManager tokenSource;
-  static SimpleCharStream cc_inputStream;
+  public  SimpleParserTokenManager tokenSource;
+  SimpleCharStream cc_inputStream;
   /// <summary>Current token.</summary>
-  static public Token token;
+  public Token token;
   /// <summary> Next token.</summary>
-  public static Token cc_nt;
-  private static int cc_ntKind;
-  static private int cc_gen;
-  static  private readonly int[] cc_la1 = new int[0];
+  public Token cc_nt;
+  private int cc_ntKind;
+  private int cc_gen;
+   private readonly int[] cc_la1 = new int[0];
   static private int[] cc_la1_0;
   static SimpleParser() { 
       cc_la1_init_0();
@@ -41,13 +41,6 @@ public class SimpleParser : SimpleParserConstants {
   }
   /// Constructor with Stream and supplied encoding
   public SimpleParser(System.IO.Stream stream, System.Text.Encoding encoding) {
-    if (cc_initialized_once) {
-      Console.Out.WriteLine("ERROR: Second call to constructor of static parser.  ");
-      Console.Out.WriteLine("       You must either use ReInit() or set the CSharpCC option STATIC to false");
-      Console.Out.WriteLine("       during parser generation.");
-      throw new InvalidOperationException();
-    }
-    cc_initialized_once = true;
     cc_inputStream = new SimpleCharStream(stream, encoding, 1, 1);
     tokenSource = new SimpleParserTokenManager(cc_inputStream);
     token = new Token();
@@ -57,11 +50,11 @@ public class SimpleParser : SimpleParserConstants {
   }
 
   /// Reinitialise.
-  static public void ReInit(System.IO.Stream stream) {
+  public void ReInit(System.IO.Stream stream) {
      ReInit(stream, null);
   }
   /// Reinitialise.
-  static public void ReInit(System.IO.Stream stream, System.Text.Encoding encoding) {
+  public void ReInit(System.IO.Stream stream, System.Text.Encoding encoding) {
    cc_inputStream.ReInit(stream, encoding, 1, 1);
     tokenSource.ReInit(cc_inputStream);
     token = new Token();
@@ -72,13 +65,6 @@ public class SimpleParser : SimpleParserConstants {
 
   /// Constructor.
   public SimpleParser(System.IO.TextReader reader) {
-    if (cc_initialized_once) {
-      Console.Out.WriteLine("ERROR: Second call to constructor of static parser. ");
-      Console.Out.WriteLine("       You must either use ReInit() or set the CSharpCC option STATIC to false");
-      Console.Out.WriteLine("       during parser generation.");
-      throw new InvalidOperationException();
-    }
-    cc_initialized_once = true;
     cc_inputStream = new SimpleCharStream(reader, 1, 1);
     tokenSource = new SimpleParserTokenManager(cc_inputStream);
     token = new Token();
@@ -88,7 +74,7 @@ public class SimpleParser : SimpleParserConstants {
   }
 
   /// Reinitialise.
-  static public void ReInit(System.IO.TextReader reader) {
+  public void ReInit(System.IO.TextReader reader) {
     cc_inputStream.ReInit(reader, 1, 1);
     tokenSource.ReInit(cc_inputStream);
     token = new Token();
@@ -99,13 +85,6 @@ public class SimpleParser : SimpleParserConstants {
 
   /** Constructor with generated Token Manager. */
   public SimpleParser(SimpleParserTokenManager tm) {
-    if (cc_initialized_once) {
-      Console.Out.WriteLine("ERROR: Second call to constructor of static parser. ");
-      Console.Out.WriteLine("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      Console.Out.WriteLine("       during parser generation.");
-      throw new InvalidOperationException();
-    }
-    cc_initialized_once = true;
     tokenSource = tm;
     token = new Token();
     cc_ntKind = -1;
@@ -122,7 +101,7 @@ public class SimpleParser : SimpleParserConstants {
     for (int i = 0; i < 0; i++) cc_la1[i] = -1;
   }
 
-  static private Token cc_consume_token(int kind) {
+  private Token cc_consume_token(int kind) {
     Token oldToken;
     if ((oldToken = token).Next != null) token = token.Next;
     else token = token.Next = tokenSource.GetNextToken();
@@ -138,7 +117,7 @@ public class SimpleParser : SimpleParserConstants {
 
 
 /** Get the next Token. */
-  static  public Token GetNextToken() {
+   public Token GetNextToken() {
     if (token.Next != null) token = token.Next;
     else token = token.Next = tokenSource.GetNextToken();
     cc_ntKind = -1;
@@ -147,7 +126,7 @@ public class SimpleParser : SimpleParserConstants {
   }
 
 /** Get the specific Token. */
-  static  public Token GetToken(int index) {
+   public Token GetToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.Next != null) t = t.Next;
@@ -156,19 +135,19 @@ public class SimpleParser : SimpleParserConstants {
     return t;
   }
 
-  private static int cc_ntk() {
+  private int cc_ntk() {
     if ((cc_nt=token.Next) == null)
       return (cc_ntKind = (token.Next = tokenSource.GetNextToken()).Kind);
     else
       return (cc_ntKind = cc_nt.Kind);
   }
 
-  static private System.Collections.Generic.IList<int[]> cc_expentries = new System.Collections.Generic.List<int[]>();
-  static private int[] cc_expentry;
-  static private int cc_kind = -1;
+  private System.Collections.Generic.IList<int[]> cc_expentries = new System.Collections.Generic.List<int[]>();
+  private int[] cc_expentry;
+  private int cc_kind = -1;
 
   /** Generate ParseException. */
-  static public ParseException GenerateParseException() {
+  public ParseException GenerateParseException() {
     cc_expentries.Clear();
     bool[] la1tokens = new bool[9];
     if (cc_kind >= 0) {
@@ -199,11 +178,11 @@ public class SimpleParser : SimpleParserConstants {
   }
 
   /** Enable tracing. */
-  static public void enable_tracing() {
+  public void enable_tracing() {
   }
 
   /** Disable tracing. */
-  static public void disable_tracing() {
+  public void disable_tracing() {
   }
 
 }

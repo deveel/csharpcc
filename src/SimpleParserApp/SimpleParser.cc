@@ -1,5 +1,6 @@
 ﻿options{
 	STATIC=false;
+	IGNORE_CASE = true;
 }
 
 PARSER_BEGIN(SimpleParser)
@@ -39,6 +40,6 @@ TOKEN: {
 void Input() :
 { Token t; string line; }
 {
-"READ" "AND" "PRINT" t = <STRING_LITERAL> { line = t.Image; }
+"READ" "AND" "PRINT" t = <STRING_LITERAL> { line = t.Image; } <EOF>
 { Console.Out.WriteLine(line); }
 }

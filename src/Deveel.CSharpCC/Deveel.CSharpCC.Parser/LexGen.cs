@@ -53,13 +53,13 @@ namespace Deveel.CSharpCC.Parser {
         public static bool keepLineCol;
 
         // Assumes l != 0L
-        static char MaxChar(long l)
+        static int MaxChar(long l)
         {
             for (int i = 64; i-- > 0; )
                 if ((l & (1L << i)) != 0L)
-                    return (char)i;
+                    return i;
 
-            return (char) 0xffff;
+            return 0xffff;
         }
 
         public static void AddCharToSkip(char c, int kind) {
