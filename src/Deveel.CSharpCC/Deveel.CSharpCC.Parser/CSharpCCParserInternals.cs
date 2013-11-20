@@ -8,7 +8,7 @@ namespace Deveel.CSharpCC.Parser {
 			int i = 0;
 			CSharpCCGlobals.lexstate_S2I["DEFAULT"] = i;
 			CSharpCCGlobals.lexstate_I2S[i] = "DEFAULT";
-			CSharpCCGlobals.simple_tokens_table["DEFAULT"] = new Dictionary<string, IDictionary<string, RegularExpression>>();
+			CSharpCCGlobals.simple_tokens_table["DEFAULT"] = new Hashtable();
 		}
 
 		public static void addcuname(String id) {
@@ -90,11 +90,11 @@ namespace Deveel.CSharpCC.Parser {
 						CSharpCCErrors.ParseError(p, "Multiple occurrence of \"" + p.LexStates[i] + "\" in lexical state list.");
 					}
 				}
-				if (CSharpCCGlobals.lexstate_S2I.ContainsKey(p.LexStates[i])) {
+				if (!CSharpCCGlobals.lexstate_S2I.ContainsKey(p.LexStates[i])) {
 					ii = nextFreeLexState++;
 					CSharpCCGlobals.lexstate_S2I[p.LexStates[i]] = ii;
 					CSharpCCGlobals.lexstate_I2S[ii] = p.LexStates[i];
-					CSharpCCGlobals.simple_tokens_table[p.LexStates[i]] = new Dictionary<string, IDictionary<string, RegularExpression>>();
+					CSharpCCGlobals.simple_tokens_table[p.LexStates[i]] = new Hashtable();
 				}
 			}
 		}

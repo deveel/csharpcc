@@ -9,6 +9,7 @@ namespace Deveel.CSharpCC.Parser {
 
         protected RegularExpression() {
             lhsTokens = new List<Token>();
+	        Label = "";
         }
 
         public string Label { get; internal set; }

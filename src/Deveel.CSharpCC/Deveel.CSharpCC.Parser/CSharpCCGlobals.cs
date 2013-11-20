@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -13,7 +14,7 @@ namespace Deveel.CSharpCC.Parser {
 
         public static bool TreeGenerated;
 
-        public static IList<string> ToolNames;
+        public static IList<string> ToolNames = new List<string>();
 
         public static String cu_name;
         public static IList<Token> cu_to_insertion_point_1 = new List<Token>();
@@ -36,8 +37,7 @@ namespace Deveel.CSharpCC.Parser {
         public static IDictionary<int, string> names_of_tokens = new Dictionary<int, string>();
         public static IDictionary<int, RegularExpression> rexps_of_tokens = new Dictionary<int, RegularExpression>();
 
-	    public static IDictionary<string, IDictionary<string, IDictionary<string, RegularExpression>>> simple_tokens_table =
-	        new Dictionary<string, IDictionary<string, IDictionary<string, RegularExpression>>>();
+	    public static Hashtable simple_tokens_table = new Hashtable();
 
         internal static int maskindex = 0;
         internal static int cc2index = 0;
@@ -373,7 +373,7 @@ namespace Deveel.CSharpCC.Parser {
             FileName = null;
             OriginalFileName = null;
             TreeGenerated = false;
-            ToolNames = null;
+            ToolNames = new List<string>();
             cu_name = null;
             cu_to_insertion_point_1 = new List<Token>();
             cu_to_insertion_point_2 = new List<Token>();
@@ -389,7 +389,7 @@ namespace Deveel.CSharpCC.Parser {
             ordered_named_tokens = new List<RegularExpression>();
             names_of_tokens = new Dictionary<int, string>();
             rexps_of_tokens = new Dictionary<int, RegularExpression>();
-            simple_tokens_table = new Dictionary<string, IDictionary<string, IDictionary<string, RegularExpression>>>();
+            simple_tokens_table = new Hashtable();
             maskindex = 0;
             cc2index = 0;
             maskVals = new List<int[]>();

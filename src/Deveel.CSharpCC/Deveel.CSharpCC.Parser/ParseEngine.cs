@@ -984,7 +984,7 @@ namespace Deveel.CSharpCC.Parser {
             return retval;
         }
 
-        private static void build(TextWriter ps) {
+	    internal static void build(TextWriter ps) {
             CodeProduction jp;
             Token t = null;
 

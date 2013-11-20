@@ -275,7 +275,9 @@ namespace Deveel.CSharpCC.Parser {
             for (i = 0; i < epsilonMoves.Count; i++)
                 epsilonMoves[i].EpsilonClosure();
 
-            foreach (var tmp in epsilonMoves) {
+	        for (int j = 0; j < epsilonMoves.Count; j++) {
+		        var tmp = epsilonMoves[j];
+
                 for (i = 0; i < tmp.epsilonMoves.Count; i++) {
                     var tmp1 = tmp.epsilonMoves[i];
                     if (tmp1.UsefulState() && !epsilonMoves.Contains(tmp1)) {

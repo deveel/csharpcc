@@ -821,7 +821,7 @@ void expansion(Container c1) :
   ( LOOKAHEAD(0, { NotTailOfExpansionUnit() } )
     expansion_unit(c2)
 	{
-	  seq.Units.Add((Lookahead)c2.member);
+	  seq.Units.Add((Expansion)c2.member);
 	  ((Expansion)c2.member).Parent = seq;
 	  ((Expansion)c2.member).Ordinal = seq.Units.Count-1;
 	}

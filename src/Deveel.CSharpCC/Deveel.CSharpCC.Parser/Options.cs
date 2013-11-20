@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Deveel.CSharpCC.Parser {
 	public static class Options {
-		private static IDictionary<string, object> optionValues = null;
+		private static IDictionary<string, object> optionValues = new Dictionary<string, object>();
 
 		private static int IntValue(String option) {
 			object value;
@@ -242,9 +242,9 @@ namespace Deveel.CSharpCC.Parser {
 
             // Now set the "GENERATE" options from the supplied (or default) JDK version.
 
-            optionValues.Add("GENERATE_CHAINED_EXCEPTION", jdkVersionAtLeast(1.1));
-            optionValues.Add("GENERATE_GENERICS", jdkVersionAtLeast(2.0));
-            optionValues.Add("GENERATE_STRING_BUILDER", jdkVersionAtLeast(1.1));
+            optionValues["GENERATE_CHAINED_EXCEPTION"] = clrVersionAtLeast(1.1);
+            optionValues["GENERATE_GENERICS"] = clrVersionAtLeast(2.0);
+            optionValues["GENERATE_STRING_BUILDER"] = clrVersionAtLeast(1.1);
         }
 
         public static int getLookahead() {
@@ -373,8 +373,8 @@ namespace Deveel.CSharpCC.Parser {
    * @return The requested jdk version.
    */
 
-        public static String getJdkVersion() {
-            return StringValue("JDK_VERSION");
+        public static String getClrVersion() {
+            return StringValue("CLR_VERSION");
         }
 
         /**
@@ -429,11 +429,11 @@ namespace Deveel.CSharpCC.Parser {
    * @return true if the output version is at least the specified version.
    */
 
-        public static bool jdkVersionAtLeast(double version) {
-            double jdkVersion = Double.Parse(getJdkVersion());
+        public static bool clrVersionAtLeast(double version) {
+            double clrVersion = Double.Parse(getClrVersion());
 
             // Comparing doubles is safe here, as it is two simple assignments.
-            return jdkVersion >= version;
+            return clrVersion >= version;
         }
 
         /**
