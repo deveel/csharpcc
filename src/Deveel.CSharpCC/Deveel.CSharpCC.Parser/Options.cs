@@ -187,7 +187,7 @@ namespace Deveel.CSharpCC.Parser {
                     Val = false;
                 } else {
                     try {
-						int i = Int32.Parse(s.Substring(index + 1), CultureInfo.InvariantCulture);
+                        int i = Int32.Parse(s.Substring(index + 1), CultureInfo.InvariantCulture);
                         if (i <= 0) {
                             Console.Out.WriteLine("Warning: Bad option value in \""
                                                   + arg + "\" will be ignored.");
