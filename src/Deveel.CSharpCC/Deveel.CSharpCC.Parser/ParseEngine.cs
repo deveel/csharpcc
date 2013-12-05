@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -656,7 +657,7 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("    try { return !cc_3" + e.InternalName + "(); }");
             ostr.WriteLine("    catch(LookaheadSuccess) { return true; }");
             if (Options.getErrorReporting())
-                ostr.WriteLine("    finally { cc_save(" + (Int32.Parse(e.InternalName.Substring(1)) - 1) + ", xla); }");
+                ostr.WriteLine("    finally { cc_save(" + (Int32.Parse(e.InternalName.Substring(1), CultureInfo.InvariantCulture) - 1) + ", xla); }");
             ostr.WriteLine("  }");
             ostr.WriteLine("");
             Phase3Data p3d = new Phase3Data(e, la.Amount);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -1000,7 +1001,7 @@ namespace Deveel.CSharpCC.Parser {
 
 						String kindStr = stateSetString.Substring(0, ind = stateSetString.IndexOf(", "));
 						String afterKind = stateSetString.Substring(ind + 2);
-						int jjmatchedPos = Int32.Parse(afterKind.Substring(0, afterKind.IndexOf(", ")));
+						int jjmatchedPos = Int32.Parse(afterKind.Substring(0, afterKind.IndexOf(", ")), CultureInfo.InvariantCulture);
 
 						if (!kindStr.Equals(Int32.MaxValue.ToString()))
 							ostr.WriteLine("         {");
