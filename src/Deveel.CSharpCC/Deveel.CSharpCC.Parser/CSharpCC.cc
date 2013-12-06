@@ -46,6 +46,7 @@ namespace Deveel.CSharpCC.Parser;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 public class CSharpCCParser {
 
@@ -2051,7 +2052,7 @@ int IntegerLiteral() :
   <INTEGER_LITERAL>
 	{
 	  try {
-	    return Int32.Parse(token.image);
+	    return Int32.Parse(token.image, CultureInfo.InvariantCulture);
 	  } catch (FormatException e) {
 	    throw new InvalidOperationException();
 	  }

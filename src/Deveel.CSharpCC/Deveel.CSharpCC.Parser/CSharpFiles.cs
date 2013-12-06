@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 
 using Deveel.CSharpCC.Util;
+using System.Globalization;
 
 namespace Deveel.CSharpCC.Parser {
 	public static class CSharpFiles {
@@ -56,7 +57,7 @@ namespace Deveel.CSharpCC.Parser {
 							str = str.Substring(0, pos);
 						if (str.Length > 0) {
 							try {
-								version = Double.Parse(str);
+								version = Double.Parse(str, CultureInfo.InvariantCulture);
 							} catch (FormatException) {
 								// Ignore - leave version as 0.0
 							}
