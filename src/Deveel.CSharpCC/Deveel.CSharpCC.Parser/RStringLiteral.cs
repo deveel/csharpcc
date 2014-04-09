@@ -773,10 +773,10 @@ namespace Deveel.CSharpCC.Parser {
 							startNfaNeeded = true;
 						}
 					}
-				}
 
-			CaseLoop:
-				;
+				CaseLoop:
+					;
+				}
 
 				/* default means that the current character is not in any of the
            strings at this position. */

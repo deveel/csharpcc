@@ -374,7 +374,7 @@ namespace Deveel.CSharpCC.Parser {
 
         private NfaState GetEquivalentRunTimeState() {
             for (int i = allStates.Count; i-- > 0;) {
-                var other = (NfaState) allStates[i];
+                var other = allStates[i];
 
                 if (this != other && other.stateName != -1 &&
                     kindToPrint == other.kindToPrint &&
@@ -382,22 +382,22 @@ namespace Deveel.CSharpCC.Parser {
                     asciiMoves[1] == other.asciiMoves[1] &&
                     EqualCharArr(charMoves, other.charMoves) &&
                     EqualCharArr(rangeMoves, other.rangeMoves)) {
-                    if (next == other.next)
+	                if (next == other.next)
                         return other;
-                    else if (next != null && other.next != null) {
-                        if (next.epsilonMoves.Count == other.next.epsilonMoves.Count) {
-                            for (int j = 0; j < next.epsilonMoves.Count; j++)
-                                if (next.epsilonMoves[j] != other.next.epsilonMoves[j])
-                                    goto Outer;
 
-                            return other;
-                        }
-                    }
+	                if (next != null && other.next != null) {
+		                if (next.epsilonMoves.Count == other.next.epsilonMoves.Count) {
+			                for (int j = 0; j < next.epsilonMoves.Count; j++)
+				                if (next.epsilonMoves[j] != other.next.epsilonMoves[j])
+					                goto Outer;
+
+			                return other;
+		                }
+	                }
                 }
-            }
 
-            Outer:
-            ;
+			Outer: ;
+            }
 
             return null;
         }
@@ -576,15 +576,15 @@ namespace Deveel.CSharpCC.Parser {
                 return epsilonMovesString;
 
             if (usefulEpsilonMoves > 0) {
-                NfaState tempState;
-                epsilonMovesString = "{ ";
+	            epsilonMovesString = "{ ";
                 for (int i = 0; i < epsilonMoves.Count; i++) {
-                    if ((tempState = (NfaState) epsilonMoves[i]).
+	                NfaState tempState;
+	                if ((tempState = epsilonMoves[i]).
                         HasTransitions()) {
                         if (tempState.stateName == -1)
                             tempState.GenerateCode();
 
-                        ((NfaState) indexedAllStates[tempState.stateName]).inNextOf++;
+                        indexedAllStates[tempState.stateName].inNextOf++;
                         stateNames[cnt] = tempState.stateName;
                         epsilonMovesString += tempState.stateName + ", ";
                         if (cnt++ > 0 && cnt%16 == 0)
@@ -592,7 +592,7 @@ namespace Deveel.CSharpCC.Parser {
                     }
                 }
 
-                epsilonMovesString += "};";
+	            epsilonMovesString += "};";
             }
 
             usefulEpsilonMoves = cnt;
@@ -745,7 +745,10 @@ namespace Deveel.CSharpCC.Parser {
             int i = 0, j = 0;
             char hiByte;
             int cnt = 0;
-            long[,] loBytes = new long[256,4];
+            long[][] loBytes = new long[256][];
+	        for (int k = 0; k < loBytes.Length; k++) {
+		        loBytes[k] = new long[4];
+	        }
 
             if ((charMoves == null || charMoves[0] == 0) &&
                 (rangeMoves == null || rangeMoves[0] == 0))
@@ -757,7 +760,7 @@ namespace Deveel.CSharpCC.Parser {
                         break;
 
                     hiByte = (char) (charMoves[i] >> 8);
-                    loBytes[hiByte, (charMoves[i] & 0xff)/64] |= (1L << ((charMoves[i] & 0xff)%64));
+                    loBytes[hiByte][(charMoves[i] & 0xff)/64] |= (1L << ((charMoves[i] & 0xff)%64));
                 }
             }
 
@@ -773,23 +776,23 @@ namespace Deveel.CSharpCC.Parser {
 
                     if (hiByte == (char) (rangeMoves[i + 1] >> 8)) {
                         for (c = (char) (rangeMoves[i] & 0xff); c <= r; c++)
-                            loBytes[hiByte, c/64] |= (1L << (c%64));
+                            loBytes[hiByte][c/64] |= (1L << (c%64));
 
                         continue;
                     }
 
                     for (c = (char) (rangeMoves[i] & 0xff); c <= 0xff; c++)
-                        loBytes[hiByte, c/64] |= (1L << (c%64));
+                        loBytes[hiByte][c/64] |= (1L << (c%64));
 
                     while (++hiByte < (char) (rangeMoves[i + 1] >> 8)) {
-                        loBytes[hiByte, 0] |= Int64.MaxValue /* 0xffffffffffffffffL */;
-                        loBytes[hiByte, 1] |= Int64.MaxValue /* 0xffffffffffffffffL */;
-                        loBytes[hiByte, 2] |= Int64.MaxValue /* 0xffffffffffffffffL */;
-                        loBytes[hiByte, 3] |= Int64.MaxValue /* 0xffffffffffffffffL */;
+                        loBytes[hiByte][0] |= Int64.MaxValue /* 0xffffffffffffffffL */;
+                        loBytes[hiByte][1] |= Int64.MaxValue /* 0xffffffffffffffffL */;
+                        loBytes[hiByte][2] |= Int64.MaxValue /* 0xffffffffffffffffL */;
+                        loBytes[hiByte][3] |= Int64.MaxValue /* 0xffffffffffffffffL */;
                     }
 
                     for (int x = 0; x <= r;x++)
-                        loBytes[hiByte, x/64] |= (1L << (c%64));
+                        loBytes[hiByte][x/64] |= (1L << (c%64));
                 }
             }
 
@@ -799,20 +802,20 @@ namespace Deveel.CSharpCC.Parser {
             for (i = 0; i <= 255; i++) {
                 if (done[i] ||
                     (done[i] =
-                        loBytes[i,0] == 0 &&
-                        loBytes[i,1] == 0 &&
-                        loBytes[i,2] == 0 &&
-                        loBytes[i,3] == 0))
+                        loBytes[i][0] == 0 &&
+                        loBytes[i][1] == 0 &&
+                        loBytes[i][2] == 0 &&
+                        loBytes[i][3] == 0))
                     continue;
 
                 for (j = i + 1; j < 256; j++) {
                     if (done[j])
                         continue;
 
-                    if (loBytes[i,0] == loBytes[j, 0] &&
-                        loBytes[i,1] == loBytes[j, 1] &&
-                        loBytes[i,2] == loBytes[j, 2] &&
-                        loBytes[i,3] == loBytes[j, 3]) {
+                    if (loBytes[i][0] == loBytes[j][0] &&
+                        loBytes[i][1] == loBytes[j][1] &&
+                        loBytes[i][2] == loBytes[j][2] &&
+                        loBytes[i][3] == loBytes[j][3]) {
                         done[j] = true;
                         if (common == null) {
                             done[i] = true;
@@ -840,7 +843,7 @@ namespace Deveel.CSharpCC.Parser {
 
                     tmpIndices[cnt++] = ind;
 
-	                tmp = "{\n   " + loBytes[i, 0] + "L, " + loBytes[i, 1] + "L, " + loBytes[i, 2] + "L, " + loBytes[i, 3] + "L\n};";
+	                tmp = "{\n   " + loBytes[i][0] + "L, " + loBytes[i][1] + "L, " + loBytes[i][2] + "L, " + loBytes[i][3] + "L\n};";
 
 
                     if (!lohiByteTab.TryGetValue(tmp, out ind)) {
@@ -863,15 +866,15 @@ namespace Deveel.CSharpCC.Parser {
             for (i = 0; i < 256; i++) {
                 if (done[i]) {
                     //TODO: Check this!!!
-                    loBytes[i,0] = 0;
-                    loBytes[i, 1] = 0;
-                    loBytes[i, 2] = 0;
-                    loBytes[i, 3] = 0;
+                    loBytes[i][0] = 0;
+                    loBytes[i][1] = 0;
+                    loBytes[i][2] = 0;
+                    loBytes[i][3] = 0;
                 } else {
                     String tmp;
                     int ind;
 
-					tmp = "{\n   " + loBytes[i, 0] + "L, " + loBytes[i, 1] + "L, " + loBytes[i, 2] + "L, " + loBytes[i, 3] + "L\n};";
+					tmp = "{\n   " + loBytes[i][0] + "L, " + loBytes[i][1] + "L, " + loBytes[i][2] + "L, " + loBytes[i][3] + "L\n};";
 
 
                     if (!lohiByteTab.TryGetValue(tmp, out ind)) {
@@ -1257,10 +1260,10 @@ namespace Deveel.CSharpCC.Parser {
 
                 if (!stateSetsToFix.ContainsKey(stringToFix))
                     stateSetsToFix[stringToFix] = setToFix;
-            }
 
-            Outer:
-            ;
+			Outer:
+				;
+            }
 
             next.usefulEpsilonMoves -= blockLen - 1;
             AddCompositeStateSet(s, false);
@@ -2319,10 +2322,11 @@ namespace Deveel.CSharpCC.Parser {
                     if (tmp.inNextOf <= 1)
                         put[state] = false;
                 }
-            }
 
-            Outer:
-            ;
+			Outer:
+				;
+
+            }
         }
 
         private static int[][] kinds;

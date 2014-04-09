@@ -165,29 +165,28 @@ namespace Deveel.CSharpCC.Parser {
 
             ostr.WriteLine("");
             ostr.WriteLine("  // Debug output.");
-            ostr.WriteLine("  public " + staticString + " System.IO.TextWriter debugStream = Console.Out;");
+            ostr.WriteLine("  public {0} System.IO.TextWriter debugStream = Console.Out;", staticString);
             ostr.WriteLine("  // Set debug output.");
-            ostr.WriteLine("  public " + staticString + " void SetDebugStream(System.IO.TextWriter ds) { debugStream = ds; }");
+            ostr.Write("  public {0} void SetDebugStream(System.IO.TextWriter ds)", staticString);
+            ostr.WriteLine(" { debugStream = ds; }");
 
             if (Options.getTokenManagerUsesParser() && !Options.getStatic()) {
                 ostr.WriteLine("");
                 ostr.WriteLine("  // The parser.");
-                ostr.WriteLine("  public " + CSharpCCGlobals.cu_name + " parser = null;");
+                ostr.WriteLine("  public {0} parser = null;", CSharpCCGlobals.cu_name);
             }
         }
 
         private static void DumpDebugMethods() {
 
-            ostr.WriteLine("  " + staticString + " int kindCnt = 0;");
-            ostr.WriteLine("  internal " + staticString + " string ccKindsForBitVector(int i, long vec)");
-            ostr.WriteLine("  {");
-            ostr.WriteLine("    String retVal = \"\";");
+            ostr.WriteLine("  {0} int kindCnt = 0;", staticString);
+            ostr.Write("  internal {0} string ccKindsForBitVector(int i, long vec) ", staticString);
+            ostr.WriteLine("{");
+            ostr.WriteLine("    string retVal = \"\";");
             ostr.WriteLine("    if (i == 0)");
             ostr.WriteLine("       kindCnt = 0;");
-            ostr.WriteLine("    for (int j = 0; j < 64; j++)");
-            ostr.WriteLine("    {");
-            ostr.WriteLine("       if ((vec & (1L << j)) != 0L)");
-            ostr.WriteLine("       {");
+            ostr.WriteLine("    for (int j = 0; j < 64; j++) {");
+            ostr.WriteLine("       if ((vec & (1L << j)) != 0L) {");
             ostr.WriteLine("          if (kindCnt++ > 0)");
             ostr.WriteLine("             retVal += \", \";");
             ostr.WriteLine("          if (kindCnt % 5 == 0)");
@@ -199,21 +198,18 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("  }");
             ostr.WriteLine("");
 
-            ostr.WriteLine("  internal " + staticString + " string ccKindsForStateVector(" + "int lexState, int[] vec, int start, int end)");
-            ostr.WriteLine("  {");
-            ostr.WriteLine("    bool[] kindDone = new bool[" + maxOrdinal + "];");
+            ostr.Write("  internal {0} string ccKindsForStateVector(int lexState, int[] vec, int start, int end)", staticString);
+            ostr.WriteLine("{");
+            ostr.WriteLine("    bool[] kindDone = new bool[{0}];", maxOrdinal);
             ostr.WriteLine("    string retVal = \"\";");
             ostr.WriteLine("    int cnt = 0;");
-            ostr.WriteLine("    for (int i = start; i < end; i++)");
-            ostr.WriteLine("    {");
+            ostr.WriteLine("    for (int i = start; i < end; i++) {");
             ostr.WriteLine("     if (vec[i] == -1)");
             ostr.WriteLine("       continue;");
             ostr.WriteLine("     int[] stateSet = statesForState[curLexState][vec[i]];");
-            ostr.WriteLine("     for (int j = 0; j < stateSet.length; j++)");
-            ostr.WriteLine("     {");
+            ostr.WriteLine("     for (int j = 0; j < stateSet.length; j++) {");
             ostr.WriteLine("       int state = stateSet[j];");
-            ostr.WriteLine("       if (!kindDone[kindForState[lexState][state]])");
-            ostr.WriteLine("       {");
+            ostr.WriteLine("       if (!kindDone[kindForState[lexState][state]]) {");
             ostr.WriteLine("          kindDone[kindForState[lexState][state]] = true;");
             ostr.WriteLine("          if (cnt++ > 0)");
             ostr.WriteLine("             retVal += \", \";");
@@ -494,9 +490,9 @@ namespace Deveel.CSharpCC.Parser {
 			}
 
 			if (hasLoop) {
-				ostr.WriteLine(staticString + "int[] ccEmptyLineNo = new int[" + maxLexStates + "];");
-				ostr.WriteLine(staticString + "int[] ccEmptyColNo = new int[" + maxLexStates + "];");
-				ostr.WriteLine(staticString + "bool[] ccBeenHere = new bool[" + maxLexStates + "];");
+                ostr.WriteLine("{0}int[] ccEmptyLineNo = new int[{1}];", staticString, maxLexStates);
+                ostr.WriteLine("{0}int[] ccEmptyColNo = new int[{1}];", staticString, maxLexStates);
+				ostr.WriteLine("{0}bool[] ccBeenHere = new bool[{1}];", staticString, maxLexStates);
 			}
 
 			if (hasSkipActions)
@@ -582,9 +578,10 @@ namespace Deveel.CSharpCC.Parser {
                         cycle + "\ncontaining regular expressions with empty matches." +
                         " This can result in an endless loop of empty string matches.");
                 }
+
+			Outer:
+				;
             }
-            Outer:
-            ;
         }
 
         private static void DumpStaticVarDeclarations() {
@@ -594,8 +591,11 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("");
             ostr.WriteLine("// Lexer state names.");
             ostr.WriteLine("public static readonly string[] lexStateNames = {");
-            for (i = 0; i < maxLexStates; i++)
-                ostr.WriteLine("   \"" + lexStateName[i] + "\",");
+            for (i = 0; i < maxLexStates; i++) {
+                ostr.WriteLine("   \"{0}\"", lexStateName[i]);
+                if (i < maxLexStates - 1)
+                    ostr.WriteLine(", ");
+            }
             ostr.WriteLine("};");
 
             if (maxLexStates > 1) {
@@ -605,14 +605,14 @@ namespace Deveel.CSharpCC.Parser {
 
                 for (i = 0; i < maxOrdinal; i++) {
                     if (i%25 == 0)
-                        ostr.Write("\n   ");
+                        ostr.WriteLine("   ");
 
                     if (newLexState[i] == null)
                         ostr.Write("-1, ");
                     else
                         ostr.Write(GetIndex(newLexState[i]) + ", ");
                 }
-                ostr.WriteLine("\n};");
+                ostr.WriteLine("};");
             }
 
             if (hasSkip || hasMore || hasSpecial) {
@@ -620,10 +620,11 @@ namespace Deveel.CSharpCC.Parser {
                 ostr.Write("static readonly long[] ccToToken = {");
                 for (i = 0; i < maxOrdinal/64 + 1; i++) {
                     if (i%4 == 0)
-                        ostr.Write("\n   ");
+                        ostr.WriteLine("   ");
+
                     ostr.Write(toToken[i] + "L, ");
                 }
-                ostr.WriteLine("\n};");
+                ostr.WriteLine("};");
             }
 
             if (hasSkip || hasSpecial) {
@@ -631,10 +632,11 @@ namespace Deveel.CSharpCC.Parser {
                 ostr.Write("static readonly long[] ccToSkip = {");
                 for (i = 0; i < maxOrdinal/64 + 1; i++) {
                     if (i%4 == 0)
-                        ostr.Write("\n   ");
+                        ostr.WriteLine("   ");
+
                     ostr.Write(toSkip[i] + "L, ");
                 }
-                ostr.WriteLine("\n};");
+                ostr.WriteLine("};");
             }
 
             if (hasSpecial) {
@@ -642,10 +644,11 @@ namespace Deveel.CSharpCC.Parser {
                 ostr.Write("static readonly long[] ccToSpecial = {");
                 for (i = 0; i < maxOrdinal/64 + 1; i++) {
                     if (i%4 == 0)
-                        ostr.Write("\n   ");
+                        ostr.WriteLine("   ");
+
                     ostr.Write(toSpecial[i] + "L, ");
                 }
-                ostr.WriteLine("\n};");
+                ostr.WriteLine("};");
             }
 
             if (hasMore) {
@@ -653,10 +656,12 @@ namespace Deveel.CSharpCC.Parser {
                 ostr.Write("static readonly long[] ccToMore = {");
                 for (i = 0; i < maxOrdinal/64 + 1; i++) {
                     if (i%4 == 0)
-                        ostr.Write("\n   ");
+                        ostr.WriteLine("   ");
+
                     ostr.Write(toMore[i] + "L, ");
                 }
-                ostr.WriteLine("\n};");
+
+                ostr.WriteLine("};");
             }
 
             if (Options.getUserCharStream())
@@ -668,27 +673,29 @@ namespace Deveel.CSharpCC.Parser {
                     charStreamName = "SimpleCharStream";
             }
 
-            ostr.WriteLine("internal " + staticString + " " + charStreamName + " inputStream;");
+            ostr.WriteLine("internal {0}{1} inputStream;", staticString, charStreamName);
 
-            ostr.WriteLine("private " + staticString + "readonly int[] ccRounds = new int[" + stateSetSize + "];");
-            ostr.WriteLine("private " + staticString + "readonly int[] ccStateSet = new int[" + (2*stateSetSize) + "];");
+            ostr.WriteLine("private {0}readonly int[] ccRounds = new int[{1}];", staticString, stateSetSize);
+            ostr.WriteLine("private {0}readonly int[] ccStateSet = new int[{1}];", staticString, (2 * stateSetSize));
 
             if (hasMoreActions || hasSkipActions || hasTokenActions) {
-				ostr.WriteLine("private " + staticString + Options.stringBufOrBuild() + " image = new " + Options.stringBufOrBuild() + "();");
-                ostr.WriteLine("private " + staticString + "int ccImageLen;");
-                ostr.WriteLine("private " + staticString + "int lengthOfMatch;");
+                ostr.WriteLine("private {0}{1} image = new {1}();", staticString, Options.stringBufOrBuild());
+                ostr.WriteLine("private {0}int ccImageLen;", staticString);
+                ostr.WriteLine("private {0}int lengthOfMatch;", staticString);
             }
 
-            ostr.WriteLine(staticString + "protected char curChar;");
+            ostr.WriteLine("{0}protected char curChar;", staticString);
 
             if (Options.getTokenManagerUsesParser() && !Options.getStatic()) {
                 ostr.WriteLine("");
                 ostr.WriteLine("// Constructor with parser.");
-                ostr.WriteLine("public " + tokMgrClassName + "(" + CSharpCCGlobals.cu_name + " parser, " + charStreamName + " stream){");
+                ostr.Write("public {0} ({1} parser, {2} stream) ", tokMgrClassName, CSharpCCGlobals.cu_name, charStreamName);
+                ostr.WriteLine("{");
                 ostr.WriteLine("   this.parser = parser;");
             } else {
                 ostr.WriteLine("// Constructor.");
-                ostr.WriteLine("public " + tokMgrClassName + "(" + charStreamName + " stream){");
+                ostr.Write("public {0} ({1} stream)", tokMgrClassName, charStreamName);
+                ostr.WriteLine("{");
             }
 
             if (Options.getStatic() && !Options.getUserCharStream()) {
@@ -712,13 +719,12 @@ namespace Deveel.CSharpCC.Parser {
             if (Options.getTokenManagerUsesParser() && !Options.getStatic()) {
                 ostr.WriteLine("");
                 ostr.WriteLine("// Constructor with parser.");
-                ostr.WriteLine("public " + tokMgrClassName + "(" + CSharpCCGlobals.cu_name + " parser, " +
-                               charStreamName + " stream, int lexState)");
+                ostr.WriteLine("public {0} ({1} parser, {2} stream, int lexState)", tokMgrClassName, CSharpCCGlobals.cu_name, charStreamName);
                 ostr.WriteLine("   : this(parser, stream) {");
             } else {
                 ostr.WriteLine("");
                 ostr.WriteLine("// Constructor.");
-                ostr.WriteLine("public " + tokMgrClassName + "(" + charStreamName + " stream, int lexState)");
+                ostr.WriteLine("public {0} ({1} stream, int lexState)", tokMgrClassName, charStreamName);
                 ostr.WriteLine("   : this(stream) {");
             }
             ostr.WriteLine("   SwitchTo(lexState);");
@@ -727,7 +733,7 @@ namespace Deveel.CSharpCC.Parser {
             // Reinit method for reinitializing the parser (for static parsers).
             ostr.WriteLine("");
             ostr.WriteLine("/** Reinitialise parser. */");
-            ostr.WriteLine("public " + staticString + "void ReInit(" + charStreamName + " stream)");
+            ostr.Write("public {0}void ReInit({1} stream)", staticString, charStreamName);
             ostr.WriteLine("{");
             ostr.WriteLine("   ccMatchedPos = ccNewStateCnt = 0;");
             ostr.WriteLine("   curLexState = defaultLexState;");
@@ -736,18 +742,18 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("}");
 
             // Method to reinitialize the jjrounds array.
-            ostr.WriteLine("private " + staticString + "void ReInitRounds()");
+            ostr.Write("private {0}void ReInitRounds()", staticString);
             ostr.WriteLine("{");
             ostr.WriteLine("   int i;");
-            ostr.WriteLine("   ccRound = " + (Int32.MinValue + 1) + ";");
-            ostr.WriteLine("   for (i = " + stateSetSize + "; i-- > 0;)");
-            ostr.WriteLine("      ccRounds[i] = " + Int32.MinValue + ";");
+            ostr.WriteLine("   ccRound = {0};", (Int32.MinValue + 1));
+            ostr.WriteLine("   for (i = {0}; i-- > 0;)", stateSetSize);
+            ostr.WriteLine("      ccRounds[i] = Int32.MinValue;");
             ostr.WriteLine("}");
 
             // Reinit method for reinitializing the parser (for static parsers).
             ostr.WriteLine("");
             ostr.WriteLine("// Reinitialise parser.");
-            ostr.WriteLine("public " + staticString + "void ReInit(" + charStreamName + " stream, int lexState)");
+            ostr.Write("public {0}void ReInit({1} stream, int lexState)", staticString, charStreamName);
             ostr.WriteLine("{");
             ostr.WriteLine("   ReInit(stream);");
             ostr.WriteLine("   SwitchTo(lexState);");
@@ -755,23 +761,23 @@ namespace Deveel.CSharpCC.Parser {
 
             ostr.WriteLine("");
             ostr.WriteLine("// Switch to specified lex state.");
-            ostr.WriteLine("public " + staticString + "void SwitchTo(int lexState)");
+            ostr.Write("public {0}void SwitchTo(int lexState)", staticString);
             ostr.WriteLine("{");
-            ostr.WriteLine("   if (lexState >= " + lexStateName.Length + " || lexState < 0)");
+            ostr.WriteLine("   if (lexState >= {0} || lexState < 0)", lexStateName.Length);
             ostr.WriteLine("      throw new TokenManagerError(\"Error: Ignoring invalid lexical state : \"" +
                            " + lexState + \". State unchanged.\", TokenManagerError.INVALID_LEXICAL_STATE);");
             ostr.WriteLine("   else");
             ostr.WriteLine("      curLexState = lexState;");
             ostr.WriteLine("}");
 
-            ostr.WriteLine("");
+            ostr.WriteLine();
         }
 
         private static void DumpFillToken() {
             double tokenVersion = CSharpFiles.GetVersion("Token.cs");
             bool hasBinaryNewToken = tokenVersion > 4.09;
 
-            ostr.WriteLine("internal " + staticString + " Token ccFillToken()");
+            ostr.Write("internal {0}Token ccFillToken()", staticString);
             ostr.WriteLine("{");
             ostr.WriteLine("   Token t;");
             ostr.WriteLine("   string curTokenImage;");
@@ -783,8 +789,7 @@ namespace Deveel.CSharpCC.Parser {
             }
 
             if (hasEmptyMatch) {
-                ostr.WriteLine("   if (ccMatchedPos < 0)");
-                ostr.WriteLine("   {");
+                ostr.WriteLine("   if (ccMatchedPos < 0) {");
                 ostr.WriteLine("      if (image == null)");
                 ostr.WriteLine("         curTokenImage = \"\";");
                 ostr.WriteLine("      else");
@@ -795,9 +800,7 @@ namespace Deveel.CSharpCC.Parser {
                     ostr.WriteLine("      beginColumn = endColumn = inputStream.BeginColumn;");
                 }
 
-                ostr.WriteLine("   }");
-                ostr.WriteLine("   else");
-                ostr.WriteLine("   {");
+                ostr.WriteLine("   } else {");
                 ostr.WriteLine("      string im = ccStrLiteralImages[ccMatchedKind];");
                 ostr.WriteLine("      curTokenImage = (im == null) ? inputStream.GetImage() : im;");
 
@@ -821,7 +824,7 @@ namespace Deveel.CSharpCC.Parser {
             }
 
             if (Options.getTokenFactory().Length > 0) {
-                ostr.WriteLine("   t = " + Options.getTokenFactory() + ".NewToken(ccMatchedKind, curTokenImage);");
+                ostr.WriteLine("   t = {0}.NewToken(ccMatchedKind, curTokenImage);", Options.getTokenFactory());
             } else if (hasBinaryNewToken) {
                 ostr.WriteLine("   t = Token.NewToken(ccMatchedKind, curTokenImage);");
             } else {
@@ -864,14 +867,10 @@ namespace Deveel.CSharpCC.Parser {
             ostr.WriteLine("  int curPos = 0;");
             ostr.WriteLine("");
             // OLD: ostr.WriteLine("  EOFLoop :\n  for (;;)");
-            ostr.WriteLine("  for (;;)");
-            ostr.WriteLine("  {");
-            ostr.WriteLine("   try");
-            ostr.WriteLine("   {");
+            ostr.WriteLine("  while (true) {");
+            ostr.WriteLine("   try {");
             ostr.WriteLine("      curChar = inputStream.BeginToken();");
-            ostr.WriteLine("   }");
-            ostr.WriteLine("   catch(System.IO.IOException e)");
-            ostr.WriteLine("   {");
+            ostr.WriteLine("   }  catch(System.IO.IOException e) {");
 
             if (Options.getDebugTokenManager())
                 ostr.WriteLine("      debugStream.WriteLine(\"Returning the <EOF> token.\");");
@@ -927,19 +926,18 @@ namespace Deveel.CSharpCC.Parser {
                     ostr.WriteLine(prefix + "try { inputStream.Backup(0);");
                     if (singlesToSkip[i].asciiMoves[0] != 0L &&
                         singlesToSkip[i].asciiMoves[1] != 0L) {
-                        ostr.WriteLine(prefix + "   while ((curChar < 64" + " && (" + (singlesToSkip[i].asciiMoves[0]) +
-                                       "L & (1L << curChar)) != 0L) || \n" + prefix + "          (curChar >> 6) == 1" + " && (" +
-                                       (singlesToSkip[i].asciiMoves[1]) + "L & (1L << (curChar & 077))) != 0L)");
+                        ostr.WriteLine(prefix + "   while ((curChar < 64 && ({0}L & (1L << curChar)) != 0L) ||",
+                            (singlesToSkip[i].asciiMoves[0]));
+                        ostr.WriteLine(prefix + "          (curChar >> 6) == 1 && ({0}L & (1L << (curChar & 077))) != 0L)",
+                            (singlesToSkip[i].asciiMoves[1]));
                     } else if (singlesToSkip[i].asciiMoves[1] == 0L) {
-                        ostr.WriteLine(prefix + "   while (curChar <= " +
-                                       (int) MaxChar(singlesToSkip[i].asciiMoves[0]) + " && (" +
-                                       (singlesToSkip[i].asciiMoves[0]) + "L & (1L << curChar)) != 0L)");
+                        ostr.WriteLine(prefix + "   while (curChar <= {0} && ({1}L & (1L << curChar)) != 0L)",
+                            MaxChar(singlesToSkip[i].asciiMoves[0]),
+                            singlesToSkip[i].asciiMoves[0]);
                     } else if (singlesToSkip[i].asciiMoves[0] == 0L) {
-                        ostr.WriteLine(prefix + "   while (curChar > 63 && curChar <= " +
-                                       ((int) MaxChar(singlesToSkip[i].asciiMoves[1]) + 64) +
-                                       " && (" +
-                                       (singlesToSkip[i].asciiMoves[1]) +
-                                       "L & (1L << (curChar & 077))) != 0L)");
+                        ostr.WriteLine(prefix + "   while (curChar > 63 && curChar <= {0}  && ({1}L & (1L << (curChar & 077))) != 0L)",
+                            (MaxChar(singlesToSkip[i].asciiMoves[1]) + 64),
+                            (singlesToSkip[i].asciiMoves[1]));
                     }
 
                     if (Options.getDebugTokenManager()) {
@@ -957,19 +955,18 @@ namespace Deveel.CSharpCC.Parser {
                         ostr.WriteLine(prefix + "}");
 
                     ostr.WriteLine(prefix + "}");
-                    ostr.WriteLine(prefix + "catch (System.IO.IOException e1) { goto EOFLoop; }");
+                    ostr.WriteLine(prefix + "catch (System.IO.IOException) { goto EOFLoop; }");
                 }
 
                 if (initMatch[i] != Int32.MaxValue && initMatch[i] != 0) {
                     if (Options.getDebugTokenManager())
-                        ostr.WriteLine("      debugStream.WriteLine(\"   Matched the empty string as \" + tokenImage[" + initMatch[i] +
-                                       "] + \" token.\");");
+                        ostr.WriteLine("      debugStream.WriteLine(\"   Matched the empty string as \" + tokenImage[" + initMatch[i] +"] + \" token.\");");
 
                     ostr.WriteLine(prefix + "ccMatchedKind = " + initMatch[i] + ";");
                     ostr.WriteLine(prefix + "ccMatchedPos = -1;");
                     ostr.WriteLine(prefix + "curPos = 0;");
                 } else {
-                    ostr.WriteLine(prefix + "ccMatchedKind = " + Int32.MaxValue + ";");
+                    ostr.WriteLine(prefix + "ccMatchedKind = Int32.MaxValue;");
                     ostr.WriteLine(prefix + "ccMatchedPos = 0;");
                 }
 
@@ -1237,9 +1234,9 @@ namespace Deveel.CSharpCC.Parser {
                 }
 
                 ostr.WriteLine("         break;");
+			Outer:
+				;
             }
-            Outer:
-            ;
 
             ostr.WriteLine("      default :");
             ostr.WriteLine("         break;");
@@ -1309,9 +1306,10 @@ namespace Deveel.CSharpCC.Parser {
                 }
 
                 ostr.WriteLine("         break;");
+
+			Outer:
+				;
             }
-            Outer:
-            ;
 
             ostr.WriteLine("      default :");
             ostr.WriteLine("         break;");
@@ -1386,10 +1384,11 @@ namespace Deveel.CSharpCC.Parser {
                 }
 
                 ostr.WriteLine("         break;");
-            }
 
-            Outer:
-            ;
+			Outer:
+				;
+
+            }
 
             ostr.WriteLine("      default :");
             ostr.WriteLine("         break;");

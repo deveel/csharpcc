@@ -531,11 +531,11 @@ namespace Deveel.CSharpCC.Parser {
      * "named_tokens_table" and "ordered_named_tokens".
      * Duplications are flagged as errors.
      */
-		    for (IEnumerator it = CSharpCCGlobals.rexprlist.GetEnumerator(); it.MoveNext();) {
-			    TokenProduction tp = (TokenProduction) (it.Current);
+		    for (int i = 0; i < CSharpCCGlobals.rexprlist.Count; i++) {
+			    TokenProduction tp = CSharpCCGlobals.rexprlist[i];
 			    IList<RegExprSpec> respecs = tp.RegexSpecs;
-			    for (IEnumerator it1 = respecs.GetEnumerator(); it1.MoveNext();) {
-				    RegExprSpec res = (RegExprSpec) (it1.Current);
+			    for (int j = 0; j < respecs.Count; j++) {
+				    RegExprSpec res = respecs[j];
 				    if (!(res.RegularExpression is RJustName) && !res.RegularExpression.Label.Equals("")) {
 					    String s = res.RegularExpression.Label;
 					    if (CSharpCCGlobals.named_tokens_table.ContainsKey(s)) {
@@ -564,16 +564,18 @@ namespace Deveel.CSharpCC.Parser {
      */
 
 		    CSharpCCGlobals.tokenCount = 1;
-		    for (IEnumerator it = CSharpCCGlobals.rexprlist.GetEnumerator(); it.MoveNext();) {
-			    TokenProduction tp = (TokenProduction) (it.Current);
+		    for (int j = 0; j < CSharpCCGlobals.rexprlist.Count; j++) {
+			    TokenProduction tp = CSharpCCGlobals.rexprlist[j];
+
 			    IList<RegExprSpec> respecs = tp.RegexSpecs;
 			    if (tp.LexStates == null) {
 				    tp.LexStates = new String[CSharpCCGlobals.lexstate_I2S.Count];
-				    int i = 0;
-				    for (IEnumerator enum1 = CSharpCCGlobals.lexstate_I2S.Values.GetEnumerator(); enum1.MoveNext();) {
-					    tp.LexStates[i++] = (String) (enum1.Current);
+
+				    for (int i = 0; i < CSharpCCGlobals.lexstate_I2S.Count; i++) {
+					    tp.LexStates[i++] = CSharpCCGlobals.lexstate_I2S[i];
 				    }
 			    }
+
 			    Hashtable[] table = new Hashtable[tp.LexStates.Length];
 			    for (int i = 0; i < tp.LexStates.Length; i++) {
 				    table[i] = (Hashtable)CSharpCCGlobals.simple_tokens_table[tp.LexStates[i]];

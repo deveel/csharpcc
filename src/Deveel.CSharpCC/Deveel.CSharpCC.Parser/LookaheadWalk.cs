@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Deveel.CSharpCC.Parser {
 	public static class LookaheadWalk {
 		public static bool considerSemanticLA;
-		public static ArrayList sizeLimitedMatches;
+		public static List<MatchInfo> sizeLimitedMatches;
 		public static void reInit() {
 			considerSemanticLA = false;
 			sizeLimitedMatches = null;
@@ -179,9 +179,10 @@ namespace Deveel.CSharpCC.Parser {
 					}
 				}
 				rest.Add(toSplit[i]);
-			}
+
 			OuterLoop:
-			;
+				;
+			}
 		}
 
 		private static void listAppend(IList<MatchInfo> vToAppendTo, IList<MatchInfo> vToAppend) {

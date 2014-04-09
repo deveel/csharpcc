@@ -426,10 +426,9 @@ namespace Deveel.CSharpCC.Parser {
 					newDesc.Insert(j, range);
 					cnt++;
 				}
-			}
-
 			Outer:
-			;
+				;
+			}
 
 			descriptors = newDesc;
 		}
