@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -186,7 +187,7 @@ namespace Deveel.CSharpCC.Parser {
                     Val = false;
                 } else {
                     try {
-                        int i = Int32.Parse(s.Substring(index + 1));
+                        int i = Int32.Parse(s.Substring(index + 1), CultureInfo.InvariantCulture);
                         if (i <= 0) {
                             Console.Out.WriteLine("Warning: Bad option value in \""
                                                   + arg + "\" will be ignored.");
@@ -430,7 +431,7 @@ namespace Deveel.CSharpCC.Parser {
    */
 
         public static bool clrVersionAtLeast(double version) {
-            double clrVersion = Double.Parse(getClrVersion());
+            double clrVersion = Double.Parse(getClrVersion(), CultureInfo.InvariantCulture);
 
             // Comparing doubles is safe here, as it is two simple assignments.
             return clrVersion >= version;
