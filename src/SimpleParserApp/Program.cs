@@ -17,6 +17,7 @@ namespace SimpleParserApp
 
 	        var parser = new SimpleParser(new StringReader(line));
 	        parser.Input();
+	        Console.In.Read();
         }
     }
 }

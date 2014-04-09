@@ -117,7 +117,7 @@ namespace Deveel.CSharpCC.Parser {
 			sb.AppendLine("void Input() :");
 			sb.AppendLine("{ Token t; string line; }");
 			sb.AppendLine("{");
-			sb.AppendLine("\"READ\" \"AND\" \"PRINT\" t = <STRING_LITERAL> { line = t.Image; }");
+			sb.AppendLine("\"READ\" \"AND\" \"PRINT\" t = <STRING_LITERAL> { line = t.Image; } <EOF>");
 			sb.AppendLine("{ Console.Out.WriteLine(line); }");
 			sb.AppendLine("}");
 			return sb.ToString();

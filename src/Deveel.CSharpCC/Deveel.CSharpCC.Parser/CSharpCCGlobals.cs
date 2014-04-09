@@ -37,7 +37,8 @@ namespace Deveel.CSharpCC.Parser {
         public static IDictionary<int, string> names_of_tokens = new Dictionary<int, string>();
         public static IDictionary<int, RegularExpression> rexps_of_tokens = new Dictionary<int, RegularExpression>();
 
-	    public static Hashtable simple_tokens_table = new Hashtable();
+		public static IDictionary<string, IDictionary<string, IDictionary<string, RegularExpression>>> simple_tokens_table =
+			new Dictionary<string, IDictionary<string, IDictionary<string, RegularExpression>>>();
 
         internal static int maskindex = 0;
         internal static int cc2index = 0;
@@ -389,7 +390,7 @@ namespace Deveel.CSharpCC.Parser {
             ordered_named_tokens = new List<RegularExpression>();
             names_of_tokens = new Dictionary<int, string>();
             rexps_of_tokens = new Dictionary<int, RegularExpression>();
-            simple_tokens_table = new Hashtable();
+            simple_tokens_table = new Dictionary<string, IDictionary<string, IDictionary<string, RegularExpression>>>();
             maskindex = 0;
             cc2index = 0;
             maskVals = new List<int[]>();

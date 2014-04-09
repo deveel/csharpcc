@@ -517,7 +517,7 @@ namespace Deveel.CSharpCC.Parser {
                 actions = new String[e_nrw.Choices.Count + 1];
                 actions[e_nrw.Choices.Count] = "\n" + "cc_consume_token(-1);\n" + "throw new ParseException();";
                 // In previous line, the "throw" never throws an exception since the
-                // evaluation of jj_consume_token(-1) causes ParseException to be
+                // evaluation of cc_consume_token(-1) causes ParseException to be
                 // thrown first.
                 Sequence nestedSeq;
                 for (int i = 0; i < e_nrw.Choices.Count; i++) {

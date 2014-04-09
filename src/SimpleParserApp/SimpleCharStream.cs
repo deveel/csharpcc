@@ -113,7 +113,7 @@ public class SimpleCharStream
 
     int i;
     try {
-      if ((i = inputStream.Read(buffer, maxNextCharInd, available - maxNextCharInd)) == 0)
+      if ((i = inputStream.Read(buffer, maxNextCharInd, available - maxNextCharInd)) == -1)
       {
         inputStream.Close();
         throw new System.IO.IOException();
@@ -134,11 +134,17 @@ public class SimpleCharStream
 /** Start. */
   public char BeginToken()
   {
+    try {
     tokenBegin = -1;
     char c = ReadChar();
     tokenBegin = bufpos;
 
     return c;
+	} catch (System.IO.EndOfStreamException) {
+		if (tokenBegin == -1)
+			tokenBegin = bufpos;
+		throw;
+	}
   }
 
   protected void UpdateLineColumn(char c)
@@ -196,6 +202,13 @@ public class SimpleCharStream
 
     if (++bufpos >= maxNextCharInd)
       FillBuff();
+
+	  if (bufpos >= maxNextCharInd) {
+		bufpos--;
+		if (bufpos < 0)
+			bufpos += bufsize;
+		throw new System.IO.EndOfStreamException();
+	  }
 
     char c = buffer[bufpos];
 

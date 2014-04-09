@@ -13,7 +13,7 @@ public class SimpleParser : SimpleParserConstants {
     cc_consume_token(PRINT);
     t = cc_consume_token(STRING_LITERAL);
                                             line = t.Image;
-    cc_consume_token(6);
+    cc_consume_token(0);
   Console.Out.WriteLine(line);
   }
 

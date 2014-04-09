@@ -1167,8 +1167,8 @@ namespace Deveel.CSharpCC.Parser {
             if (hasMore)
                 ostr.WriteLine(prefix + " }");
 
-            //TODO: Check this is the right position for the EOFLoop label!!!
-            ostr.WriteLine("  EOFLoop :;");
+			//TODO: Check this is the right position for the EOFLoop label!!!
+			ostr.WriteLine("  EOFLoop: ;");
 
             ostr.WriteLine("  }");
             ostr.WriteLine("}");

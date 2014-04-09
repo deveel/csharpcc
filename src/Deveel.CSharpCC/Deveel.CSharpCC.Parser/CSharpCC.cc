@@ -824,6 +824,8 @@ void expansion(Container c1) :
 	{
 	  seq.Units.Add((Expansion)c2.member);
 	  ((Expansion)c2.member).Parent = seq;
+	  // TODO: this is an hack that differs from original JavaCC
+	  if (!(c2.member is REndOfFile))
 	  ((Expansion)c2.member).Ordinal = seq.Units.Count-1;
 	}
   )+
