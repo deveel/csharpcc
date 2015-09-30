@@ -1,3 +1,5 @@
+_*NOTE*: The project was born as an ancillary for [DeveelDB](http://github.com/deveel/deveeldb), but since this switched to Irony for generating PL/SQL parsers, CSharpCC became an unmaintained project_
+
 CSharpCC
 ========
 
